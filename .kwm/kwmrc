@@ -19,23 +19,16 @@
 # include binds
 
 # Set default values for screen padding
-kwmc config padding top 27
-kwmc config padding bottom 7
-kwmc config padding left 7
-kwmc config padding right 7
+kwmc config padding 27 7 7 7
 
 # Set default values for container gaps
-kwmc config gap vertical 7
-kwmc config gap horizontal 7
-
-# Allow Kwm to tile windows
-kwmc config tiling on
+kwmc config gap 7 7
 
 # Let Kwm listen for hotkeys
 kwmc config hotkeys on
 
 # Set prefix for Kwms hotkeys
-kwmc config prefix ctrl+cmd-w
+kwmc config prefix-key ctrl+cmd-w
 
 # Prefix is not applied globally
 kwmc config prefix-global off
@@ -50,11 +43,11 @@ kwmc config float-non-resizable on
 kwmc config dragndrop on
 
 # Set focus-follows-mouse-mode to autoraise
-kwmc config focus autoraise
+kwmc config focus-follows-mouse off # autoraise
 
 # Focus-follows-mouse is temporarily offd when
 # a floating window has focus
-kwmc config focus standby-on-float on
+kwmc config standby-on-float on
 
 # The mouse will automatically move to the center
 # of the focused window
@@ -64,7 +57,7 @@ kwmc config focus mouse-follows on
 kwmc config cycle-focus screen # all | offd
 
 # Default tiling mode for new spaces
-kwmc config space float
+kwmc config tiling float
 
 # Override default tiling mode for given monitors
 # kwmc config screen 0 bsp
@@ -96,9 +89,9 @@ kwmc config float Photoshop
 # kwmc config capture 1 iTunes
 
 # Enable border for focused window
-kwmc config focused-border on
-kwmc config focused-border size 2
-kwmc config focused-border color FF73C6FF
+kwmc config focused-border off
+kwmc config focused-border size 3
+kwmc config focused-border color FFB9B4A1
 
 # Enable border for marked window
 kwmc config marked-border on
@@ -144,9 +137,9 @@ kwmc bind prefix-[ window -c reduce 0.05
 kwmc bind prefix-] window -c expand 0.05
 
 # Set Temporary Window Container
-kwmc bind prefix-o window -t fullscreen
-kwmc bind prefix-t window -t parent
-kwmc bind prefix-f window -t float
+kwmc bind prefix-o window -z fullscreen
+kwmc bind prefix-t window -z parent
+kwmc bind prefix-f window -t focused
 
 # Mark Window
 kwmc bind prefix-m mark -w focused

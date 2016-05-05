@@ -63,3 +63,10 @@ eval "$(rbenv init -)"
 
 # Add Haskell stuff
 export PATH="/Users/Maxi/Library/Haskell/ghc-7.10.3/lib/elm-init-1.0.1.1/bin:${PATH}"
+
+
+# Set the default editor to emacs-client
+export EDITOR="emacsclient -nw"
+
+# Only load Liquid Prompt in interactive shells, not from a script or from scp
+# [[ $- = *i* ]] && source ~/.liquidprompt/liquidprompt
