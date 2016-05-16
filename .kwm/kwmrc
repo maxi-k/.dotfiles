@@ -82,6 +82,7 @@ kwmc config tiled EmacsApplication
 # looks like: kwmc config float Google Chrome
 kwmc config float Steam
 kwmc config float Photoshop
+kwmc config float Finder
 
 # The following command captures an application to the
 # given screen, if the screen exists. By doing this
