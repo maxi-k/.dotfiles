@@ -1,15 +1,9 @@
-source ~/.search/search_wrapper.sh
-alias la='ls -a'
-alias lla='ls -la'
+test -f ~/.dotfiles/.bash_look && source ~/.dotfiles/.bash_look
 
-alias ec='emacsclient -nw'
+test -f ~/.search/search_wrapper.sh && source ~/.search/search_wrapper.sh
 
-alias cdc='pwd | pbcopy'
-alias cdp='cd $(pbpaste)'
-
-alias tml="tmux list-sessions"
-alias tma="tmux -2 attach -t $1"
-alias tmk="tmux kill-session -t $1"
+# Load in aliases
+test -f ~/.dotfiles/.bash_aliases && source ~/.dotfiles/.bash_aliases
 
 export LC_ALL=en_US.utf-8
 export LANG="$LC_ALL"
