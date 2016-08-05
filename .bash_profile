@@ -23,6 +23,3 @@ export EDITOR="emacsclient -nw"
 
 # Load .bashrc if it exists
 test -e ~/.bashrc && source ~/.bashrc
-
-# Load .bash_local if it exists
-test -f ~/.dotfiles/.bash_local && source ~/.dotfiles/.bash_local
