@@ -1,4 +1,4 @@
-" ---- THE VIM CUSTOMIZATIONS ---- "
+"--- THE VIM CUSTOMIZATIONS ---- "
 
 set nocompatible 
 filetype off
@@ -19,22 +19,16 @@ set hidden
 " The current directory should always be that of the current file
 set autochdir
 
-" Make the font bigger
-set guifont=Monaco:h15
-
-" Make the background light
-set bg=light
-
 " Enable line numbers
 set relativenumber
-
-" Set tab width to 2
-set tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
 
 " Relative line numbers when in normal (movement!) mode
 " Absolute line numbers when in insert mode
 autocmd InsertEnter * :set number norelativenumber
 autocmd InsertLeave * :set relativenumber number
+
+" Set tab width to 2
+set tabstop=8 softtabstop=0 expandtab shiftwidth=2 smarttab
 
 " Enable filetype plugins 
 filetype indent plugin on 
@@ -44,8 +38,8 @@ filetype indent plugin on
 " nnoremap : ;
 
 " Open a new line with <Enter> in normal mode
-nmap <CR> i<CR><Esc>
-nmap <C-CR> m`o<Esc>``
+" nmap <CR> i<CR><Esc>
+" nmap <C-CR> m`o<Esc>``
 
 " Make working with parens etc. nice
 " inoremap { {<CR><BS>}<Esc>ko
@@ -71,6 +65,7 @@ set showcmd
 
 " Highlight search matches
 set hlsearch
+set incsearch
 
 " Activate smartcase for search, so that case sensitivity is `dwim`
 " Toggling case-sensitivity works by appending \C or (in) \c at the end
@@ -86,15 +81,25 @@ set autoindent
 
 " No annoying sounds
 set errorbells visualbell
-
+"
 " Set the leader key to <space>
-let mapleader = "\<Space>"
+let mapleader=' '
+" Test out the leader
+nnoremap <leader>d dd
 
 " No cursor blinking
 set guicursor+=a:blinkon0
 
 " Timeout before normal mode
 set timeoutlen=0 ttimeoutlen=0
+
+" Set the path to include recursive directories
+" for fuzzy finding (:find filename)
+set path+=**
+
+" Tab completion for :find, with multiple results
+" to choose from
+set wildmenu
 
 " ---- THE PLUGIN CUSTOMIZATIONS ---- "
 
@@ -147,8 +152,15 @@ Plugin 'vim-scripts/paredit.vim'
 " Vim Fireplace for clojure|script editing
 Plugin 'tpope/vim-fireplace'
 
+" Molokai theme
+Plugin 'tomasr/molokai'
+
 " End the Vundle init
 call vundle#end()
+
+" Easymotion
+"map  <Leader>f <Plug>(easymotion-bd-f)
+"nmap <Leader>f <Plug>(easymotion-overwin-f)
 
 " Fix weird nerdtree chars
 let g:NERDTreeDirArrows=0
@@ -160,8 +172,25 @@ nnoremap <C-n> :NERDTreeToggle<CR>
 nnoremap <C-s> :SpotEdit<space>
 
 " Setup paredit
-let g:paredit_leader = '<Space>'
-let g:paredit_electric_return = 0
+" let g:paredit_leader = '\<Space>'
+" let g:paredit_electric_return = 0
 
 " Setup org-mode filetypes
 au BufNewFile,BufRead *.org set filetype=org
+
+" Set the coloscheme to molokai
+" which was downloaded with vundle
+colorscheme molokai
+
+" Make the font bigger
+set guifont=Monaco:h15
+
+" Make the background light
+" set bg=light
+
+" Make vim use the terminal background
+" instead of inserting its own
+highlight Normal ctermbg=NONE
+highlight nonText ctermbg=NONE
+
+
