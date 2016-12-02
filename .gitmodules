@@ -5,3 +5,7 @@
 [submodule ".vim/bundle/Vundle.vim"]
         path = .vim/bundle/Vundle.vim
         url = https://github.com/VundleVim/Vundle.vim
+
+[submodule ".emacs.d"]
+        path = .emacs.d
+        url = https://github.com/maxi-k/.emacs.d
