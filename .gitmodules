@@ -1,9 +1,9 @@
 [submodule "vim/.vim/bundle/molokai"]
-	path = .vim/bundle/molokai
+	path = vim/.vim/bundle/molokai
 	url = https://github.com/tomasr/molokai.git
 
 [submodule "vim/.vim/bundle/Vundle.vim"]
-        path = .vim/bundle/Vundle.vim
+        path = vim/.vim/bundle/Vundle.vim
         url = https://github.com/VundleVim/Vundle.vim
 
 [submodule "vim/.vim/bundle/paredit.vim"]
