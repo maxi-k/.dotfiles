@@ -1,11 +1,68 @@
-[submodule ".vim/bundle/molokai"]
+[submodule "vim/.vim/bundle/molokai"]
 	path = .vim/bundle/molokai
 	url = https://github.com/tomasr/molokai.git
 
-[submodule ".vim/bundle/Vundle.vim"]
+[submodule "vim/.vim/bundle/Vundle.vim"]
         path = .vim/bundle/Vundle.vim
         url = https://github.com/VundleVim/Vundle.vim
 
-[submodule ".emacs.d"]
-        path = .emacs.d
+[submodule "vim/.vim/bundle/paredit.vim"]
+        path = vim/.vim/bundle/paredit.vim
+        url = https://github.com/vim-scripts/paredit.vim.git
+
+[submodule "vim/.vim/bundle/lightline.vim"]
+        path = vim/.vim/bundle/lightline.vim
+        url = https://github.com/itchyny/lightline.vim
+
+[submodule "vim/.vim/bundle/nerdtree"]
+        path = vim/.vim/bundle/nerdtree
+        url = https://github.com/scrooloose/nerdtree
+
+[submodule "vim/.vim/bundle/vim-orgmode"]
+        path = vim/.vim/bundle/vim-orgmode
+        url = https://github.com/jceb/vim-orgmode
+
+[submodule "vim/.vim/bundle/vim-easymotion"]
+        path = vim/.vim/bundle/vim-easymotion
+        url = https://github.com/Lokaltog/vim-easymotion
+
+[submodule "vim/.vim/bundle/vim-surround"]
+        path = vim/.vim/bundle/vim-surround
+        url = https://github.com/tpope/vim-surround
+
+[submodule "vim/.vim/bundle/nerdcommenter"]
+        path = vim/.vim/bundle/nerdcommenter
+        url = https://github.com/scrooloose/nerdcommenter
+
+[submodule "vim/.vim/bundle/syntastic"]
+        path = vim/.vim/bundle/syntastic
+        url = https://github.com/scrooloose/syntastic
+
+[submodule "vim/.vim/bundle/supertab"]
+        path = vim/.vim/bundle/supertab
+        url = https://github.com/ervandew/supertab
+
+[submodule "vim/.vim/bundle/ctrlp.vim"]
+        path = vim/.vim/bundle/ctrlp.vim
+        url = https://github.com/kien/ctrlp.vim
+
+[submodule "vim/.vim/bundle/vim-ctrlspace"]
+        path = vim/.vim/bundle/vim-ctrlspace
+        url = https://github.com/vim-ctrlspace/vim-ctrlspace
+
+[submodule "vim/.vim/bundle/SpotlightOpen"]
+        path = vim/.vim/bundle/SpotlightOpen
+        url = https://github.com/vim-scripts/SpotlightOpen
+
+
+[submodule "vim/.vim/bundle/paredit.vim"]
+        path = vim/.vim/bundle/paredit.vim
+        url = https://github.com/vim-scripts/paredit.vim
+
+[submodule "vim/.vim/bundle/vim-fireplace"]
+        path = vim/.vim/bundle/vim-fireplace
+        url = https://github.com/tpope/vim-fireplace
+
+[submodule "emacs/.emacs.d"]
+        path = emacs/.emacs.d
         url = https://github.com/maxi-k/.emacs.d
