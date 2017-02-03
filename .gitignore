@@ -3,6 +3,6 @@
 .viminfo
 
 # Everything in .xmonad, except config files
-.xmonad/*
-!.xmonad/xmonad.hs
-!.xmonad/xmobar.config
+xmonad/.xmonad/*
+!xmonad/.xmonad/xmonad.hs
+!xmonad/.xmonad/xmobar.config
