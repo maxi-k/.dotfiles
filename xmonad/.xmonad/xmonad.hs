@@ -1,13 +1,20 @@
 import XMonad
 import XMonad.Util.Run
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Actions.WorkspaceNames
+import XMonad.Actions.GroupNavigation
 import XMonad.Layout.Gaps
 import XMonad.Layout.Spacing
 import XMonad.Layout.Minimize
 import XMonad.Layout.NoBorders
+import XMonad.Util.EZConfig ( additionalKeys )
+import qualified Data.Map 
 
-myLayout = tiled ||| full 
+myWorkspaces = map show [1 .. 9 :: Int]
+
+myLayout = tiled ||| full
   where nmaster = 1 -- Default num of windows in master pane
         ratio = 1/2 -- Default ratio of master pane
         delta = 3/100 -- Percent of screen to increment when resizing
@@ -15,15 +22,24 @@ myLayout = tiled ||| full
         full = noBorders Full
         tiled = smartBorders $ minimize $ spacing spacingNum $ gaps  [(U, 33), (D, 10), (L, 10), (R, 10)] $ Tall nmaster delta ratio
 
-myLogHook pipe = workspaceNamesPP xmobarPP { ppOutput = hPutStrLn pipe } >>= dynamicLogWithPP
+myKeys conf@(XConfig {modMask = modm}) = Data.Map.fromList $
+  [ ((modm               , xK_p), spawn "exe=`rofi -show 'combi' -modi combi`") 
+  , ((modm .|. shiftMask , xK_p), spawn "dmenu_run")
+  ]
+
+myLogHook pipe = (workspaceNamesPP xmobarPP { ppOutput = hPutStrLn pipe } >>= dynamicLogWithPP)
+  >> historyHook
+  >> ewmhDesktopsLogHook
 
 myConfig pipe = defaultConfig
   { modMask = mod4Mask -- Use Super instead of Alt
+  , keys =  \c -> myKeys c `Data.Map.union` keys defaultConfig c
   , borderWidth = 2
-  , normalBorderColor = "#00000"
+  , normalBorderColor = "#202020"
   , focusedBorderColor = "#ffa000"
   , layoutHook = myLayout
   , logHook = myLogHook pipe
+  , workspaces = myWorkspaces
   }
 
 main = xmonad . myConfig =<< spawnPipe "xmobar ~/.xmonad/xmobar.config"
