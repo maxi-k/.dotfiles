@@ -1,5 +1,6 @@
 export LC_ALL=en_US.utf-8
 export LANG="$LC_ALL"
+export VISUAL="vim"
 
 test -f ~/.bash_look && source ~/.bash_look
 
