@@ -5,7 +5,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Actions.WorkspaceNames
 import XMonad.Actions.GroupNavigation
-import XMonad.Layout.Gaps
+import XMonad.Layout.Tabbed
 import XMonad.Layout.Spacing
 import XMonad.Layout.Minimize
 import XMonad.Layout.NoBorders
@@ -13,14 +13,20 @@ import XMonad.Layout.ResizableTile
 import XMonad.Util.EZConfig ( additionalKeys )
 import qualified Data.Map
 
+mySpacing :: Int
+mySpacing = 10
+
+toggleSpacing :: Int -> Int
+toggleSpacing 0 = mySpacing
+toggleSpacing _ = 0 
+
+
 myLayout = avoidStruts (tiled ||| full)
   where nmaster = 1 -- Default num of windows in master pane
         ratio = 1/2 -- Default ratio of master pane
         delta = 3/100 -- Percent of screen to increment when resizing
-        spacingNum = 10
         full = noBorders Full
-        tiled = smartBorders . minimize . (spacing spacingNum) $
-                gaps (map (flip (,) spacingNum) [U, D, L, R]) $
+        tiled = smartBorders . minimize . (spacingWithEdge mySpacing) $
                 ResizableTall nmaster delta ratio []
 
 myStatusBar = "xmobar ~/.xmonad/xmobar.config"
@@ -48,8 +54,11 @@ myWorkspaces = clickable . (map xmobarEscape) $
 myKeys conf@(XConfig {modMask = modm}) = Data.Map.fromList $
   [ ((modm               , xK_p), spawn "exe=`rofi -show 'combi' -modi combi`")
   , ((modm .|. shiftMask , xK_p), spawn "dmenu_run")
+  , ((modm               , xK_g), sendMessage $ ModifySpacing toggleSpacing )
   , ((modm               , xK_a), sendMessage MirrorShrink)
   , ((modm               , xK_z), sendMessage MirrorExpand)
+  , ((modm               , xK_m), withFocused minimizeWindow)
+  , ((modm .|. shiftMask , xK_m), sendMessage RestoreNextMinimizedWin)
   ]
 
 myConfig = def
