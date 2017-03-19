@@ -66,3 +66,8 @@
 [submodule "emacs/.emacs.d"]
         path = emacs/.emacs.d
         url = https://github.com/maxi-k/.emacs.d
+
+[submodule "tmux/.tmux/plugins/tpm"]
+        path = tmux/.tmux/plugins/tpm
+        url = https://github.com/tmux-plugins/tpm
+    
