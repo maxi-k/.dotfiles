@@ -1,6 +1,7 @@
 .bash_local
 .tmuxinator
 .viminfo
+leiningen/.lein/repl-history
 
 # Everything in .xmonad, except config files
 xmonad/.xmonad/*
