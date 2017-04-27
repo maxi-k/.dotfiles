@@ -1,0 +1,2 @@
+#!/bin/bash
+du -h $1 | grep "^[\s.0-9]\+G" | sort -n -r | less
