@@ -11,7 +11,7 @@
   :plugins [[lein-exec "0.3.6"]
             [lein-auto "0.1.3"]
             [lein-cooper "1.2.2"]
-            [cider/cider-nrepl "0.14.0"]
+            [cider/cider-nrepl "0.15.0-SNAPSHOT"]
             [refactor-nrepl "2.3.0-SNAPSHOT"]]
   }
  :cuttle {:plugins [[lein-pprint "1.1.1"]]}}
