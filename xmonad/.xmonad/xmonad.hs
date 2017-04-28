@@ -62,8 +62,7 @@ myKeys conf@(XConfig {modMask = modm}) = Data.Map.fromList $
   ]
 
 myConfig = def
-  { terminal = "urxvt"
-  , modMask = mod4Mask -- Use Super instead of Alt
+  { modMask = mod4Mask -- Use Super instead of Alt
   , keys =  \c -> myKeys c `Data.Map.union` keys def c
   , borderWidth = 2
   , normalBorderColor = "#202020"
