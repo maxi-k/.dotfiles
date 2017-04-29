@@ -9,7 +9,7 @@ parse_git_branch() {
 
 # Make the prompt look nice
 # (User Directory git-branch $) with colors (grey yellow yellow grey)
-c_grey=$(tput setaf 237)
+c_grey=$(tput setaf 240)
 c_yellow=$(tput setaf 180)
 c_reset=$(tput sgr0)
 export PS1="\[$c_grey\]\u\[$c_reset\] \[$c_yellow\]\W\$(parse_git_branch)\[$c_reset\] \[$c_grey\]$\[$c_reset\] "
