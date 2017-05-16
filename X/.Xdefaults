@@ -1,0 +1,87 @@
+! ---
+! Xft (font) settings
+! ---
+Xft.dpi                      : 96
+Xft.rgba                     : rgb
+Xft.hinting                  : true
+Xft.hintstyle                : hintslight
+
+! ---
+! URxvt Settings
+! ---
+! Behaviour
+URxvt.loginShell             : true
+URxvt.internalBorder         : 3
+URxvt.saveLines              : 1000
+URxvt.urlLauncher            : chromium-browser
+URxvt.matcher.button         : 1
+! Perl extensions
+URxvt.perl-ext-common        : default,matcher,clipboard
+URxvt.keysym.Shift-Control-C : perl:clipboard:copy
+URxvt.keysym.Shift-Control-V : perl:clipboard:paste
+! Looks
+URxvt.transparent            : false
+URxvt.fading                 : 0
+! Scrollbar
+URxvt.scrollStyle            : rxvt
+URxvt.scrollBar              : false
+! Text
+URxvt.font                   : xft:Hack:size=12
+URxvt*letterSpace            : -1
+
+
+! ---
+! ROFI settings
+! ---
+! Behaviour
+rofi.modi                    :                           run,ssh
+rofi.fuzzy                   :                          true
+rofi.combi-modi              :                     window,run,ssh
+! Looks
+rofi.color-enabled           :                  true
+rofi.color-normal            :	argb:00000000, #D8DEE9 , argb:00000000, #FAC863 , #1B2B34
+rofi.color-urgent            :	argb:00000000, #F99157 , argb:00000000, #F99157 , #1B2B34
+rofi.color-active            :	argb:00000000, #6699CC , argb:00000000, #6699CC , #1B2B34
+rofi.color-window            :	argb:ee222222, #FAC863 , #FAC863
+rofi.separator-style         :                dash
+
+! ---
+! General Colors
+! ---
+
+!special
+*.foreground                 : #c5c8c6
+*.background                 : #202020
+*.cursorColor                : #c5c8c6
+
+! black
+*.color0                     : #282a2e
+*.color8                     : #373b41
+
+! red
+*.color1                     : #a54242
+*.color9                     : #cc6666
+
+! green
+*.color2                     : #8c9440
+*.color10                    : #b5bd68
+
+! yellow
+*.color3                     : #de935f
+*.color11                    : #f0c674
+
+! blue
+*.color4                     : #5f819d
+*.color12                    : #81a2be
+
+! magenta
+*.color5                     : #85678f
+*.color13                    : #b294bb
+
+! cyan
+*.color6                     : #5e8d87
+*.color14                    : #8abeb7
+
+! white
+*.color7                     : #707880
+*.color15                    : #c5c8c6
