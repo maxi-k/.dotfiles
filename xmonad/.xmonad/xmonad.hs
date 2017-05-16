@@ -29,6 +29,7 @@ myLayout = avoidStruts (tiled ||| full)
         tiled = smartBorders . minimize . (spacingWithEdge mySpacing) $
                 ResizableTall nmaster delta ratio []
 
+myTerminal = "urxvt"
 myStatusBar = "xmobar ~/.xmonad/xmobar.config"
 myToggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
 
@@ -62,7 +63,8 @@ myKeys conf@(XConfig {modMask = modm}) = Data.Map.fromList $
   ]
 
 myConfig = def
-  { modMask = mod4Mask -- Use Super instead of Alt
+  { terminal = myTerminal
+  , modMask = mod4Mask -- Use Super instead of Alt
   , keys =  \c -> myKeys c `Data.Map.union` keys def c
   , borderWidth = 2
   , normalBorderColor = "#202020"
