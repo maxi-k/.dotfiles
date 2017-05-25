@@ -71,6 +71,7 @@ myConfig = def
   , focusedBorderColor = "#ffa000"
   , layoutHook = myLayout
   -- , logHook = myLogHook pipe
+  , startupHook = spawn "~/.xmonad/startup-hook"
   , workspaces = myWorkspaces
   }
 
