@@ -1,0 +1,19 @@
+#!/bin/sh
+# Change resolution of output $1 to resolution $2 (format HorizontalxVertical)
+# If only $1 is given, simply set the size to $1
+if [ -z $2 ]; then
+  if [ -z $1 ]; then
+      echo "Usage:
+1 Parameter:\t Resolution
+2 Parameters:\t Display, Resolution.
+To find out the display name, use resolution-list.
+Resolutions are given in the format [Horizontal]x[Vertical]"
+    exit;
+  else
+    xrandr -s $1
+  fi
+else
+  xrandr --output $1 --mode $2
+fi
+# Set the background with feh again if possible
+[ -f ~/.fehbg ] && exec ~/.fehbg
