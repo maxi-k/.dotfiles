@@ -3,6 +3,7 @@ import XMonad.Util.Run
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.SetWMName
 import XMonad.Actions.WorkspaceNames
 import XMonad.Actions.GroupNavigation
 import XMonad.Layout.Tabbed
@@ -71,7 +72,9 @@ myConfig = def
   , focusedBorderColor = "#ffa000"
   , layoutHook = myLayout
   -- , logHook = myLogHook pipe
-  , startupHook = spawn "~/.xmonad/startup-hook"
+  , startupHook = do
+      spawn "~/.xmonad/startup-hook" 
+      setWMName "LG3D"
   , workspaces = myWorkspaces
   }
 
