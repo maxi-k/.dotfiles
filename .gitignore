@@ -8,4 +8,5 @@ xmonad/.xmonad/*
 !xmonad/.xmonad/xmonad.hs
 !xmonad/.xmonad/xmobar.config
 !xmonad/.xmonad/xmonad-session-rc
+!xmonad/.xmonad/*.conf
 /leiningen/.lein/self-installs/leiningen-2.6.1-standalone.jar
