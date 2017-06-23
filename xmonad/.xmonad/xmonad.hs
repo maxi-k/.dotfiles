@@ -54,13 +54,19 @@ myWorkspaces = clickable . (map xmobarEscape) $
                 doubleLts x = [x]
 
 myKeys conf@(XConfig {modMask = modm}) = Data.Map.fromList $
+  -- Rofi with mod+p and dmenu as a fallback with shift+mod+p
   [ ((modm               , xK_p), spawn "exe=`rofi -show 'combi' -modi combi`")
   , ((modm .|. shiftMask , xK_p), spawn "dmenu_run")
+  -- Toggle spacing for current workspace
   , ((modm               , xK_g), sendMessage $ ModifySpacing toggleSpacing )
+  -- Expand / Shrink windows vertically
   , ((modm               , xK_a), sendMessage MirrorShrink)
   , ((modm               , xK_z), sendMessage MirrorExpand)
+  -- Minimization
   , ((modm               , xK_m), withFocused minimizeWindow)
   , ((modm .|. shiftMask , xK_m), sendMessage RestoreNextMinimizedWin)
+  -- Cycle keyboard layouts
+  , ((modm               , xK_v), spawn "~/.dotfiles/bin/x-cycle-layout")
   ]
 
 myConfig = def
