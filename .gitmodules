@@ -71,3 +71,6 @@
         path = tmux/.tmux/plugins/tpm
         url = https://github.com/tmux-plugins/tpm
     
+[submodule "vim/.vim/bundle/vim-elixir"]
+	path = vim/.vim/bundle/vim-elixir
+	url = https://github.com/elixir-lang/vim-elixir.git

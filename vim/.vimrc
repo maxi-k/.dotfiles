@@ -152,6 +152,9 @@ Plugin 'vim-scripts/paredit.vim'
 " Vim Fireplace for clojure|script editing
 Plugin 'tpope/vim-fireplace'
 
+" Support for the elixir language
+Plugin 'elixir-lang/vim-elixir'
+
 " Molokai theme
 Plugin 'tomasr/molokai'
 
