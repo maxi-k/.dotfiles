@@ -30,3 +30,5 @@ test -s "$HOME/.kiex/scripts/kiex" && source "$HOME/.kiex/scripts/kiex" # Load t
 
 # Load .bashrc if it exists
 test -e ~/.bashrc && source ~/.bashrc
+
+export PATH="$HOME/.cargo/bin:$PATH"
