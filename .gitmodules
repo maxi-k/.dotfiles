@@ -74,7 +74,7 @@
         path = tmux/.tmux/plugins/tmux-resurrect
         url = https://github.com/tmux-plugins/tmux-resurrect
 
-[submodule "tmux/.tmux/plugins/tpm"]
+[submodule "tmux/.tmux/plugins/tmux-yank"]
         path = tmux/.tmux/plugins/tmux-yank
         url = https://github.com/tmux-plugins/tmux-yank
     
