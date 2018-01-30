@@ -14,3 +14,6 @@ test -f ~/.bash_aliases && source ~/.bash_aliases
 test -f ~/.bash_local && source ~/.bash_local
 test -s "$HOME/.kiex/scripts/kiex" && source "$HOME/.kiex/scripts/kiex" # Load the kiex elixir version manager
 
+# Load z script
+. ~/.dotfiles/bin/z/z.sh
+
