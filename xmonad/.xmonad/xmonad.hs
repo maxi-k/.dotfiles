@@ -46,7 +46,7 @@ myPP = xmobarPP { ppVisible = xmobarColor "#404040" ""
                 }
 
 myWorkspaces = clickable . (map xmobarEscape) $
-  ["1 \xf108 ","2 \xf120 ","3 \xf268 ","4 \xf0e0 ","5 \xf111 ","6 \xf111 ","7 \xf111 " ,"8 \xf111 ","9 \xf001 "]
+  ["1 \xf108 ","2 \xf120 ","3 \xf269 ","4 \xf0e0 ","5 \xf111 ","6 \xf111 ","7 \xf111 " ,"8 \xf111 ","9 \xf001 "]
   where clickable l = [ "<action=xdotool key super+" ++ show n ++ ">" ++ ws ++ "</action>" | (i,ws) <- zip [1..9] l,
                         let n = i ]
         xmobarEscape = concatMap doubleLts
