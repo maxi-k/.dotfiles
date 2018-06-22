@@ -77,16 +77,19 @@
 [submodule "tmux/.tmux/plugins/tmux-yank"]
         path = tmux/.tmux/plugins/tmux-yank
         url = https://github.com/tmux-plugins/tmux-yank
-    
+
 [submodule "vim/.vim/bundle/vim-elixir"]
 	path = vim/.vim/bundle/vim-elixir
 	url = https://github.com/elixir-lang/vim-elixir.git
+
 [submodule "bin/getquote-crypto"]
 	path = bin/getquote-crypto
-	url = https://github.com/alxjsn/getquote-crypto
+	url = https://github.com/maxi-k/getquote-crypto
+
 [submodule "bin/z"]
 	path = bin/z
 	url = https://github.com/rupa/z
+
 [submodule "vim/.vim/bundle/elm-vim"]
 	path = vim/.vim/bundle/elm-vim
 	url = https://github.com/elmcast/elm-vim.git
