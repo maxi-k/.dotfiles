@@ -87,3 +87,6 @@
 [submodule "bin/z"]
 	path = bin/z
 	url = https://github.com/rupa/z
+[submodule "vim/.vim/bundle/elm-vim"]
+	path = vim/.vim/bundle/elm-vim
+	url = https://github.com/elmcast/elm-vim.git
