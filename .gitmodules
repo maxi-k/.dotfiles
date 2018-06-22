@@ -81,3 +81,9 @@
 [submodule "vim/.vim/bundle/vim-elixir"]
 	path = vim/.vim/bundle/vim-elixir
 	url = https://github.com/elixir-lang/vim-elixir.git
+[submodule "bin/getquote-crypto"]
+	path = bin/getquote-crypto
+	url = https://github.com/alxjsn/getquote-crypto
+[submodule "bin/z"]
+	path = bin/z
+	url = https://github.com/rupa/z

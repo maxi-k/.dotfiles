@@ -147,7 +147,10 @@ Plugin 'vim-ctrlspace/vim-ctrlspace'
 Plugin 'vim-scripts/SpotlightOpen'
 
 " Paredit. Must Have
-Plugin 'vim-scripts/paredit.vim'
+" Plugin 'vim-scripts/paredit.vim'
+
+" Parinfer. Replacement for Paredit
+Plugin 'bhurlow/vim-parinfer'
 
 " Vim Fireplace for clojure|script editing
 Plugin 'tpope/vim-fireplace'
@@ -155,11 +158,17 @@ Plugin 'tpope/vim-fireplace'
 " Support for the elixir language
 Plugin 'elixir-lang/vim-elixir'
 
+" Support for the elm language
+Plugin 'elmcast/elm-vim'
+
 " Molokai theme
 Plugin 'tomasr/molokai'
 
 " End the Vundle init
 call vundle#end()
+
+" NetLogo Syntax
+au! BufRead,BufNewFile *.nlogo setfiletype nlogo
 
 " Easymotion
 "map  <Leader>f <Plug>(easymotion-bd-f)
