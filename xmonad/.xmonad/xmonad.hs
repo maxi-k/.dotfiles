@@ -63,8 +63,8 @@ myKeys conf@(XConfig {modMask = modm}) = Data.Map.fromList $
   , ((modm               , xK_a), sendMessage MirrorShrink)
   , ((modm               , xK_z), sendMessage MirrorExpand)
   -- Minimization
-  , ((modm               , xK_m), withFocused minimizeWindow)
-  , ((modm .|. shiftMask , xK_m), sendMessage RestoreNextMinimizedWin)
+--  , ((modm               , xK_m), withFocused minimizeWindow)
+--  , ((modm .|. shiftMask , xK_m), sendMessage RestoreNextMinimizedWin)
   -- Cycle keyboard layouts
   , ((modm               , xK_v), spawn "~/.dotfiles/bin/x-cycle-layout")
   ]

@@ -11,3 +11,5 @@ xmonad/.xmonad/*
 !xmonad/.xmonad/*.conf
 /leiningen/.lein/self-installs/*
 /leiningen/.lein/self-installs
+/X/.config/albert/core.db
+/X/.config/albert/last_used_version
