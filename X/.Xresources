@@ -26,7 +26,7 @@ URxvt.fading                 : 0
 URxvt.scrollStyle            : rxvt
 URxvt.scrollBar              : false
 ! Text
-URxvt.font                   : xft:DejaVu Sans Mono:size=13
+URxvt.font                   : xft:DejaVu Sans Mono:size=11
 URxvt*letterSpace            : -1
 
 ! ---
