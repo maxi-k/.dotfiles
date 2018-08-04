@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Reset screen temperature
+redshift -x
