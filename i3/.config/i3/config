@@ -41,8 +41,12 @@ bindsym $mod+Shift+q kill
 exec_always --no-startup-id "test -f ~/.fehbg && source ~/.fehbg"
 # exec_always --no-startup-id "test -f $(which albert) && albert"
 
+# Set the screen according to arandr generated
+# config file if it exists under ~/.screenlayouts/default.sh
+exec_always --no-startup-id "~/.screenlayout/default.sh"
+
 # start dmenu (a program launcher)
-# bindsym $mod+d exec dmenu_run 
+# bindsym $mod+d exec dmenu_run
 bindsym $mod+p exec "rofi -modi combi -show combi"
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
@@ -72,6 +76,10 @@ bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
+
+# Move between different monitors
+bindsym $mod+o move container to output right
+bindsym $mod+Shift+o move workspace to output right
 
 # split in horizontal orientation
 bindsym $mod+b split h
@@ -177,10 +185,14 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available) #i3status
 # bar {
-#         i3bar_command "polybar example" 
+#         i3bar_command "polybar example"
 # }
 # Use polybar instead
-exec_always --no-startup-id "~/.config/polybar/start.sh"
+# exec_always --no-startup-id "~/.config/polybar/start.sh"
+bar {
+        i3bar_command "~/.config/polybar/start.sh"
+        tray_output primary
+}
 
 # i3gaps
 
