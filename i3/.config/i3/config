@@ -155,6 +155,9 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 exec_always --no-startup-id "betterlockscreen -u ~/.config/wallpaper.jpg -b 0.1"
 bindsym $mod+Shift+u exec "betterlockscreen -l blur"
 
+# switch layouts
+bindsym $mod+u exec "~/.dotfiles/bin/x-cycle-layout"
+
 # resize window (you can also use the mouse for that)
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
