@@ -25,27 +25,23 @@ set -g status-interval 5
 set -g window-status-format " #I:#W "
 
 # default statusbar colors
-set-option -g status-bg $tm_inactive_bg #base02
-set-option -g status-left-bg $tm_feature_bg #base02
-set-option -g status-left-fg $tm_feature_fg
+set-option -g status-style bg=$tm_inactive_bg #base02
+set-option -g status-left-style bg=$tm_feature_bg,fg=$tm_feature_fg #base02
 
 # default window title colors
-set-window-option -g window-status-fg $tm_inactive_fg #base0
-set-window-option -g window-status-bg $tm_inactive_bg
+set-window-option -g window-status-style bg=$tm_inactive_bg,fg=$tm_inactive_fg #base0
 #set-window-option -g window-status-attr dim
 
 # active window title colors
+set-window-option -g window-status-current-style bg=$tm_active_bg,fg=$tm_active_fg
 set-window-option -g window-status-current-format " #[bold]#I:#W "
-set-window-option -g window-status-current-fg $tm_active_fg #orange
-set-window-option -g window-status-current-bg $tm_active_bg
 
 # pane border
-set-option -g pane-border-fg $tm_inactive_bg #base02
-set-option -g pane-active-border-fg $tm_active_bg_low
+set-option -g pane-border-style fg=$tm_inactive_bg #base02
+set-option -g pane-active-border-style fg=$tm_active_bg_low
 
 # message text
-set-option -g message-bg $tm_inactive_bg #base02
-set-option -g message-fg $tm_active_fg #orange
+set-option -g message-style bg=$tm_inactive_bg,fg=$tm_active_fg #base02
 
 # pane number display
 set-option -g display-panes-active-colour $tm_feature_pop
