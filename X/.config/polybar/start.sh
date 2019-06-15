@@ -16,4 +16,5 @@ while pgrep -x polybar >/dev/null; do sleep 1; done
 ##   MONITOR=$m polybar bottom &
 ## done
 
-MONITOR=$(xrandr | grep "primary" | awk '{ print $1 }') polybar bottom &
+# MONITOR=$(xrandr | grep "primary" | awk '{ print $1 }') \
+polybar bottom &
