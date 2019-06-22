@@ -20,6 +20,8 @@ if [ -x "$(command -v brew)" ]; then
   ### ASDF_DATA_DIR=`brew --prefix asdf`
   # instead, setup manually
   export ASDF_DATA_DIR="/usr/local/opt/asdf"
+elif [ -d "/opt/asdf-vm" ]; then
+  export ASDF_DATA_DIR="/opt/asdf-vm"
 else
   export ASDF_DATA_DIR="$HOME/.asdf"
 fi
