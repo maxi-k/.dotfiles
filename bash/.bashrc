@@ -20,6 +20,8 @@ if [ -x "$(command -v brew)" ]; then
   ### ASDF_DATA_DIR=`brew --prefix asdf`
   # instead, setup manually
   export ASDF_DATA_DIR="/usr/local/opt/asdf"
+elif [ -d "/opt/asdf-vm" ]; then
+  export ASDF_DATA_DIR="/opt/asdf-vm"
 else
   export ASDF_DATA_DIR="$HOME/.asdf"
 fi
@@ -33,10 +35,12 @@ fi
 # Load z script
 . ~/.dotfiles/bin/z/z.sh
 
+export PATH=$HOME/.npm/bin:$PATH
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # This loads nvm with bash completion
 # export NVM_DIR="$HOME/.nvm"
 # [ -s "$(brew --prefix nvm)/nvm.sh" ] && \. "$(brew --prefix nvm)/nvm.sh"
 # [ -s "$(brew --prefix nvm)/bash_completion" ] && \. "$(brew --prefix nvm)/bash_completion"
-
-

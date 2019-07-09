@@ -44,6 +44,7 @@ exec_always --no-startup-id "test -f ~/.fehbg && source ~/.fehbg"
 # Set the screen according to arandr generated
 # config file if it exists under ~/.screenlayouts/default.sh
 exec_always --no-startup-id "~/.screenlayout/default.sh"
+workspace 1 output LVDS
 
 # start dmenu (a program launcher)
 # bindsym $mod+d exec dmenu_run

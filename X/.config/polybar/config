@@ -75,7 +75,7 @@ cursor-scroll = ns-resize
 [bar/bottom]
 inherit         = bar/base
 bottom          = true
-monitor         = ${env:MONITOR}
+# monitor         = ${env:MONITOR}
 
 [module/xwindow]
 type = internal/xwindow
