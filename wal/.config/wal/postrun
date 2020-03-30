@@ -1,0 +1,14 @@
+#!/bin/sh
+
+source "${HOME}/.cache/wal/colors.sh"
+
+mkdir -p  "${HOME}/.config/dunst"
+mkdir -p  "${HOME}/.config/zathura"
+ln -sf    "${HOME}/.cache/wal/dunstrc"    "${HOME}/.config/dunst/dunstrc"
+ln -sf    "${HOME}/.cache/wal/zathurarc"    "${HOME}/.config/zathura/zathurarc"
+
+xrdb -override "${HOME}/.cache/wal/colors.Xresources
+
+# Restart dunst, link the config
+pkill dunst
+dunst &
