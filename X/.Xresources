@@ -15,6 +15,7 @@ URxvt.internalBorder         : 3
 URxvt.saveLines              : 1000
 URxvt.urlLauncher            : chromium-browser
 URxvt.matcher.button         : 1
+Urxvt.cursorBlink            : 0
 ! Perl extensions
 URxvt.perl-ext-common        : default,matcher,clipboard
 URxvt.keysym.Shift-Control-C : perl:clipboard:copy
@@ -75,6 +76,3 @@ rofi.color-urgent:                   argb:00000000,  #F99157 , argb:00000000,  #
 rofi.color-active:                   argb:00000000,  #6699CC , argb:00000000,  #6699CC ,  #1B2B34
 rofi.color-window:                   argb:ee222222,  #FAC863 ,  #FAC863
 rofi.separator-style:                dash
-
-
-
