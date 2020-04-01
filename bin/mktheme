@@ -9,7 +9,7 @@
 # Location of link to wallpaper link.
 # From lukesmith.xyz's voidrice
 confdir=${XDG_CONFIG_HOME:-$HOME/.config}
-bgloc="${XDG_CACHE_HOME:-$HOME/.cache/}/bg"
+bgloc="${XDG_CACHE_HOME:-$HOME/.cache}/bg"
 
 [ -f "$1" ] && ln -sf "$(readlink -f "$1")" "$bgloc" && notify-send -i "$bgloc" "Changing wallpaper..."
 
@@ -19,6 +19,4 @@ bgloc="${XDG_CACHE_HOME:-$HOME/.cache/}/bg"
 [[ -z "$NO_DYNAMIC_COLORS" ]] && wal -s -i "$(readlink -f "$bgloc")" -o "$confdir/wal/postrun" >/dev/null 2>&1
 
 xwallpaper --zoom "$bgloc"
-
-# Reset color that are supposed to stay constant
-[ -e $confdir/X/constant-config ] && xrdb -override $confdir/X/constant-config
+which betterlockscreen &>/dev/null && betterlockscreen -u "$(readlink -f "$bgloc")" -b 0.1 &>/dev/null &
