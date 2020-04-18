@@ -84,7 +84,7 @@ scrolling:
   # to allow mouse scrolling for applications like `man`.
   #
   # Specifying `0` will disable faux scrolling.
-  faux_multiplier: 3
+  multiplier: 3
 
   # Scroll to the bottom when new text is written to the terminal.
   auto_scroll: false
@@ -532,6 +532,10 @@ key_bindings:
   #- { key: Q,      mods: Command,         action: Quit             }
   #- { key: W,      mods: Command,         action: Quit             }
   #- { key: F,      mods: Command|Control, action: ToggleFullscreen }
+
+  # (own Bindings)
+  - { key: B,        mods: Alt,     chars: "\x1bb"                  }
+  - { key: F,        mods: Alt,     chars: "\x1bf"                  }
 
   - { key: Paste,                   action: Paste                            }
   - { key: Copy,                    action: Copy                             }
