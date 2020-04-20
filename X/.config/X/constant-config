@@ -15,6 +15,7 @@ URxvt.internalBorder         : 3
 URxvt.saveLines              : 1000
 URxvt.urlLauncher            : chromium-browser
 URxvt.matcher.button         : 1
+Urxvt.cursorBlink            : 0
 ! Perl extensions
 URxvt.perl-ext-common        : default,matcher,clipboard
 URxvt.keysym.Shift-Control-C : perl:clipboard:copy
@@ -29,14 +30,10 @@ URxvt.scrollBar              : false
 URxvt.font                   : xft:DejaVu Sans Mono:size=11
 URxvt*letterSpace            : -1
 
-! ---
-! General Colors
-! ---
-
-! ! special
-*.foreground                 : #cccccc
-*.background                 : #202020
-*.cursorColor                : #c5c8c6
+URxvt*foreground                 : #cccccc
+URxvt*background                 : #202020
+URxvt*cursorColor                : #c5c8c6
+URxvt*borderColor                : #202020
 
 ! black
 URxvt*color0  : #2E3436
@@ -62,19 +59,3 @@ URxvt*color14 : #34E2E2
 ! white
 URxvt*color7  : #D3D7CF
 URxvt*color15 : #EEEEEC
-
-! ROFI settings
-!
-rofi.modi:                           run,ssh
-rofi.fuzzy:                          true
-rofi.combi-modi:                     window,run,ssh
-! ROFI Color theme
-rofi.color-enabled:                  true
-rofi.color-normal:                   argb:00000000,  #D8DEE9 , argb:00000000,  #FAC863 ,  #1B2B34
-rofi.color-urgent:                   argb:00000000,  #F99157 , argb:00000000,  #F99157 ,  #1B2B34
-rofi.color-active:                   argb:00000000,  #6699CC , argb:00000000,  #6699CC ,  #1B2B34
-rofi.color-window:                   argb:ee222222,  #FAC863 ,  #FAC863
-rofi.separator-style:                dash
-
-
-

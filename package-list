@@ -1,0 +1,19 @@
+# Used for simple (partial) installation of dotfiles
+stow
+
+# Required for i3 / tiling wm setup
+i3
+betterlockscreen
+wal
+dunst
+rofi
+xwallpaper
+redshift
+
+# Used for working
+rxvt-unicode
+emacs
+vim
+tmux
+ttf-dejavu
+

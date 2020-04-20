@@ -62,9 +62,9 @@
         path = vim/.vim/bundle/vim-fireplace
         url = https://github.com/tpope/vim-fireplace
 
-[submodule "emacs/.emacs.d"]
-        path = emacs/.emacs.d
-        url = https://github.com/maxi-k/.emacs.d
+[submodule "vim/.vim/bundle/vim-elixir"]
+	path = vim/.vim/bundle/vim-elixir
+	url = https://github.com/elixir-lang/vim-elixir.git
 
 [submodule "tmux/.tmux/plugins/tpm"]
         path = tmux/.tmux/plugins/tpm
@@ -74,17 +74,13 @@
         path = tmux/.tmux/plugins/tmux-resurrect
         url = https://github.com/tmux-plugins/tmux-resurrect
 
-[submodule "tmux/.tmux/plugins/tmux-resurrect"]
-        path = tmux/.tmux/plugins/tmux-continuum
-        url = https://github.com/tmux-plugins/tmux-continuum
-
 [submodule "tmux/.tmux/plugins/tmux-yank"]
         path = tmux/.tmux/plugins/tmux-yank
         url = https://github.com/tmux-plugins/tmux-yank
 
-[submodule "vim/.vim/bundle/vim-elixir"]
-	path = vim/.vim/bundle/vim-elixir
-	url = https://github.com/elixir-lang/vim-elixir.git
+[submodule "tmux/.tmux/plugins/tmux-continuum"]
+	path = tmux/.tmux/plugins/tmux-continuum
+	url = https://github.com/tmux-plugins/tmux-continuum
 
 [submodule "bin/getquote-crypto"]
 	path = bin/getquote-crypto
@@ -97,3 +93,7 @@
 [submodule "vim/.vim/bundle/elm-vim"]
 	path = vim/.vim/bundle/elm-vim
 	url = https://github.com/elmcast/elm-vim.git
+
+[submodule "emacs/.emacs.d"]
+        path = emacs/.emacs.d
+        url = https://github.com/maxi-k/.emacs.d

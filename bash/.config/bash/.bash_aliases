@@ -4,6 +4,7 @@
 # ls
 alias la='ls -a'
 alias lla='ls -la'
+
 # copy current directory to clipboard
 alias cdc='pwd | pbcopy'
 # switch to directory from clipboard
@@ -11,6 +12,9 @@ alias cdp='cd $(pbpaste)'
 
 ## Emacs shortcuts
 alias ec='emacsclient -nw'
+
+## Vi(m) shortcuts
+which "vim" &>/dev/null && alias vi='vim' 
 
 ## Tmux shortcuts
 alias tml="tmux list-sessions" # list sessions
@@ -20,6 +24,3 @@ alias tmk="tmux kill-session -t $1" # kill session
 ## Haskell
 alias stack-watch="stack build --file-watch --copy-bins"
 
-## Java
-# Version management using jabba
-alias jvm='jabba'

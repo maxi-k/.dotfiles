@@ -8,16 +8,14 @@
 ;=====================================================
 
 [colors]
-;background = ${xrdb:color0:#222}
-background = #222
+background = ${xrdb:color0:#222}
 background-alt = #444
-;foreground = ${xrdb:color7:#222}
-foreground = #dfdfdf
+foreground = ${xrdb:color7:#dfdfdf}
 foreground-alt = #555
 ; default: #ffb52a
-primary = #4c7899 
-secondary = #e60053
-alert = #bd2c40
+primary = ${xrdb:color1:#4c7899}
+secondary = ${xrdb:color3:#e60053}
+alert = #{xrdb:color4:#bd2c40}
 
 [bar/base]
 ;monitor = ${env:MONITOR:HDMI-1}
