@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script does the following:
 #	Run by itself, set the wallpaper (at X start).
@@ -18,5 +18,4 @@ bgloc="${XDG_CACHE_HOME:-$HOME/.cache}/bg"
 # If pywal is installed, use it.
 [[ -z "$NO_DYNAMIC_COLORS" ]] && wal -s -i "$(readlink -f "$bgloc")" -o "$confdir/wal/postrun" >/dev/null 2>&1
 
-xwallpaper --zoom "$bgloc"
-which betterlockscreen &>/dev/null && betterlockscreen -u "$(readlink -f "$bgloc")" -b 0.1 &>/dev/null &
+xwallpaper --zoom "$bgloc" --no-randr
