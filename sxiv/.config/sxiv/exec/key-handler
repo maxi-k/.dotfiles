@@ -1,0 +1,13 @@
+#!/bin/bash
+
+change_theme() {
+  read file
+  image="$(pwd)/$file"
+  echo "Calling $(which mktheme) $image"
+  [ -e $image ] && mktheme $image && notify-send "Changed theme based on wallpaper $file" || notify-send "Could change theme with $image"
+}
+
+echo "Read key $1"
+case "$1" in
+  w|W|b|B)   change_theme ;;
+esac
