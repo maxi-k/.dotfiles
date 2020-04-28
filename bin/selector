@@ -1,9 +1,13 @@
 #!/bin/sh
-if [ -f $(which rofi) ]; then 
+if $(command -v rofi >/dev/null 2>&1); then
   themefile=~/.cache/wal/colors-rofi-dark.rasi
-  [ -f $themefile ] && rofi -dmenu -theme $themefile || rofi -dmenu 
-elif [ -f $(which dmenu) ]; then
-  dmenu
+  if [ -f $themefile ]; then 
+    rofi -dmenu -theme $themefile "$@"
+  else 
+    rofi -dmenu "$@"
+  fi
+elif $(command -v dmenu >/dev/null 2>&1); then
+  dmenu "$@"
 else
   notify-send "no launcher found" 
 fi

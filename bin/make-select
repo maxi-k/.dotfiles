@@ -1,0 +1,21 @@
+#!/bin/bash
+MAKE=$(which make)
+# $MAKE -pRrq -f : 2>/dev/null \
+#   | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' \
+#   | sort \
+#   | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' \
+#   | echo
+tasks=`$MAKE -pRrq : 2>/dev/null \
+  | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' \
+  | sort \
+  | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' \
+  | sed 's/\(.*\).$/\1/'`
+
+select_tasks() {
+  echo $tasks \
+    | tr " " "\n" \
+    | selector -p "Task" 2>/dev/null \
+    | xargs -r make 
+}
+
+[ ! -z "$tasks" ] && select_tasks || echo "No tasks found"
