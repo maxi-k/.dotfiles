@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Make sure emacs is started
+emacsclient -nw -e '(prog (magit-status) (evil-motion-state))' 
