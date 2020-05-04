@@ -104,68 +104,65 @@ set wildmenu
 " ---- THE PLUGIN CUSTOMIZATIONS ---- "
 
 " Include Vundle in the runtimepath and init 
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/bundle/vim-plug
 
 "  Start Vundle
-call vundle#begin()
-
-" Let Vundle manage Vundle
-Plugin 'gmarik/Vundle.vim'
+call plug#begin('~/.vim/bundle')
 
 " Lightline plugin
-Plugin 'itchyny/lightline.vim'
+Plug 'itchyny/lightline.vim'
 
 " NerdTREE plugin
-Plugin 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree'
 
 " Org Mode clone for vim
-Plugin 'jceb/vim-orgmode'
+Plug 'jceb/vim-orgmode'
 
 " Easymotion plugin
-Plugin 'Lokaltog/vim-easymotion'
+Plug 'Lokaltog/vim-easymotion'
 
 " Surround plugin
-Plugin 'tpope/vim-surround'
+Plug 'tpope/vim-surround'
 
 " Easy Commenting
-Plugin 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdcommenter'
 
 " Syntastic linting plugin
-Plugin 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic'
 
 " Supertab plugin
-Plugin 'ervandew/supertab'
+Plug 'ervandew/supertab'
 
 " Control-p plugin
-Plugin 'kien/ctrlp.vim'
+Plug 'kien/ctrlp.vim'
 
 " Ctrl-Space
-Plugin 'vim-ctrlspace/vim-ctrlspace'
+Plug 'vim-ctrlspace/vim-ctrlspace'
 
 " Find files with Spotlight
 " Commands: :SpotEdit <file>, :SpotSplit <file>, :SpotSource <file>, :SpotRead <file>
-Plugin 'vim-scripts/SpotlightOpen'
+Plug 'vim-scripts/SpotlightOpen'
 
 " Paredit. Must Have
 " Plugin 'vim-scripts/paredit.vim'
 
 " Parinfer. Replacement for Paredit
-Plugin 'bhurlow/vim-parinfer'
+Plug 'bhurlow/vim-parinfer'
 
 " Vim Fireplace for clojure|script editing
-Plugin 'tpope/vim-fireplace'
+Plug 'tpope/vim-fireplace'
 
 " Support for the elixir language
-Plugin 'elixir-lang/vim-elixir'
+Plug 'elixir-lang/vim-elixir'
 
 " Support for the elm language
-Plugin 'elmcast/elm-vim'
+Plug 'elmcast/elm-vim'
 
 " Molokai theme
-Plugin 'tomasr/molokai'
+Plug 'tomasr/molokai'
 
-" End the Vundle init
-call vundle#end()
+" End the Plug init
+call plug#end()
 
 " NetLogo Syntax
 au! BufRead,BufNewFile *.nlogo setfiletype nlogo

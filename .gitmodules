@@ -97,3 +97,9 @@
 [submodule "emacs/.emacs.d"]
         path = emacs/.emacs.d
         url = https://github.com/maxi-k/.emacs.d
+[submodule "vim/.vim/autoload"]
+	path = vim/.vim/autoload
+	url = https://github.com/junegunn/vim-plug
+[submodule "vim/.vim/bundle/vim-parinfer"]
+	path = vim/.vim/bundle/vim-parinfer
+	url = https://github.com/bhurlow/vim-parinfer.git
