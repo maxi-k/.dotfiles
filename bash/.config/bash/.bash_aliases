@@ -14,7 +14,8 @@ alias cdp='cd $(pbpaste)'
 alias ec='emacsclient -nw'
 
 ## Vi(m) shortcuts
-which "vim" &>/dev/null && alias vi='vim' 
+command -v vim &>/dev/null && alias vi='vim' 
+command -v nvim &>/dev/null && alias vi='nvim'
 
 ## Tmux shortcuts
 alias tml="tmux list-sessions" # list sessions
