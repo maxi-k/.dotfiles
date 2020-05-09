@@ -9,14 +9,13 @@ tm_feature_bg=$tm_inactive_bg
 tm_feature_fg=colour180
 tm_feature_pop=colour33
 
-tm_tunes="#[fg=$tm_feature_fg]#(osascript ~/.dotfiles/applescript/tunes.scpt)"
 tm_battery="#(~/.dotfiles/bin/battery_indicator.sh)"
-tm_date="#[fg=$tm_inactive_fg] %R %d %b"
+tm_date="#[fg=$tm_inactive_fg] %R | %a %d %b"
 tm_host="#[fg=$tm_feature_fg,bold]#h"
 tm_session_name="#[fg=$tm_feature_fg,bold]$tm_icon #S"
 
 set -g status-left ' '$tm_session_name' '
-set -g status-right $tm_tunes' '$tm_date' '$tm_host
+set -g status-right ' '$tm_date' '$tm_host
 
 set -g status-left-length 32
 set -g status-right-length 150
