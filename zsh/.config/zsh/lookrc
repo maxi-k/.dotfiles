@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+# git branch in prompt
+parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+# enable command substition in prompt (parse_git_branch) 
+setopt PROMPT_SUBST
+
+# set the prompt
+PS1='%F{240}%n %F{180}%1~$(parse_git_branch) %F{240}%(!.#.$)%f '
