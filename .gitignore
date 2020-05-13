@@ -1,4 +1,4 @@
-.bash_local
+*/.config/*/localrc
 .tmuxinator
 .viminfo
 vim/.vim/sessions/

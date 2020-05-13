@@ -1,27 +1,25 @@
-#!/bin/bash
+#!/bin/sh
 
-## General Shortcuts
 # ls
 alias la='ls -a'
 alias lla='ls -la'
 
+## Clipboard
 # copy current directory to clipboard
 alias cdc='pwd | pbcopy'
 # switch to directory from clipboard
 alias cdp='cd $(pbpaste)'
 
-## Emacs shortcuts
+## Editors
+# Emacs
 alias ec='emacsclient -nw'
 
-## Vi(m) shortcuts
+# Vi(m) 
 command -v vim &>/dev/null && alias vi='vim' 
 command -v nvim &>/dev/null && alias vi='nvim'
 
-## Tmux shortcuts
+## Tmux 
 alias tml="tmux list-sessions" # list sessions
 alias tma="tmux -2 attach -t $1" # attach session
 alias tmk="tmux kill-session -t $1" # kill session
-
-## Haskell
-alias stack-watch="stack build --file-watch --copy-bins"
 
