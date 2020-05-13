@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+# Make C-a and C-e work properly
+bindkey -e

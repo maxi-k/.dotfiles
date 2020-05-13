@@ -13,6 +13,7 @@ export PATH=$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin
 
 # Load in look config, aliases and local config
 test -f ~/.config/zsh/lookrc &&  source ~/.config/zsh/lookrc
+test -f ~/.config/zsh/keyrc && source ~/.config/zsh/keyrc
 test -f ~/.config/shell/aliasrc && source ~/.config/shell/aliasrc 
 test -f ~/.config/shell/localrc && source ~/.config/shell/localrc 
 
