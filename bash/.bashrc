@@ -2,11 +2,12 @@ export LC_ALL=en_US.UTF-8
 export LANG="$LC_ALL"
 export VISUAL="vim"
 export EDITOR="emacsclient -nw"
+export GPG_TTY=$(tty)
 
 # Load in look config, aliases and local config
-test -f ~/.config/bash/.bash_look && source ~/.config/bash/.bash_look
-test -f ~/.config/bash/.bash_aliases && source ~/.config/bash/.bash_aliases
-test -f ~/.config/bash/.bash_local && source ~/.config/bash/.bash_local
+test -f ~/.config/bash/lookrc &&  source ~/.config/bash/lookrc
+test -f ~/.config/shell/aliasrc && source ~/.config/shell/aliasrc 
+test -f ~/.config/shell/localrc && source ~/.config/shell/localrc 
 
 test -f ~/.search/search_wrapper.sh && source ~/.search/search_wrapper.sh
 
@@ -20,7 +21,7 @@ else
 fi
 
 [ -f "$ASDF_DATA_DIR/asdf.sh" ] && source "$ASDF_DATA_DIR/asdf.sh" || echo "asdf not found"
-[ -f "$ASDF_DATA_DIR/completions/asdf.bash" ] && source "$ASDF_DATA_DIR/completions/asdf.bash" || echo "asdf completions not found"
+# [ -f "$ASDF_DATA_DIR/completions/asdf.bash" ] && source "$ASDF_DATA_DIR/completions/asdf.bash" || echo "asdf completions not found"
 
 # Load z script
 . ~/.dotfiles/bin/z/z.sh
