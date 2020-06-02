@@ -1,0 +1,14 @@
+#!/bin/sh
+export DOTFILES_XPROFILE_LOADED="true"
+
+[ -f ${HOME}/.config/shell/profile ] && [ -z $DOTFILES_PROFILE_LOADED ] && source ${HOME}/.config/shell/profile
+
+[ -e ${HOME}/.config/X/default-config ] && xrdb ${HOME}/.config/X/default-config 
+[ -f ${HOME}/.config/screenlayout ] && ${HOME}/.config/screenlayout 
+
+# [ -e ${HOME}/.config/polybar/start.sh ] && ${HOME}/.config/polybar/start.sh 
+
+pgrep dunst || dunst &  # Dunst the messaging service
+mktheme & # Create a theme for this session
+
+export _JAVA_AWT_WM_NONREPARENTING=1 

@@ -1,5 +1,6 @@
 #!/bin/bash
-stow bash
+stow shell
+stow zsh
 stow git
 stow tmux
 stow vim

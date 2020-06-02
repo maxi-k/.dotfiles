@@ -1,15 +1,6 @@
 #!/bin/zsh
 
-# General variables
-export LC_ALL=en_US.UTF-8
-export LANG="$LC_ALL"
-export VISUAL="vim"
-export EDITOR="emacsclient -nw"
 export GPG_TTY=$(tty)
-
-# Setup PATH
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH
-export PATH=$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin
 
 # Load in look config, aliases and local config
 test -f ~/.config/zsh/lookrc &&  source ~/.config/zsh/lookrc

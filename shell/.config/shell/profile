@@ -1,0 +1,17 @@
+#!/bin/sh
+
+export DOTFILES_PROFILE_LOADED="yes"
+
+# General variables
+export LC_ALL=en_US.UTF-8
+export LANG="$LC_ALL"
+export VISUAL="vim"
+export EDITOR="emacsclient -nw"
+export READER="zathura"
+export GPG_TTY=$(tty)
+
+# Setup PATH
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH
+export PATH=$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin
+
+[ -f ~/.config/shell/profile.local ] && source ${HOME}/.config/shell/profile.local

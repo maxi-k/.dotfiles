@@ -1,0 +1,4 @@
+#!/bin/sh
+test -f ${HOME}/.config/polybar/start.sh && \
+  ${HOME}/.config/polybar/start.sh || \
+  echo "Polybar not found"

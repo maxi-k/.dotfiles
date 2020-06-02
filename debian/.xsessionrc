@@ -1,0 +1,3 @@
+#!/bin/sh
+test -f ${HOME}/.xprofile && source ${HOME}/.xprofile
+export PATH="$PATH:/snap/bin"
