@@ -1,0 +1,14 @@
+#!/bin/sh
+
+server=${1:-"8.8.8.8"}
+search=${2:-"bytes"}
+printf "%s" "waiting for $server using search-string '$search'..."
+
+notifyuser() {
+  msg="Connected to $server!"
+  printf "\n$msg\n" 
+  command -v notify-send 1>/dev/null && notify-send $msg 
+  command -v terminal-notifier 1>/dev/null && terminal-notifier -sound "default" -message $msg 
+}
+
+ping $server | grep -q $search && notifyuser
