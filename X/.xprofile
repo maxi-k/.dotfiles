@@ -8,7 +8,8 @@ export DOTFILES_XPROFILE_LOADED="true"
 
 # [ -e ${HOME}/.config/polybar/start.sh ] && ${HOME}/.config/polybar/start.sh 
 
-pgrep dunst || dunst &  # Dunst the messaging service
-mktheme & # Create a theme for this session
+command -v dunst && (pgrep dunst || dunst) &  # Dunst the messaging service
+command -v mktheme && mktheme & # Create a theme for this session
+command -v unclutter && unclutter & # Hide mouse cursor when unused
 
 export _JAVA_AWT_WM_NONREPARENTING=1 
