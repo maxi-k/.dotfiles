@@ -30,7 +30,7 @@ font pango:DejaVu Sans Mono 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec alacritty 
+bindsym $mod+Return exec alacritty
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -179,7 +179,7 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Use polybar 
+# Use polybar
 exec_always --no-startup-id "$HOME/.config/i3/session || notify-send \"could not load polybar\""
 
 # ---------------------------------------------
@@ -231,3 +231,11 @@ client.background       $all_bg
 # client.urgent           #2F343A #900000 #FFFFFF #900000   #900000
 # client.placeholder      #000000 #0C0C0C #FFFFFF #000000   #0C0C0C
 # client.background       #FFFFFF
+
+
+# Spotify media keys
+# Spotify related key bindings
+bindsym XF86AudioPlay exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause"
+bindsym XF86AudioStop exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Stop"
+bindsym XF86AudioPrev exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous"
+bindsym XF86AudioNext exec "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next"
