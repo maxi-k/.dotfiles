@@ -4,6 +4,7 @@
 rofi.modi:                           run,ssh
 rofi.fuzzy:                          true
 rofi.combi-modi:                     window,run,ssh
+rofi.terminal:                       alacritty
 ! ROFI Color theme
 rofi.color-enabled:                  true
 rofi.color-normal:                   argb:00000000,  #D8DEE9 , argb:00000000,  #FAC863 ,  #1B2B34
