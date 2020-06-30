@@ -1,0 +1,18 @@
+# Cycle keyboard layout
+super + u
+    x-cycle-layout && command -v notify-send 1>/dev/null 2>&1 && notify-send "Cycled Layout"
+
+# Lock the screen
+super + shift + u
+    lock
+
+# Audio Controls
+XF86AudioMute
+    amixer sset Master toggle
+
+XF86Audio{Raise,Lower}Volume
+    amixer sset Master 5%{+,-}
+
+# Spotify media keys
+XF86Audio{Play,Stop,Prev,Next}
+    dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.{PlayPause,Stop,Previous,Next}
