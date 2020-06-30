@@ -13,6 +13,13 @@ XF86AudioMute
 XF86Audio{Raise,Lower}Volume
     amixer sset Master 5%{+,-}
 
+super + shift + b
+    $TERMINAL -e "bluetoothctl"
+
+super + shift + r
+    pkill -USR1 -x sxhkd && command -v notify-send && notify-send 1>/dev/null 2>&1 "Reloaded hotkeys"
+
 # Spotify media keys
 XF86Audio{Play,Stop,Prev,Next}
     dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.{PlayPause,Stop,Previous,Next}
+
