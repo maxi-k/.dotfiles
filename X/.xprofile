@@ -11,6 +11,6 @@ export DOTFILES_XPROFILE_LOADED="true"
 command -v dunst && (pgrep dunst || dunst) &  # Dunst the messaging service
 command -v mktheme && mktheme & # Create a theme for this session
 command -v unclutter && unclutter & # Hide mouse cursor when unused
-command -v sxhkd & sxhkd & # Bind Hotkeys
+command -v sxhkd && sxhkd & # Bind Hotkeys
 
 export _JAVA_AWT_WM_NONREPARENTING=1 
