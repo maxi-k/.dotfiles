@@ -23,3 +23,5 @@ fi
 test -f ~/.dotfiles/bin/z/z.sh && . ~/.dotfiles/bin/z/z.sh
 
 bindkey -e
+
+setopt sharehistory

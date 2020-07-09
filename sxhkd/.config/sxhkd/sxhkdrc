@@ -4,16 +4,21 @@
 
 super + Return
   $TERMINAL
+ 
+#@space
+super + p 
+   launcher 
 
-super + @space
-  launcher -m $(bspc query -M -m --names)
-
-super + shift + @space
+#@space
+super + shift + p 
   dmenu_run
 
 # Open special programs
 super + shift + b
     $TERMINAL -e "bluetoothctl"
+
+super + shift + c
+    $TERMINAL -e "python"
 
 # Cycle keyboard layout
 super + u
@@ -36,13 +41,16 @@ XF86Audio{Play,Stop,Prev,Next}
 
 # Restart sxhkd
 super + Delete
-  pkill -USR1 -x sxhkd 
+  pkill -USR1 -x sxhkd && command -v notify-send && notify-send "Reloaded keybindings"
 
 # ------
 # Window Management
 #
 # Adapted from https://github.com/baskerville/bspwm/blob/master/examples/sxhkdrc
 # ------
+#
+super + b
+  echo "b" | dwmc | xargs notify-send
 
 # super + shift + r
 #   pkill -USR1 -x sxhkd && bspc wm -r && command -v notify-send && notify-send "Reloaded wm and hotkeys"
