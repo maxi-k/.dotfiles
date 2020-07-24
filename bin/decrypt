@@ -1,0 +1,4 @@
+#!/bin/sh
+[ -z $1 ] && echo "Usage: $0 [file-to-decrypt]" && exit
+
+GPG_TTY=`tty` gpgtar -d -C ./ $1

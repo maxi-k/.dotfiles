@@ -1,0 +1,6 @@
+#!/bin/sh
+
+[ -z $1 ] && echo "Usage $0 [file-to-encrypt]" && exit
+INFILE=$1
+
+GPG_TTY=`tty` gpgtar -e -c -o "$INFILE.encrypted" "$INFILE" && rm -r "$INFILE"
