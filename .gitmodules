@@ -97,3 +97,6 @@
 [submodule "emacs/.emacs.d"]
         path = emacs/.emacs.d
         url = https://github.com/maxi-k/.emacs.d
+[submodule "doom/.config/doom/themes/bleak"]
+	path = doom/.config/doom/themes
+	url = https://github.com/maxi-k/emacs-bleak-theme
