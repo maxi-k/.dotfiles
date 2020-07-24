@@ -9,7 +9,7 @@ test -f ~/.config/shell/aliasrc && source ~/.config/shell/aliasrc
 test -f ~/.config/shell/localrc && source ~/.config/shell/localrc
 
 # Use the extensible version manager asdf
-if [ -x "$(command -v brew)" ]; then
+if command -v brew 1>/dev/null; then
     export ASDF_DATA_DIR="/usr/local/opt/asdf"
 elif [ -d "/opt/asdf-vm" ]; then
     export ASDF_DATA_DIR="/opt/asdf-vm"
