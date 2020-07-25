@@ -58,12 +58,35 @@
 ;; Use the org notes file instead.
 (setq initial-buffer-choice (expand-file-name +org-capture-notes-file org-directory))
 
+;; Still new to doom, show which-key faster
+(setq which-key-idle-delay 0.5)
+
+;; Keep a scroll margin
+(setq scroll-margin 7)
+
+;; Highlight lines > 100 in length
+(setq whitespace-line-column 100
+      whitespace-style '(face trailing lines-tail tabs))
+
+;; Make duplicate buffer names more discernible
+;; - post-forward: display the directory name after the buffer name
+(setq uniquify-buffer-name-style 'post-forward)
+
+;; Completely indent and untabify a buffer
 (defun cleanup-buffer ()
   "Perform a bunch of operations on the whitespace content of a buffer."
   (interactive)
   (indent-buffer)
   (untabify-buffer)
   (delete-trailing-whitespace))
+
+(defun visit-initial-buffer ()
+  "Visit the initial buffer"
+  (interactive)
+  (let (buffer-list-update-hook)
+    (if (file-exists-p initial-buffer-choice)
+        (find-file initial-buffer-choice)
+      (get-buffer-create initial-buffer-choice))))
 
 ;; Import some important  keys from my own config
 (map!
@@ -75,9 +98,29 @@
  :leader
  (:prefix "o"
   :desc "News"   "n"    #'elfeed
-  :desc "Doom"   "d"    #'+doom-dashboard/open)
+  :desc "Doom"   "d"    #'+doom-dashboard/open
+  :desc "Init"   "i"    #'visit-initial-buffer)
  (:when (featurep! :editor evil)
   (:prefix "b"
    "v" #'evil-switch-to-windows-last-buffer
    "c" #'cleanup-buffer)))
 
+
+;;;  TODO: Features to import from old config:
+;;;
+;; (config/provide-feature :movement
+;;   "j" 'avy-goto-char
+;;   "w" 'avy-goto-word-or-subword-1)
+
+;; (config/global-keys
+;;   "m" 'avy-goto-word-or-subword-1)
+
+;; (global-set-key (kbd "s-i") 'imenu)
+;; (config/provide-feature :movement "i" 'imenu)
+;;
+;; * :use-package browse-kill-ring
+;; ** :defer t
+;; ** :bind
+;; Look through the kill ring and insert exactly what you want.
+;; #+begin_src emacs-lisp
+;; ("C-x C-y" . browse-kill-ring)
