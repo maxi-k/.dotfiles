@@ -64,6 +64,7 @@
 ;; Keep a scroll margin
 (setq scroll-margin 7)
 
+;; TODO find out why this doesn't work
 ;; Highlight lines > 100 in length
 (setq whitespace-line-column 100
       whitespace-style '(face trailing lines-tail tabs))
@@ -80,13 +81,10 @@
   (untabify-buffer)
   (delete-trailing-whitespace))
 
-(defun visit-initial-buffer ()
+(defun visit-notes-buffer ()
   "Visit the initial buffer"
   (interactive)
-  (let (buffer-list-update-hook)
-    (if (file-exists-p initial-buffer-choice)
-        (find-file initial-buffer-choice)
-      (get-buffer-create initial-buffer-choice))))
+  (find-file (expand-file-name +org-capture-notes-file org-directory)))
 
 ;; Import some important  keys from my own config
 (map!
@@ -99,7 +97,7 @@
  (:prefix "o"
   :desc "News"   "n"    #'elfeed
   :desc "Doom"   "d"    #'+doom-dashboard/open
-  :desc "Init"   "i"    #'visit-initial-buffer)
+  :desc "Org"    "o"    #'visit-notes-buffer)
  (:when (featurep! :editor evil)
   (:prefix "b"
    "v" #'evil-switch-to-windows-last-buffer
@@ -124,3 +122,5 @@
 ;; Look through the kill ring and insert exactly what you want.
 ;; #+begin_src emacs-lisp
 ;; ("C-x C-y" . browse-kill-ring)
+;;
+;; golden-ratio-mode
