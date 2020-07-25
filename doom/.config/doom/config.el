@@ -25,7 +25,8 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+
+(setq doom-theme (if window-system 'doom-one 'bleak))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -56,7 +57,7 @@
 
 ;; Don't open the doom dashboard at startup
 ;; Use the org notes file instead.
-(setq initial-buffer-choice (expand-file-name +org-capture-notes-file org-directory))
+;; (setq initial-buffer-choice (expand-file-name +org-capture-notes-file org-directory))
 
 ;; Still new to doom, show which-key faster
 (setq which-key-idle-delay 0.5)
@@ -73,54 +74,66 @@
 ;; - post-forward: display the directory name after the buffer name
 (setq uniquify-buffer-name-style 'post-forward)
 
-;; Completely indent and untabify a buffer
-(defun cleanup-buffer ()
-  "Perform a bunch of operations on the whitespace content of a buffer."
-  (interactive)
-  (indent-buffer)
-  (untabify-buffer)
-  (delete-trailing-whitespace))
-
 (defun visit-notes-buffer ()
-  "Visit the initial buffer"
+  "Visit the main org mode notes buffer."
   (interactive)
   (find-file (expand-file-name +org-capture-notes-file org-directory)))
+
 
 ;; Import some important  keys from my own config
 (map!
  ;; Global Keys
  (:when (featurep! :tools magit)
-  (:prefix "C-c"
-   :desc "Git"    "g"    #'magit-status))
+  :desc "Git"    "C-c g"    #'magit-status)
+ (:when (featurep! :emacs browse-kill-ring)
+  "C-x C-y"  #'browse-kill-ring)
+
  ;; Leader Keys
  :leader
+
+ ;; buffer commands
+ (:prefix "b"
+  (:when (featurep! :editor evil))
+  "v" #'evil-switch-to-windows-last-buffer)
+
+ ;; "open commands / apps"
  (:prefix "o"
-  :desc "News"   "n"    #'elfeed
-  :desc "Doom"   "d"    #'+doom-dashboard/open
-  :desc "Org"    "o"    #'visit-notes-buffer)
- (:when (featurep! :editor evil)
-  (:prefix "b"
-   "v" #'evil-switch-to-windows-last-buffer
-   "c" #'cleanup-buffer)))
+  (:when (featurep! :app rss)
+   :desc "News"   "n"    #'elfeed)
+  (:when (featurep! :ui doom-dashboard)
+   :desc "Doom"   "d"    #'+doom-dashboard/open)
+  (:when (featurep! :lang org)
+   :desc "Org"    "o"    #'visit-notes-buffer))
+
+ ;; search commands
+ (:prefix "s"
+  (:when (featurep! :emacs browse-kill-ring)
+   "c" #'browse-kill-ring))
+
+ ;; window commands
+ (:prefix "w"
+  (:when (featurep! :ui golden-ratio)
+   "g" #'+golden-ratio-toggle))
+
+ ;; Direct Keybindings for jumping with avy
+ :desc "Jump Char" "J" #'avy-goto-char
+ :desc "Jump Word" "j" #'avy-goto-word-or-subword-1)
+
+
+
+;; Mode Variables
+(after! rustic
+  (when (featurep! :tools lsp)
+    (setq rustic-lsp-server 'rust-analyzer)))
 
 
 ;;;  TODO: Features to import from old config:
 ;;;
-;; (config/provide-feature :movement
-;;   "j" 'avy-goto-char
-;;   "w" 'avy-goto-word-or-subword-1)
 
-;; (config/global-keys
-;;   "m" 'avy-goto-word-or-subword-1)
-
-;; (global-set-key (kbd "s-i") 'imenu)
-;; (config/provide-feature :movement "i" 'imenu)
-;;
 ;; * :use-package browse-kill-ring
 ;; ** :defer t
 ;; ** :bind
 ;; Look through the kill ring and insert exactly what you want.
 ;; #+begin_src emacs-lisp
-;; ("C-x C-y" . browse-kill-ring)
+;; 
 ;;
-;; golden-ratio-mode
