@@ -80,6 +80,7 @@
   (find-file (expand-file-name +org-capture-notes-file org-directory)))
 
 (defun toggle-window-split ()
+  "Toggle the window split between horizontal and vertial."
   (interactive)
   (when (= (count-windows) 2)
       (let* ((this-win-buffer (window-buffer))
@@ -103,7 +104,6 @@
           (set-window-buffer (next-window) next-win-buffer)
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
-
 
 
 ;; Import some important  keys from my own config
