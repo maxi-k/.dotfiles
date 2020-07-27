@@ -11,3 +11,7 @@ export READER="zathura"
 # Setup PATH
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH
 export PATH=$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin
+
+[ -d ${HOME}/.emacs.d/bin ] && export PATH=$PATH:$HOME/.emacs.d/bin
+
+
