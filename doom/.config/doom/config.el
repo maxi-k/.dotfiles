@@ -105,6 +105,11 @@
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
+(defun open-external-terminal ()
+  "Open an external terminal in the current directory asynchronously."
+  (interactive)
+  (let ((term (or (getenv "TERMINAL") "alacritty")))
+    (async-shell-command term nil nil)))
 
 ;; Import some important  keys from my own config
 (map!
@@ -126,12 +131,14 @@
 
  ;; "open commands / apps"
  (:prefix "o"
+  :desc "Term Here"    "h"    #'terminal-here-launch
+  :desc "Term Project" "p"    #'terminal-here-project-launch
   (:when (featurep! :app rss)
-   :desc "News"   "n"    #'elfeed)
+   :desc "News"        "n"    #'elfeed)
   (:when (featurep! :ui doom-dashboard)
-   :desc "Doom"   "d"    #'+doom-dashboard/open)
+   :desc "Doom"        "d"    #'+doom-dashboard/open)
   (:when (featurep! :lang org)
-   :desc "Org"    "o"    #'visit-notes-buffer))
+   :desc "Org"         "o"    #'visit-notes-buffer))
 
  ;; search commands
  (:prefix "s"
@@ -146,7 +153,6 @@
  ;; Direct Keybindings for jumping with avy
  :desc "Jump Char" "J" #'avy-goto-char
  :desc "Jump Word" "j" #'avy-goto-word-or-subword-1)
-
 
 
 ;; Mode Variables
