@@ -160,18 +160,9 @@
   (when (featurep! :tools lsp)
     (setq rustic-lsp-server 'rust-analyzer)))
 
+(after! org
+  (setq org-startup-folded 't))
+
 (defun pinentry-emacs (desc prompt ok error)
   (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
     str))
-
-
-;;;  TODO: Features to import from old config:
-;;;
-
-;; * :use-package browse-kill-ring
-;; ** :defer t
-;; ** :bind
-;; Look through the kill ring and insert exactly what you want.
-;; #+begin_src emacs-lisp
-;; 
-;;
