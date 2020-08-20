@@ -60,7 +60,9 @@
 ;; (setq initial-buffer-choice (expand-file-name +org-capture-notes-file org-directory))
 
 ;; Still new to doom, show which-key faster
-(setq which-key-idle-delay 0.5)
+(setq which-key-idle-delay 1.5)
+(after! company
+  (setq company-idle-delay 1.0))
 
 ;; Keep a scroll margin
 (setq scroll-margin 7)
