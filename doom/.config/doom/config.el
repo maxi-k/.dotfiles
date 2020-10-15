@@ -172,3 +172,13 @@
 (after! ruby
   (when (featurep! :tools lsp)
     (setq lsp-solargraph-use-bundler 't)))
+
+(let ((notes-directory "~/Documents/Notes/roam"))
+  (setq deft-directory notes-directory)
+  (setq org-roam-directory notes-directory))
+
+(when (featurep! :lang org +roam)
+  (map!
+   :leader
+   (:prefix "m"
+    "t" #'org-roam-dailies-today)))

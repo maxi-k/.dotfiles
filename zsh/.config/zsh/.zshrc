@@ -9,14 +9,7 @@ test -f ~/.config/shell/aliasrc && source ~/.config/shell/aliasrc
 test -f ~/.config/shell/localrc && source ~/.config/shell/localrc
 
 # Use the extensible version manager asdf
-if command -v brew 1>/dev/null; then
-    export ASDF_DATA_DIR="/usr/local/opt/asdf"
-elif [ -d "/opt/asdf-vm" ]; then
-    export ASDF_DATA_DIR="/opt/asdf-vm"
-else
-    export ASDF_DATA_DIR="$HOME/.asdf"
-fi
-
+[ -d "/opt/asdf-vm" ] && export ASDF_DATA_DIR="/opt/asdf-vm" || export ASDF_DATA_DIR="$HOME/.asdf"
 [ -f "$ASDF_DATA_DIR/asdf.sh" ] && source "$ASDF_DATA_DIR/asdf.sh" || echo "asdf not found"
 
 # Load z script for entering recent folders
