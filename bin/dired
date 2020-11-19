@@ -1,0 +1,43 @@
+#!/usr/bin/env sh
+
+# Open a dired-mode popup frame from the shell for the current directory.
+# This opens a temporary emacs daemon if emacs isn't already running.
+#
+# Usage: dired [directory]
+# Examples:
+#   org-capture -k n "To the mind that is still, the whole universe surrenders."
+
+set -e
+
+cleanup() {
+  emacsclient --eval '(let (kill-emacs-hook) (kill-emacs))'
+}
+
+# If emacs isn't running, we start a temporary daemon, solely for this window.
+if ! emacsclient --suppress-output --eval nil; then
+  emacs --daemon
+  trap cleanup EXIT INT TERM
+  daemon=1
+fi
+
+# If a directory was given, use it; else use pwd
+[ -n "$1" ] && TARGET_DIR="$1" || TARGET_DIR=$(pwd)
+
+# Fix incompatible terminals that cause odd 'not a valid terminal' errors
+[ $TERM = "alacritty" ] && export TERM=xterm-256color
+
+# If devour is installed, replace the terminal window
+command -v devour 2>&1 1>/dev/null && CMD="devour emacsclient" || CMD="emacsclient"
+
+if [ $daemon ]; then
+  $CMD -a "" \
+    -c \
+    -F '((width . 70) (height . 25) (transient . t))' \
+    -e "(dired \"$TARGET_DIR\")"
+else
+  # Non-daemon servers flicker a lot if frames are created from terminal, so we
+  # do it internally instead.
+  $CMD -a "" \
+    -c \
+    -e "(dired \"$TARGET_DIR\")"
+fi
