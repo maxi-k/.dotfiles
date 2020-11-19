@@ -180,5 +180,7 @@
 (when (featurep! :lang org +roam)
   (map!
    :leader
-   (:prefix "m"
-    "t" #'org-roam-dailies-today)))
+   (:prefix "n"
+    (:prefix "r"
+      "q" #'org-roam-buffer-toggle-display
+      "t" #'org-roam-dailies-find-today))))
