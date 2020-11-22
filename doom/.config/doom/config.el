@@ -169,6 +169,10 @@
   (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
     str))
 
+(after! ruby
+  (when (featurep! :tools lsp)
+    (setq lsp-solargraph-use-bundler 't)))
+
 (let ((notes-directory "~/Documents/Notes/roam"))
   (setq deft-directory notes-directory)
   (setq org-roam-directory notes-directory))
@@ -176,8 +180,11 @@
 (when (featurep! :lang org +roam)
   (map!
    :leader
-   (:prefix "m"
-    "t" #'org-roam-dailies-today)))
+   (:prefix "n"
+    (:prefix "r"
+      "q" #'org-roam-buffer-toggle-display
+      "t" #'org-roam-dailies-find-today))))
+
 
 
 ;; Make macOS title bar transparent
