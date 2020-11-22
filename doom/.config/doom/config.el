@@ -178,3 +178,8 @@
    :leader
    (:prefix "m"
     "t" #'org-roam-dailies-today)))
+
+
+;; Make macOS title bar transparent
+(when (eq system-type 'darwin)
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
