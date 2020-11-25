@@ -227,3 +227,9 @@
     (:prefix "r"
       "q" #'org-roam-buffer-toggle-display
       "t" #'org-roam-dailies-find-today))))
+
+
+
+;; Make macOS title bar transparent
+(when (eq system-type 'darwin)
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
