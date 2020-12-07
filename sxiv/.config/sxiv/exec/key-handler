@@ -2,12 +2,16 @@
 
 change_theme() {
   read file
-  case $file in
-    /*) image=$file ;; # absolute path
+  case "$file" in
+    /*) image="$file" ;; # absolute path
     *)  image="$(pwd)/$file"
   esac
   echo "Calling $(which mktheme) $image"
-  [ -e $image ] && mktheme $image && notify-send "Changed theme based on wallpaper $file" || notify-send "Could change theme with $image"
+  [ -e "$image" ] \
+    && echo "Image file found" \
+    && mktheme "$image" \
+    &&  notify-send "Changed theme based on wallpaper $file" \
+    || notify-send "Could not change theme with $image"
 }
 
 echo "Read key $1"

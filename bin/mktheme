@@ -11,11 +11,17 @@
 confdir=${XDG_CONFIG_HOME:-$HOME/.config}
 bgloc="${XDG_CACHE_HOME:-$HOME/.cache}/bg"
 
-[ -f "$1" ] && ln -sf "$(readlink -f "$1")" "$bgloc" && notify-send -i "$bgloc" "Changing wallpaper..."
+[ -f "$1" ] \
+  && ln -sf "$(readlink -f "$1")" "$bgloc" \
+  && notify-send -i "$bgloc" "Changing wallpaper..." \
+  || echo "Could not find as file"
 
-[ -d "$1" ] && ln -sf "$(find "$(readlink -f "$1")" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$bgloc" && notify-send -i "$bgloc" "Random Wallpaper chosen."
+[ -d "$1" ] \
+  && ln -sf "$(find "$(readlink -f "$1")" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$bgloc" \
+  && notify-send -i "$bgloc" "Random Wallpaper chosen."
 
 # If pywal is installed, use it.
-[[ -z "$NO_DYNAMIC_COLORS" ]] && wal -s -i "$(readlink -f "$bgloc")" -o "$confdir/wal/postrun" >/dev/null 2>&1
+[[ -z "$NO_DYNAMIC_COLORS" ]] \
+  && wal -s -i "$(readlink -f "$bgloc")" -o "$confdir/wal/postrun" >/dev/null 2>&1
 
 xwallpaper --zoom "$bgloc" --no-randr
