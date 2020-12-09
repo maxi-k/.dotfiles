@@ -20,6 +20,15 @@ super + shift + b
 super + shift + c
     $TERMINAL -e "python"
 
+super + shift + o
+    select-recent-dir "emacsclient -c"
+
+super + shift + F10
+    $TERMINAL -e "htop"
+
+super + shift + F12
+    $TERMINAL -e zsh -c "ssh rome"
+
 # Cycle keyboard layout
 super + u
     x-cycle-layout && command -v notify-send && notify-send "Cycled Layout"

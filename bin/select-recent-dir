@@ -1,0 +1,3 @@
+#!/bin/bash
+selected=$(cat .z | sort -gr -t '|' -k 2 | awk -F'|' '{ print $1 }' | selector)
+[ -n "$selected" ] && ([ -n "$1" ] && $1 "$selected" || echo "$selected")
