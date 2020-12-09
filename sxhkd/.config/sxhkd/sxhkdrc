@@ -23,6 +23,9 @@ super + shift + c
 super + shift + o
     select-recent-dir "emacsclient -c"
 
+super + shift + s
+    tmux list-sessions | selector | awk -F: '\{ print $1 \}' | xargs $TERMINAL -e tmux new-session -A -s
+
 super + shift + F10
     $TERMINAL -e "htop"
 
