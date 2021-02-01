@@ -1,18 +1,21 @@
 #!/bin/sh
 export DOTFILES_XPROFILE_LOADED="true"
 
-[ -f ${HOME}/.config/shell/profile ] && [ -z $DOTFILES_PROFILE_LOADED ] && source ${HOME}/.config/shell/profile
+[ -f ${HOME}/.config/shell/profile ] && [ -z $DOTFILES_PROFILE_LOADED ] && source ${HOME}/.config/shell/profile 
 
 [ -e ${HOME}/.config/X/default-config ] && xrdb ${HOME}/.config/X/default-config 
+
 [ -f ${HOME}/.config/screenlayout ] && ${HOME}/.config/screenlayout 
 
 # [ -e ${HOME}/.config/polybar/start.sh ] && ${HOME}/.config/polybar/start.sh 
 
-command -v dunst && (pgrep dunst || dunst) &  # Dunst the messaging service
-command -v mktheme && mktheme & # Create a theme for this session
-command -v unclutter && unclutter & # Hide mouse cursor when unused
-command -v sxhkd && sxhkd & # Bind Hotkeys
+if [ "$XDG_SESSION_DESKTOP" == "dwm" ]; then
+  command -v mktheme && mktheme & # Create a theme for this session
+  command -v dunst && (pgrep dunst || dunst) &  # Dunst the messaging service
+  command -v unclutter && (pgrep unclutter || unclutter) & # Hide mouse cursor when unused
+  command -v sxhkd && (pgrep sxhkd || sxhkd) & # Bind Hotkeys
+  command -v slstatus && (pgrep slstatus || slstatus) & # slstatus for dwm
+fi
 
-[ -f ${HOME}/.config/dwm/dwm-bar/dwm_bar.sh ] && ${HOME}/.config/dwm/dwm-bar/dwm_bar.sh & # DWM Status bar script
 
 export _JAVA_AWT_WM_NONREPARENTING=1 
