@@ -12,6 +12,9 @@ export READER="zathura"
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:$PATH
 export PATH=$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin
 
+# Add emacs bin to path
 [ -d ${HOME}/.emacs.d/bin ] && export PATH=$PATH:$HOME/.emacs.d/bin
 
-
+# Use the extensible version manager asdf
+[ -d "/opt/asdf-vm" ] && export ASDF_DATA_DIR="/opt/asdf-vm" || export ASDF_DATA_DIR="$HOME/.asdf"
+[ -f "$ASDF_DATA_DIR/asdf.sh" ] && source "$ASDF_DATA_DIR/asdf.sh" # || echo "asdf not found"
