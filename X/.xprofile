@@ -17,5 +17,8 @@ if [ "$XDG_SESSION_DESKTOP" == "dwm" ]; then
   command -v slstatus && (pgrep slstatus || slstatus) & # slstatus for dwm
 fi
 
+# Start syncthing if not started yet and not running
+command -v syncthing && (pgrep syncthing || syncthing)
+
 
 export _JAVA_AWT_WM_NONREPARENTING=1 
