@@ -13,6 +13,9 @@ super + p
 super + shift + p 
   dmenu_run
 
+super + ctrl + p
+  run-flatpak
+
 # Open special programs
 super + shift + b
     $TERMINAL -e "bluetoothctl"

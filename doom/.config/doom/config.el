@@ -229,6 +229,17 @@
       "q" #'org-roam-buffer-toggle-display
       "t" #'org-roam-dailies-find-today))))
 
+(after! ess
+  (map!
+   (:map ess-mode-map
+    :localleader
+    ("e" #'ess-eval-region-or-function-or-paragraph))))
+
+(after! elfeed
+  (map!
+   (:map elfeed-search-mode-map
+    :localleader
+    "r" #'elfeed-search-update)))
 
 ;; Make macOS title bar transparent
 (when (eq system-type 'darwin)
