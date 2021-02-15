@@ -13,6 +13,8 @@
   #TERM: xterm-256color
 
 window:
+  # Allow terminal applications to change Alacritty's window title.
+  dynamic_title: true
   # Window dimensions (changes require restart)
   #
   # Specified in number of columns/lines, not pixels.
@@ -258,7 +260,7 @@ colors:
 #   - Linear
 #
 # Specifying a `duration` of `0` will disable the visual bell.
-visual_bell:
+bell:
   animation: EaseOutExpo
   duration: 0
   color: '0xffffff'
@@ -326,9 +328,6 @@ selection:
 
   # When set to `true`, selected text will be copied to the primary clipboard.
   save_to_clipboard: false
-
-# Allow terminal applications to change Alacritty's window title.
-dynamic_title: true
 
 cursor:
   # Cursor style
@@ -629,22 +628,22 @@ key_bindings:
   - { key: Left,     mods: Control, chars: "\x1b[1;5D"                       }
   - { key: Left,     mods: Alt,     chars: "\x1b[1;3D"                       }
   - { key: Left,                    chars: "\x1b[D",        mode: ~AppCursor }
-  - { key: Left,                    chars: "\x1bOD",        mode: AppCursor  }
+    #  - { key: Left,                    chars: "\x1bOD",        mode: AppCursor  }
   - { key: Right,    mods: Shift,   chars: "\x1b[1;2C"                       }
   - { key: Right,    mods: Control, chars: "\x1b[1;5C"                       }
   - { key: Right,    mods: Alt,     chars: "\x1b[1;3C"                       }
   - { key: Right,                   chars: "\x1b[C",        mode: ~AppCursor }
-  - { key: Right,                   chars: "\x1bOC",        mode: AppCursor  }
+    #  - { key: Right,                   chars: "\x1bOC",        mode: AppCursor  }
   - { key: Up,       mods: Shift,   chars: "\x1b[1;2A"                       }
   - { key: Up,       mods: Control, chars: "\x1b[1;5A"                       }
   - { key: Up,       mods: Alt,     chars: "\x1b[1;3A"                       }
   - { key: Up,                      chars: "\x1b[A",        mode: ~AppCursor }
-  - { key: Up,                      chars: "\x1bOA",        mode: AppCursor  }
+    #  - { key: Up,                      chars: "\x1bOA",        mode: AppCursor  }
   - { key: Down,     mods: Shift,   chars: "\x1b[1;2B"                       }
   - { key: Down,     mods: Control, chars: "\x1b[1;5B"                       }
   - { key: Down,     mods: Alt,     chars: "\x1b[1;3B"                       }
   - { key: Down,                    chars: "\x1b[B",        mode: ~AppCursor }
-  - { key: Down,                    chars: "\x1bOB",        mode: AppCursor  }
+    #  - { key: Down,                    chars: "\x1bOB",        mode: AppCursor  }
   - { key: F1,                      chars: "\x1bOP"                          }
   - { key: F2,                      chars: "\x1bOQ"                          }
   - { key: F3,                      chars: "\x1bOR"                          }
