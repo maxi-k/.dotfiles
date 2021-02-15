@@ -14,7 +14,7 @@ tasks=`$MAKE -pRrq : 2>/dev/null \
 select_tasks() {
   echo $tasks \
     | tr " " "\n" \
-    | selector -p "Task" 2>/dev/null \
+    | fzf --reverse \
     | xargs -r make 
 }
 
