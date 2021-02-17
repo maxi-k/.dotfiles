@@ -76,10 +76,21 @@
 ;; - post-forward: display the directory name after the buffer name
 (setq uniquify-buffer-name-style 'post-forward)
 
-(defun visit-notes-buffer ()
-  "Visit the main org mode notes buffer."
-  (interactive)
-  (find-file (expand-file-name +org-capture-notes-file org-directory)))
+(when (featurep! :lang org)
+  (defun visit-notes-buffer ()
+    "Visit the main org mode notes buffer."
+    (interactive)
+    (find-file (expand-file-name +org-capture-notes-file org-directory)))
+  ;; use "TODO" instead of "[ ]" for new todo entries as used by orgzly
+  (setq org-capture-templates
+        (append '(("t" "Personal todo" entry
+                   (file+headline +org-capture-todo-file "Inbox")
+                   "* TODO %?\n" :prepend t)
+                  ("f" "File todo" entry
+                   (file+headline +org-capture-todo-file "Inbox")
+                   "* TODO %?\n%i\n%a" :prepend t))
+                (cdr org-capture-templates)))
+  )
 
 (defun toggle-window-split ()
   "Toggle the window split between horizontal and vertial."
