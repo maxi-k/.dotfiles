@@ -81,16 +81,23 @@
     "Visit the main org mode notes buffer."
     (interactive)
     (find-file (expand-file-name +org-capture-notes-file org-directory)))
+
+  (defun org-directory-files (&optional root)
+    "List org files in the given directory. If no directory is given,assume the current one."
+    (let ((directory (or root (pwd))))
+      (directory-files "." nil ".org")))
   ;; use "TODO" instead of "[ ]" for new todo entries as used by orgzly
-  (setq org-capture-templates
-        (append '(("t" "Personal todo" entry
-                   (file+headline +org-capture-todo-file "Inbox")
-                   "* TODO %?\n" :prepend t)
-                  ("f" "File todo" entry
-                   (file+headline +org-capture-todo-file "Inbox")
-                   "* TODO %?\n%i\n%a" :prepend t))
-                (cdr org-capture-templates)))
-  )
+  (after! org
+    (setq org-startup-folded 't
+          org-duration-format (quote h:mm)
+          org-capture-templates
+          (append '(("t" "Personal todo" entry
+                     (file+headline +org-capture-todo-file "Inbox")
+                     "* TODO %?\n" :prepend t)
+                    ("f" "File todo" entry
+                     (file+headline +org-capture-todo-file "Inbox")
+                     "* TODO %?\n%i\n%a" :prepend t))
+                  (cdr org-capture-templates)))))
 
 (defun toggle-window-split ()
   "Toggle the window split between horizontal and vertial."
@@ -146,6 +153,8 @@
  (:prefix "o"
   :desc "Term Here"    "h"    #'terminal-here-launch
   :desc "Term Project" "p"    #'terminal-here-project-launch
+  :desc "Calc"         "c"    #'calc
+  :desc "Calc Region"  "C"    #'calc-grab-region
   (:when (featurep! :app rss)
    :desc "News"        "n"    #'elfeed)
   (:when (featurep! :ui doom-dashboard)
@@ -172,9 +181,6 @@
 (after! rustic
   (when (featurep! :tools lsp)
     (setq rustic-lsp-server 'rust-analyzer)))
-
-(after! org
-  (setq org-startup-folded 't))
 
 (defun pinentry-emacs (desc prompt ok error)
   (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
