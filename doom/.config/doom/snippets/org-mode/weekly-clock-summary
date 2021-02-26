@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: weekly-clock-summary
+# uuid:
+# key: report
+# condition: t
+# type: snippet
+# --
+
+#+BEGIN: clocktable :scope org-directory-files :maxlevel 2 :fileskip0 't :block thisweek :compact 't $0
+#+END:
