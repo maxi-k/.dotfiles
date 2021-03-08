@@ -256,6 +256,7 @@
   (map!
    (:map elfeed-search-mode-map
     :localleader
+    "u" #'elfeed-update
     "r" #'elfeed-search-update)))
 
 ;; Make macOS title bar transparent
