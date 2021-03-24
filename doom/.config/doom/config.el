@@ -179,6 +179,7 @@ depending on the current stat."
 
  ;; window commands
  (:prefix "w"
+  "'" #'toggle-window-split
   (:when (featurep! :ui golden-ratio)
    "g" #'+golden-ratio-toggle))
 
