@@ -131,6 +131,14 @@
   (let ((term (or (getenv "TERMINAL") "alacritty")))
     (async-shell-command term nil nil)))
 
+(defun +popup/toggle-for-buffer ()
+  "Raise or degrade the current buffer to/from a popup window
+depending on the current stat."
+  (interactive)
+  (call-interactively (if (+popup-buffer-p)
+                          #'+popup/raise
+                        #'+popup/buffer)))
+
 ;; Import some important  keys from my own config
 (map!
  ;; Global Keys
@@ -146,8 +154,10 @@
 
  ;; buffer commands
  (:prefix "b"
-  (:when (featurep! :editor evil))
-  "v" #'evil-switch-to-windows-last-buffer)
+  (:when (featurep! :editor evil)
+   "v" #'evil-switch-to-windows-last-buffer)
+  (:when (featurep! :ui popup)
+   "~" #'+popup/toggle-for-buffer))
 
  ;; "open commands / apps"
  (:prefix "o"
