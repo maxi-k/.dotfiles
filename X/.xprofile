@@ -13,12 +13,18 @@ if [ "$XDG_SESSION_DESKTOP" == "dwm" ]; then
   command -v mktheme && mktheme & # Create a theme for this session
   command -v dunst && (pgrep dunst || dunst) &  # Dunst the messaging service
   command -v unclutter && (pgrep unclutter || unclutter) & # Hide mouse cursor when unused
-  command -v sxhkd && (pgrep sxhkd || sxhkd) & # Bind Hotkeys
   command -v slstatus && (pgrep slstatus || slstatus) & # slstatus for dwm
+  command -v gsettings && export GTK_THEME=$(gsettings get org.gnome.desktop.interface gtk-theme | sed "s/'//g")
+  test -d "$HOME/.local/share/flatpak/exports/bin" && export PATH="$PATH:$HOME/.local/share/flatpak/exports/bin"
+  # Set logitech mouse speed
+  command -v xinput && xinput --set-prop "pointer:Logitech MX Master 3" 'libinput Accel Speed' -0.5
+  command -v xset && xset mouse 3 6
 fi
+
+# Bind hotkeys
+command -v start-keybindings && start-keybindings &
 
 # Start syncthing if not started yet and not running
 command -v syncthing && (pgrep syncthing || syncthing -no-browser) &
 
-
-export _JAVA_AWT_WM_NONREPARENTING=1 
+export _JAVA_AWT_WM_NONREPARENTING=1

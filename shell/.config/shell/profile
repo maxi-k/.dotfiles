@@ -2,6 +2,7 @@
 
 # General variables
 export LC_ALL=en_US.UTF-8
+export LC_TIME="de_DE.UTF-8"
 export LANG="$LC_ALL"
 export VISUAL="vim"
 export TERMINAL="alacritty"
@@ -18,3 +19,7 @@ export PATH=$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin
 # Use the extensible version manager asdf
 [ -d "/opt/asdf-vm" ] && export ASDF_DATA_DIR="/opt/asdf-vm" || export ASDF_DATA_DIR="$HOME/.asdf"
 [ -f "$ASDF_DATA_DIR/asdf.sh" ] && source "$ASDF_DATA_DIR/asdf.sh" # || echo "asdf not found"
+
+command -v flatpak 1>/dev/null && export PATH="$PATH:/var/lib/flatpak/exports/bin:${HOME}/.local/share/flatpak/exports/bin"
+
+[ -f "~/.config/shell/profile.local" ] && source ~/.config/shell/profile.local

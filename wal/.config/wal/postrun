@@ -18,6 +18,5 @@ pkill dunst
 
 if command -v dwmc >/dev/null; then 
   COL_LIST="$foreground$background$color8$foreground$color10$foreground"
-  echo "$foreground" > ~/log
   echo "c$COL_LIST" | dwmc | xargs notify-send "Changing dwm colors: "
 fi

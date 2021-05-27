@@ -67,6 +67,9 @@ super + Delete
 super + b
   echo "b" | dwmc | xargs notify-send
 
+# super + {1-9}
+#   wmctrl -s {0-8}
+
 # super + shift + r
 #   pkill -USR1 -x sxhkd && bspc wm -r && command -v notify-send && notify-send "Reloaded wm and hotkeys"
 # 

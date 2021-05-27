@@ -1,0 +1,4 @@
+#!/bin/sh
+
+SXHKDF="${HOME}/.config/sxhkd/sxhkdrc.$XDG_SESSION_DESKTOP"
+command -v sxhkd && (pgrep sxhkd || (test -f "$SXHKDF" && sxhkd -c "$SXHKDF" || sxhkd)) 

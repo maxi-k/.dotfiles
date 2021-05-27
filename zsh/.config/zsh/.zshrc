@@ -5,6 +5,8 @@ export GPG_TTY=$(tty)
 # Load in look config, aliases and local config
 test -f ~/.config/zsh/lookrc &&  source ~/.config/zsh/lookrc
 test -f ~/.config/zsh/keyrc && source ~/.config/zsh/keyrc
+test -f ~/.config/zsh/toolrc && source ~/.config/zsh/toolrc
+test -f ~/.config/shell/profile && source ~/.config/shell/profile
 test -f ~/.config/shell/aliasrc && source ~/.config/shell/aliasrc
 test -f ~/.config/shell/localrc && source ~/.config/shell/localrc
 

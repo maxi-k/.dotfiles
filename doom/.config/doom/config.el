@@ -88,6 +88,7 @@
       (directory-files "." nil ".org")))
   ;; use "TODO" instead of "[ ]" for new todo entries as used by orgzly
   (after! org
+    (add-to-list 'org-latex-packages-alist '("" "minted"))
     (setq org-startup-folded 't
           org-duration-format (quote h:mm)
           org-capture-templates
@@ -97,35 +98,39 @@
                     ("f" "File todo" entry
                      (file+headline +org-capture-todo-file "Inbox")
                      "* TODO %?\n%i\n%a" :prepend t))
-                  (cdr org-capture-templates)))))
+                  (cdr org-capture-templates))
+          org-latex-pdf-process '("latexmk -lualatex -shell-escape -interaction=nonstopmode -output-directory=%o %f")
+          org-latex-listings 'minted)))
+
+;; (setq enable-local-variables t)
 
 (defun toggle-window-split ()
   "Toggle the window split between horizontal and vertial."
   (interactive)
   (when (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
+    (let* ((this-win-buffer (window-buffer))
+           (next-win-buffer (window-buffer (next-window)))
+           (this-win-edges (window-edges (selected-window)))
+           (next-win-edges (window-edges (next-window)))
+           (this-win-2nd (not (and (<= (car this-win-edges)
+                                       (car next-win-edges))
+                                   (<= (cadr this-win-edges)
+                                       (cadr next-win-edges)))))
+           (splitter
+            (if (= (car this-win-edges)
+                   (car (window-edges (next-window))))
+                'split-window-horizontally
+              'split-window-vertically)))
+      (delete-other-windows)
+      (let ((first-win (selected-window)))
+        (funcall splitter)
+        (if this-win-2nd (other-window 1))
+        (set-window-buffer (selected-window) this-win-buffer)
+        (set-window-buffer (next-window) next-win-buffer)
+        (select-window first-win)
+        (if this-win-2nd (other-window 1))))))
 
-(defun open-external-terminal ()
+ (defun open-external-terminal ()
   "Open an external terminal in the current directory asynchronously."
   (interactive)
   (let ((term (or (getenv "TERMINAL") "alacritty")))
@@ -262,6 +267,13 @@ depending on the current stat."
    (:map ess-mode-map
     :localleader
     ("e" #'ess-eval-region-or-function-or-paragraph))))
+
+(when (featurep! :editor lispy)
+  (map!
+   :map lispy-mode-map
+   :localleader
+   "s" #'lispy-splice-sexp-killing-backward
+   "S" #'lispy-splice-sexp-killing-forward))
 
 (after! elfeed
   (map!

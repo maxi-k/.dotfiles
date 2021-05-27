@@ -1,0 +1,24 @@
+# Restart sxhkd
+super + Delete
+  pkill -USR1 -x sxhkd && command -v notify-send && notify-send "Reloaded keybindings"
+
+super + shift + b
+    $TERMINAL -e "bluetoothctl"
+
+super + shift + c
+    $TERMINAL -e "python"
+
+super + shift + o
+    select-recent-dir "emacsclient -c"
+
+super + shift + s
+    tmux list-sessions | selector | awk -F: '\{ print $1 \}' | xargs $TERMINAL -e tmux new-session -A -s
+
+super + shift + F9
+    emacs
+
+super + shift + F10
+    $TERMINAL -e "htop"
+
+super + {1-9}
+    wmctrl -s {0-8}
