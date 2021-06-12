@@ -16,10 +16,15 @@ export PATH=$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin
 # Add emacs bin to path
 [ -d ${HOME}/.emacs.d/bin ] && export PATH=$PATH:$HOME/.emacs.d/bin
 
-# Use the extensible version manager asdf
+### PACKAGE & VERSION MANAGERS ###
+# Use asdf if installed
 [ -d "/opt/asdf-vm" ] && export ASDF_DATA_DIR="/opt/asdf-vm" || export ASDF_DATA_DIR="$HOME/.asdf"
 [ -f "$ASDF_DATA_DIR/asdf.sh" ] && source "$ASDF_DATA_DIR/asdf.sh" # || echo "asdf not found"
-
+# Use guix if installed
+command -v guix 1>/dev/null && export GUIX_PROFILE="${HOME}/.guix-profile" && . "$GUIX_PROFILE/etc/profile" 
+# load nix if installed
+test -e $HOME/.nix-profile/etc/profile.d/nix.sh && source $HOME/.nix-profile/etc/profile.d/nix.sh 
+# load flatpak export if flatpak is installed
 command -v flatpak 1>/dev/null && export PATH="$PATH:/var/lib/flatpak/exports/bin:${HOME}/.local/share/flatpak/exports/bin"
 
 [ -f "~/.config/shell/profile.local" ] && source ~/.config/shell/profile.local

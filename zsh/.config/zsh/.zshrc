@@ -22,5 +22,6 @@ setopt appendhistory     # Append history to the history file (no overwriting)
 setopt sharehistory      # Share history across terminals
 setopt incappendhistory  # Immediately append to the history file, not just when a term is killed
 
+# Load direnv if installed
+command -v direnv 1>/dev/null && eval "$(direnv hook zsh)"
 
-test -e $HOME/.nix-profile/etc/profile.d/nix.sh && source $HOME/.nix-profile/etc/profile.d/nix.sh 
