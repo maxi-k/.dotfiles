@@ -2,7 +2,7 @@
 # Launchers & Terminals 
 # ------
 
-super + Return
+super + shift + Return
   $TERMINAL
  
 #@space
