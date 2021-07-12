@@ -22,4 +22,4 @@ bgloc="${XDG_CACHE_HOME:-$HOME/.cache}/bg"
 [[ -z "$NO_DYNAMIC_COLORS" ]] \
   && (wal -s -n -i "$(readlink -f "$bgloc")" -o "$confdir/wal/postrun" &)
 
-xwallpaper --zoom "$bgloc" & # --no-randr
+feh --bg-fill "$bgloc" --no-fehbg

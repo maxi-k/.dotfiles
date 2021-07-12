@@ -2,9 +2,9 @@
 if $(command -v rofi >/dev/null 2>&1); then
   themefile=~/.cache/wal/colors-rofi-dark.rasi
   if [ -f $themefile ]; then 
-    rofi -dmenu -theme $themefile "$@"
+    rofi -dmenu -i -theme $themefile "$@"
   else 
-    rofi -dmenu "$@"
+    rofi -dmenu -i "$@"
   fi
 elif $(command -v dmenu >/dev/null 2>&1); then
   dmenu "$@"

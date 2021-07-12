@@ -1,2 +1,2 @@
 #!/bin/sh
-nmcli con show | awk '{ print $1 }' | selector | xargs nmcli con up
+nmcli con show | grep vpn | awk '{ print $1 }' | selector | xargs nmcli con up

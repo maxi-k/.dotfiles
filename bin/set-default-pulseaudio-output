@@ -1,0 +1,17 @@
+#!/bin/sh
+SELECTION=`pactl list sinks \
+  | grep --no-group-separator -A1 "Name" \
+  | awk -F':' '{printf("%s%s", $2, (NR%2 ? "|" : "\n"))}' \
+  | awk -F'|' '{printf("%s | %s\n", $2, $1)}' \
+  | column -t -s'|' -o'|' \
+  | selector`
+
+OBJECT=`echo $SELECTION | awk -F'|' '{print $2}'`
+DESCRIPTION=`echo $SELECTION | awk -F'|' '{print $1}'`
+
+pactl set-default-sink $OBJECT \
+  && (command -v notify-send && notify-send "Set PA sink to $DESCRIPTION") \
+  || (command -v notify-send && notify-send "Could not set PA sink to $DESCRIPTION") 
+
+  
+  

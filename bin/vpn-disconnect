@@ -1,0 +1,2 @@
+#!/bin/sh
+nmcli con show --active | grep vpn | awk '{ print $1 }' | selector | xargs nmcli con down
