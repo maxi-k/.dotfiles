@@ -1,18 +1,38 @@
 #!/bin/sh
 
-bspc monitor -d $(seq 1 9)
+# Spread desktops across monitors
+desktop=1
+monitors_connected=$(bspc query -M | wc -l)
+per_monitor=$(( 10 / monitors_connected ))
+for monitor in $(bspc query -M); do
+  bspc monitor $monitor -d $(seq $desktop $(( desktop + per_monitor - 1)))
+  desktop=$(( desktop + per_monitor ))
+done
 
-bspc config border_width         2
-bspc config window_gap           3
+bspc config remove_unplugged_monitors  true
+bspc config remove_disabled_monitors   true
+bspc config merge_overlapping_monitors true
 
-bspc config split_ratio          0.52
+# Set up window look
+bspc config border_width               2
+bspc config window_gap                 0
+# bspc config split_ratio          0.52
+
+# Set up monocle mode
 bspc config borderless_monocle   true
 bspc config gapless_monocle      true
+bspc config bottom_monocle_padding  -23
 
-bspc rule -a Gimp desktop='^8' state=floating follow=on
-bspc rule -a Firefox desktop='^2'
-bspc rule -a Screenkey manage=off
+# Set up mouse cursor
+xsetroot -cursor_name left_ptr
+# bspc config pointer_follows_focus false
 
+# Application specific rules
+bspc rule -a Emacs state=tiled
+bspc rule -a Gimp state=floating follow=on
+# bspc rule -a Firefox desktop='^2'
+# bspc rule -a Screenkey manage=off
+
+# Start polybar
 POLYBAR_PATH="$HOME/.config/polybar/start.sh"
-test -f $POLYBAR_PATH && $POLYBAR_PATH || \
-  (command -v notify-send && notify-send "Could not start polybar")
+test -f "$POLYBAR_PATH" && (`$POLYBAR_PATH` &) || notify-send "Could not start polybar"
