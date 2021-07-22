@@ -1,7 +1,9 @@
 #!/bin/sh
 if [ -f $(which rofi) ]; then
   themefile=~/.cache/wal/colors-rofi-dark.rasi
-  [ -f $themefile ] && rofi -modi combi -show combi -theme $themefile "$@" || rofi -modi combi -show combi "$@"
+  mode=${MODE_HINT:-combi}
+  rofi_base="rofi -modi $mode -show $mode"
+  [ -f $themefile ] && $rofi_base -theme $themefile "$@" || $rofi_base "$@"
 elif [ -f $(which dmenu) ]; then
   dmenu "$@"
 else
