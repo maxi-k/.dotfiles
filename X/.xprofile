@@ -9,16 +9,25 @@ export DOTFILES_XPROFILE_LOADED="true"
 
 # [ -e ${HOME}/.config/polybar/start.sh ] && ${HOME}/.config/polybar/start.sh 
 
-if [ "$XDG_SESSION_DESKTOP" == "dwm" ]; then
+tiling_wm() {
   command -v mktheme && mktheme & # Create a theme for this session
   command -v dunst && (pgrep dunst || dunst) &  # Dunst the messaging service
   command -v unclutter && (pgrep unclutter || unclutter) & # Hide mouse cursor when unused
-  command -v slstatus && (pgrep slstatus || slstatus) & # slstatus for dwm
+  command -v nm-applet && (pgrep nm-applet || nm-applet) &
   command -v gsettings && export GTK_THEME=$(gsettings get org.gnome.desktop.interface gtk-theme | sed "s/'//g")
   test -d "$HOME/.local/share/flatpak/exports/bin" && export PATH="$PATH:$HOME/.local/share/flatpak/exports/bin"
   # Set logitech mouse speed
   command -v xinput && xinput --set-prop "pointer:Logitech MX Master 3" 'libinput Accel Speed' -0.5
   command -v xset && xset mouse 3 6
+}
+
+if [ "$XDG_SESSION_DESKTOP" = "dwm" ]; then
+  tiling_wm
+  command -v slstatus && (pgrep slstatus || slstatus) & # slstatus for dwm
+fi
+
+if [ "$XDG_SESSION_DESKTOP" = "bspwm" ]; then
+  tiling_wm
 fi
 
 # Bind hotkeys
