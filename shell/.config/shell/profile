@@ -21,7 +21,7 @@ export PATH=$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin
 [ -d "/opt/asdf-vm" ] && export ASDF_DATA_DIR="/opt/asdf-vm" || export ASDF_DATA_DIR="$HOME/.asdf"
 [ -f "$ASDF_DATA_DIR/asdf.sh" ] && source "$ASDF_DATA_DIR/asdf.sh" # || echo "asdf not found"
 # Use guix if installed
-command -v guix 1>/dev/null && export GUIX_PROFILE="${HOME}/.guix-profile" && . "$GUIX_PROFILE/etc/profile" 
+command -v guix 1>/dev/null && export GUIX_PROFILE="${HOME}/.config/guix/current" && . "$GUIX_PROFILE/etc/profile"
 # load nix if installed
 test -e $HOME/.nix-profile/etc/profile.d/nix.sh && source $HOME/.nix-profile/etc/profile.d/nix.sh 
 # load flatpak export if flatpak is installed
