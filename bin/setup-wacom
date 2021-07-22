@@ -1,0 +1,5 @@
+#!/bin/sh
+
+NAME="Wacom One by Wacom M Pen stylus"
+xsetwacom set "$NAME" rotate half
+xsetwacom set "$NAME" MapToOutput DisplayPort-1
