@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+test "$TERM" = "dumb" && unsetopt zle && export PS1="$ " && return
+
 export GPG_TTY=$(tty)
 
 # Load in look config, aliases and local config
