@@ -29,6 +29,12 @@ super + shift + o
 super + shift + s
     tmux list-sessions | selector | awk -F: '\{ print $1 \}' | xargs $TERMINAL -e tmux new-session -A -s
 
+super + shift + F12
+    firefox
+
+super + shift + f
+    cat ~/.cache/searches.log | selector | tee -a ~/.cache/searches.log | xargs -I'%s' firefox --search "%s"
+
 # Cycle keyboard layout
 super + space
     x-cycle-layout && command -v notify-send && notify-send "Cycled Layout"

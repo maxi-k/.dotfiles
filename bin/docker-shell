@@ -1,0 +1,11 @@
+#!/bin/sh
+TOOL=${DTOOL:-docker}
+DSHELL=${DSHELL:-bash}
+DREMOVE=${DREMOVE:-"--rm"}
+IMAGE=$1
+
+test -z "$1" && echo "Specify image to run" && exit
+
+CMD="$TOOL run $DREMOVE -it --entrypoint $DSHELL $IMAGE"
+echo "$CMD"
+$CMD
