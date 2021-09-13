@@ -21,7 +21,7 @@ super + shift + b
     $TERMINAL -e "bluetoothctl"
 
 super + shift + c
-    $TERMINAL -e "python"
+    $TERMINAL -e "python3"
 
 super + shift + o
     select-recent-dir "emacsclient -c"
