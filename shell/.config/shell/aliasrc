@@ -25,3 +25,5 @@ alias tma="tmux -2 attach -t $1" # attach session
 alias tmk="tmux kill-session -t $1" # kill session
 
 alias sl='sl -e'
+
+alias du-gui='ncdu'
