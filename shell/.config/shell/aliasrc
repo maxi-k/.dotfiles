@@ -1,8 +1,9 @@
 #!/bin/sh
 
 # ls
-alias la='ls -a'
-alias lla='ls -la'
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
 
 ## Clipboard
 # copy current directory to clipboard

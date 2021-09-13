@@ -9,4 +9,19 @@ parse_git_branch() {
 setopt PROMPT_SUBST
 
 # set the prompt
-PS1='%F{240}%n %F{180}%1~$(parse_git_branch) %F{240}%(!.#.$)%f '
+PS1='%F{240}%n %F{180}%1~$(parse_git_branch) %F{240}%(!.#.$)%f ' # left aligned
+RPROMPT='%F{240}$(hostname)%f'  # right aligned
+
+# enable color support of ls
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+test -f ~/.cache/wal/colors.sh && source ~/.cache/wal/colors.sh
