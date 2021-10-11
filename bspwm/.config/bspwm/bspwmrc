@@ -12,6 +12,7 @@ done
 bspc config remove_unplugged_monitors  true
 bspc config remove_disabled_monitors   true
 bspc config merge_overlapping_monitors true
+bspc config directional_focus_tightness low  # allows focusing floating windows with standard directional keys
 
 # Set up window look
 bspc config border_width               2
@@ -29,7 +30,7 @@ xsetroot -cursor_name left_ptr
 
 # Application specific rules
 bspc rule -a Emacs state=tiled
-bspc rule -a Gimp state=floating follow=on
+# bspc rule -a Gimp state=floating follow=on
 # bspc rule -a Firefox desktop='^2'
 # bspc rule -a Screenkey manage=off
 
