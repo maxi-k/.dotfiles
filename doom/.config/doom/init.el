@@ -53,11 +53,12 @@
 
        :editor
        (evil +everywhere)  ; come to the dark side, we have cookies
+       evil-cleverparens   ; clever parenthesis in lisp-like modes with evil
        file-templates      ; auto-snippets for empty files
        fold                ; (nigh) universal code folding
        ;;(format +onsave)  ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
-       lispy               ; vim for lisp, for people who don't like vim
+       ;;lispy             ; vim for lisp, for people who don't like vim
        ;;multiple-cursors  ; editing in many places at once
        ;;objed             ; text object editing for the innocent
        ;;parinfer          ; turn lisp into python, sort of
@@ -140,6 +141,7 @@
        ;;lean
        ;;factor
        ledger              ; an accounting system in Emacs
+       lfe                 ; lisp flavoured erlang
        ;;lua               ; one-based indices? one-based indices
        markdown            ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c

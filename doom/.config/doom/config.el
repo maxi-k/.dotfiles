@@ -26,7 +26,7 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 
-(setq doom-theme (if window-system 'doom-one 'bleak))
+(setq doom-theme (if window-system 'doom-nord 'bleak))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -213,7 +213,7 @@ depending on the current stat."
 
 (when (featurep! :lang org +roam)
   ;; Don't convert to file links, keep heading-based roam: links instead
-  (setq org-roam-link-auto-replace nil)
+  ;; (setq org-roam-link-auto-replace nil)
 
   (defun my/org-roam-replace-link ()
     "Replace the link at point with a new roam-style link.
@@ -260,7 +260,7 @@ depending on the current stat."
    (:prefix "n"
     (:prefix "r"
       "q" #'org-roam-buffer-toggle-display
-      "t" #'org-roam-dailies-find-today))))
+      "t" #'org-roam-dailies-today))))
 
 (after! ess
   (map!
@@ -268,19 +268,36 @@ depending on the current stat."
     :localleader
     ("e" #'ess-eval-region-or-function-or-paragraph))))
 
-(when (featurep! :editor lispy)
-  (map!
-   :map lispy-mode-map
-   :localleader
-   "s" #'lispy-splice-sexp-killing-backward
-   "S" #'lispy-splice-sexp-killing-forward))
-
 (after! elfeed
   (map!
    (:map elfeed-search-mode-map
     :localleader
     "u" #'elfeed-update
     "r" #'elfeed-search-update)))
+
+(defun my/on-lisp-mode ()
+  "Call on entering a lisp mode."
+  (interactive)
+  (paredit-mode)
+  (rainbow-delimiters-mode)
+  (smartparens-mode -1) ;; also generates closing single quotes
+  (when (and (featurep! :editor evil)
+             (featurep! :editor evil-cleverparens))
+    (evil-cleverparens-mode 1)))
+
+(add-hook! 'lisp-mode-hook (my/on-lisp-mode))
+(add-hook! emacs-lisp-mode (my/on-lisp-mode))
+(when (featurep! :lang lfe)
+  (add-hook! lfe-mode (my/on-lisp-mode)))
+(when (featurep! :lang clojure)
+  (add-hook! clojure-mode (my/on-lisp-mode)))
+
+(when (featurep! :editor lispy)
+  (map!
+   :map lispy-mode-map
+   :localleader
+   "s" #'lispy-splice-sexp-killing-backward
+   "S" #'lispy-splice-sexp-killing-forward))
 
 ;; Make macOS title bar transparent
 (when (eq system-type 'darwin)
