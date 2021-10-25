@@ -156,6 +156,10 @@ depending on the current stat."
 
  ;; Leader Keys
  :leader
+ (:prefix "i"
+  (:when (featurep! :editor evil)
+   "i" #'evil-insert-digraph
+   "d" #'evil-ex-show-digraphs))
 
  ;; buffer commands
  (:prefix "b"
