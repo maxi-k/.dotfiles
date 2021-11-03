@@ -93,7 +93,9 @@ super + {y,shift + y,g,f}
 
 # set the node flags
 super + ctrl + {m,x,y,z}
-	bspc node -g {marked,locked,sticky,private}
+        STATE={marked,locked,sticky,private};\
+        bspc node -g $STATE;\
+        notify-send "Set node state to $STATE"
 
 #
 # focus/swap/move

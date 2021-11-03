@@ -215,56 +215,95 @@ depending on the current stat."
   (setq deft-recursive 't)
   (setq org-roam-directory notes-directory))
 
-(when (featurep! :lang org +roam)
-  ;; Don't convert to file links, keep heading-based roam: links instead
-  ;; (setq org-roam-link-auto-replace nil)
+(when (featurep! :lang org +roam2)
+  (after! org-roam
+    ;; Don't convert to file links, keep heading-based roam: links instead
+    ;; (setq org-roam-link-auto-replace nil)
 
-  (defun my/org-roam-replace-link ()
-    "Replace the link at point with a new roam-style link.
+    ;; TODO version that replaces every link with
+    ;; org-next-link
+    (defun my/org-roam-replace-link ()
+      "Replace the link at point with a new roam-style link.
   Return 't if it was replaced, nil otherwise"
-    (interactive)
-    (save-excursion
-      (let ((context (org-element-context)))
-        (pcase (org-element-lineage context '(link) t)
-          (`nil nil)
-          (link
-           (let* ((link-type (org-element-property :type link))
-                  (link-content (cond ((string-equal "roam" link-type) nil)
-                                      ((string-equal "fuzzy" link-type) (org-element-property :raw-link link))
-                                      (t (let* ((begin (or (org-element-property :contents-begin link)
-                                                           (org-element-property :begin link)))
-                                                (end (or (org-element-property :contents-end link)
-                                                         (org-element-property :end link))))
-                                           (when (and begin end)
-                                             (string-trim (buffer-substring-no-properties begin end))))))))
-             (when link-content
-               (save-match-data
-                 (unless (org-in-regexp org-link-bracket-re 1)
-                   (user-error "No link at point"))
-                 (replace-match "")
-                 (insert (org-link-make-string (concat "roam:" link-content) link-content))))))))))
+      (interactive)
+      (save-excursion
+        (let ((context (org-element-context)))
+          (pcase (org-element-lineage context '(link) t)
+            (`nil nil)
+            (link
+             (let* ((link-type (org-element-property :type link))
+                    (link-content (cond ((string-equal "roam" link-type) nil)
+                                        ((string-equal "fuzzy" link-type) (org-element-property :raw-link link))
+                                        (t (let* ((begin (or (org-element-property :contents-begin link)
+                                                             (org-element-property :begin link)))
+                                                  (end (or (org-element-property :contents-end link)
+                                                           (org-element-property :end link))))
+                                             (when (and begin end)
+                                               (string-trim (buffer-substring-no-properties begin end))))))))
+               (when link-content
+                 (message link-content)
+                 (save-match-data
+                   (if (org-in-regexp org-link-bracket-re 1)
+                       (progn
+                         (replace-match "")
+                         (insert (org-link-make-string (concat "roam:" link-content) link-content)))
+                     (message "No link at point"))))))))))
 
 
-  (defun my/org-roam-replace-and-follow ()
-    "Replaces the link at point with a roam: style link, then follows it."
-    (interactive)
-    (my/org-roam-replace-link)
-    (let ((org-roam-link-auto-replace nil))
-      (org-open-at-point)))
+    (defun my/walk-org-links (f)
+      "Walk org mode links in a buffer, calling `f` at each point. Does not save the excursion."
+      (pcase (org-next-link)
+        ("No further link found" nil)
+        (res
+         (funcall f)
+         (my/walk-org-links f))))
 
-  (map!
-   (:map org-mode-map
-     :nvie "M-[" #'my/org-roam-replace-and-follow
-     :nvie "M-]" #'my/org-roam-replace-link
-     :localleader
-     (:prefix "m"
-      "l" #'my/org-roam-replace-and-follow
-      "L" #'my/org-roam-replace-link))
-   :leader
-   (:prefix "n"
-    (:prefix "r"
-      "q" #'org-roam-buffer-toggle-display
-      "t" #'org-roam-dailies-today))))
+    (defun my/migrate-org-roam-buffer ()
+      "Migrate the given buffer to org roam v2 if possible."
+      (interactive)
+      (save-excursion
+        (my/walk-org-links #'my/org-roam-replace-link)
+        (org-roam-link-replace-all)))
+
+    (defmacro my/infile-no-traces (file &rest body)
+      `(let ((no-traces|visited-p (get-file-buffer (expand-file-name ,file)))
+             to-be-removed)
+         (save-window-excursion
+           (find-file ,file)
+           (setq to-be-removed (current-buffer))
+           ,@body)
+         (unless no-traces|visited-p
+           (kill-buffer to-be-removed))))
+
+    (defun my/migrate-org-roam-file (file)
+      (my/infile-no-traces file
+                           (message "Migrating %s" file)
+                           (my/migrate-org-roam-buffer)
+                           (save-buffer)))
+
+    (defun my/migrate-org-roam-directory (dir)
+      (let ((files (directory-files dir  t "\\.org$")))
+        (mapc #'my/migrate-org-roam-file files)))
+
+    (defun my/org-roam-replace-and-follow ()
+      "Replaces the link at point with a roam: style link, then follows it."
+      (interactive)
+      (my/org-roam-replace-link)
+      (let ((org-roam-link-auto-replace nil))
+        (org-open-at-point)))
+
+    (map!
+     (:map org-mode-map
+      "M-]" #'my/org-roam-replace-link
+      :localleader
+      (:prefix "m"
+       "l" #'my/org-roam-replace-and-follow
+       "L" #'my/org-roam-replace-link))
+     :leader
+     (:prefix "n"
+      (:prefix "r"
+       "t" #'org-roam-dailies-today))))
+  )
 
 (after! ess
   (map!
