@@ -29,11 +29,14 @@ super + shift + o
 super + shift + s
     tmux list-sessions | selector | awk -F: '\{ print $1 \}' | xargs $TERMINAL -e tmux new-session -A -s
 
-super + shift + F12
-    firefox
+super + shift + d
+    xdg-open ~
 
 super + shift + f
     cat ~/.cache/searches.log | selector | tee -a ~/.cache/searches.log | xargs -I'%s' firefox --search "%s"
+
+super + F12
+	bspc rule -a \* -o state=floating sticky=on layer=above rectangle=720x360+600+26 && $TERMINAL
 
 # Cycle keyboard layout
 super + space
