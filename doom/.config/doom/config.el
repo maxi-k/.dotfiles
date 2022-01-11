@@ -197,18 +197,15 @@ depending on the current stat."
  :desc "Jump Word" "j" #'avy-goto-word-or-subword-1)
 
 
-;; Mode Variables
-(after! rustic
-  (when (featurep! :tools lsp)
-    (setq rustic-lsp-server 'rust-analyzer)))
+;; Mode Variables for the language server protocol
+(when (featurep! :tools lsp)
+  (setq lsp-lens-auto-enable nil)  ;; lens seems to deteriorate performance (tested in c++ mode), disable it for now
+  (after! rustic (setq rustic-lsp-server 'rust-analyzer))
+  (after! ruby (setq lsp-solargraph-use-bundler 't)))
 
 (defun pinentry-emacs (desc prompt ok error)
   (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
     str))
-
-(after! ruby
-  (when (featurep! :tools lsp)
-    (setq lsp-solargraph-use-bundler 't)))
 
 (let ((notes-directory "~/Documents/Notes/roam"))
   (setq deft-directory notes-directory)
@@ -222,10 +219,10 @@ depending on the current stat."
 
     ;; TODO version that replaces every link with
     ;; org-next-link
-    (defun my/org-roam-replace-link ()
+    (defun my/org-roam-replace-link (&optional arg)
       "Replace the link at point with a new roam-style link.
   Return 't if it was replaced, nil otherwise"
-      (interactive)
+      (interactive "P")
       (save-excursion
         (let ((context (org-element-context)))
           (pcase (org-element-lineage context '(link) t)
@@ -241,13 +238,14 @@ depending on the current stat."
                                              (when (and begin end)
                                                (string-trim (buffer-substring-no-properties begin end))))))))
                (when link-content
-                 (message link-content)
                  (save-match-data
                    (if (org-in-regexp org-link-bracket-re 1)
                        (progn
                          (replace-match "")
                          (insert (org-link-make-string (concat "roam:" link-content) link-content)))
-                     (message "No link at point"))))))))))
+                     (message "No link at point"))))
+               (when arg
+                 (org-roam-link-replace-at-point))))))))
 
 
     (defun my/walk-org-links (f)
@@ -303,6 +301,21 @@ depending on the current stat."
      (:prefix "n"
       (:prefix "r"
        "t" #'org-roam-dailies-today))))
+
+  ;; Modify update mode to run in background
+  (defun my/org-roam-on-save-autosync (&optional file-path)
+    (when org-roam-db-update-on-save
+      (let ((file (or file-path (buffer-file-name (buffer-base-buffer)))))
+        (message "will run async with file %s" file)
+        (make-thread
+         (lambda ()
+           (message "start async db update for file %s" file)
+           (org-roam-db-update-file file)
+           (message "done with async db update for file %s" file))))))
+
+  ;; doesn't work yet:
+  ;; (error "Attempt to accept output from process emacsql-sqlite locked to thread #<thread 0x55ac05b5dc20>")
+  ;; (advice-add 'org-roam-db-autosync--try-update-on-save-h :override #'my/org-roam-on-save-autosync)
   )
 
 (after! ess
