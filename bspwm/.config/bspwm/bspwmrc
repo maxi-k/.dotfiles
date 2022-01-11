@@ -30,6 +30,7 @@ xsetroot -cursor_name left_ptr
 
 # Application specific rules
 bspc rule -a Emacs state=tiled
+bspc rule -a Zoom state=floating
 # bspc rule -a Gimp state=floating follow=on
 # bspc rule -a Firefox desktop='^2'
 # bspc rule -a Screenkey manage=off
