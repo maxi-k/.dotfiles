@@ -62,7 +62,8 @@
 ;; Still new to doom, show which-key faster
 (setq which-key-idle-delay 1.5)
 (after! company
-  (setq company-idle-delay 1.0))
+  (setq company-idle-delay 1.0)
+  (setq company-tooltip-idle-delay 0.325))
 
 ;; Keep a scroll margin
 (setq scroll-margin 7)
@@ -246,7 +247,6 @@ depending on the current stat."
                      (message "No link at point"))))
                (when arg
                  (org-roam-link-replace-at-point))))))))
-
 
     (defun my/walk-org-links (f)
       "Walk org mode links in a buffer, calling `f` at each point. Does not save the excursion."

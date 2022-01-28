@@ -54,8 +54,8 @@ XF86Audio{Raise,Lower}Volume
     amixer sset Master 5%{+,-}
 
 # Spotify media keys
-XF86Audio{Play,Stop,Prev,Next}
-    dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.{PlayPause,Stop,Previous,Next}
+XF86Audio{Play,Pause,Stop,Prev,Next}
+    playerctl {play,pause,stop,previous,next}
 
 # Restart sxhkd
 super + Delete
