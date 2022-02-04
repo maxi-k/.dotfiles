@@ -14,6 +14,7 @@ xmonad/.xmonad/*
 /leiningen/.lein/self-installs
 /X/.config/albert/core.db
 /X/.config/albert/last_used_version
+*.local
 
 # Mac
 .DS_Store
