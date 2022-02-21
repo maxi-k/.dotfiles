@@ -84,9 +84,17 @@
     (find-file (expand-file-name +org-capture-notes-file org-directory)))
 
   (defun org-directory-files (&optional root)
-    "List org files in the given directory. If no directory is given,assume the current one."
-    (let ((directory (or root (pwd))))
-      (directory-files "." nil ".org")))
+    "List org files in the given directory.
+If no directory is given,assume the current one (`default-directory`)."
+    (let ((directory (or root default-directory)))
+      (directory-files directory nil ".org")))
+
+  (defun org-recursive-directory-files (&optional root)
+    "List org files in the given directory recursively.
+If no directory is given, assume the current one (`default-directory`)."
+    (let ((directory (or root default-directory)))
+      (directory-files-recursively directory (rx ".org" eos))))
+
   ;; use "TODO" instead of "[ ]" for new todo entries as used by orgzly
   (after! org
     (add-to-list 'org-latex-packages-alist '("" "minted"))
@@ -316,6 +324,36 @@ depending on the current stat."
   ;; doesn't work yet:
   ;; (error "Attempt to accept output from process emacsql-sqlite locked to thread #<thread 0x55ac05b5dc20>")
   ;; (advice-add 'org-roam-db-autosync--try-update-on-save-h :override #'my/org-roam-on-save-autosync)
+
+  (defun my/roam-update-agenda-files ()
+    "Update the `org-agenda-files` variable by adding all org-roam files which contain todo-like strings."
+    ;; (with-temp-buffer (org-agenda-mode) org-todo-keywords-for-agenda)
+    (let* ((todo-strings '("TODO" "WAIT" "HOLD" "IDEA" "STRT" "PROJ" "\\[ \\]" "\\[?\\]" "\\[X\\]"))
+           (args (mapcar (lambda (s) (concat "-e '" s "' ")) todo-strings))
+           (search-dir org-roam-directory)
+           (default-directory search-dir)
+           (exec (executable-find "rg"))
+           (cmd (apply #'concat "rg " "--fixed-strings " "--files-with-matches " args))
+           (original-agenda org-agenda-files))
+      (if exec
+          (async-start
+           `(lambda ()
+              (require 'subr-x)
+              (remq nil
+                    (mapcar
+                     (lambda (f) (when (and f (not (string-empty-p f))) (concat ,search-dir f)))
+                     (split-string
+                      (shell-command-to-string ,cmd) "\n"))))
+           `(lambda (result)
+              (if (boundp 'my/original-org-agenda-files)
+                  ;; TODO duplicates as in ~/foo and /home/user/foo are still possible; how to fix best?
+                  (setq org-agenda-files (delete-dups (append my/original-org-agenda-files result)))
+                (setq org-agenda-files (delete-dups (append org-agenda-files result)))
+                (setq my/original-org-agenda-files '(,@original-agenda)))))
+        (message "Couldn't find ripgrep for smart roam<->agenda file initialization."))))
+
+  (after! org-agenda ;; TODO is this delayed correctly?
+    (my/roam-update-agenda-files))
   )
 
 (after! ess
