@@ -182,6 +182,12 @@ depending on the current stat."
   (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
     str))
 
+
+(setq my/notes-directory "~/Documents/Notes/")
+(setq deft-directory my/notes-directory
+      deft-recursive 't
+      org-roam-directory (concat my/notes-directory "roam"))
+
 (when (featurep! :lang org)
   (defun visit-notes-buffer ()
     "Visit the main org mode notes buffer."
@@ -232,17 +238,86 @@ Use a prefix argument to insert an active timestamp instead."
     (interactive "P")
     (my/org-insert-timestamped-list-item 't active))
 
+  (defun my/roam-link-loop--capture-advice (result)
+    "Advice for continuing the link loop after calling capture from org-roam-node-insert"
+    (advice-remove 'org-capture-finalize #'my/roam-link-loop--capture-advice)
+    (setq my/in-roam-link-loop nil)
+    (when result ;; capture successful -> insert space
+      (move-end-of-line nil) ;; fix for org-capture not positioning cursor properly after inserting text
+      (insert 32))
+    (my/roam-link-loop)
+    result)
+
+  (defun my/roam-link-loop ()
+    "Prompt user for inserting links to roam nodes multiple times."
+    (interactive)
+    (let ((start-loc (current-buffer)))
+      (org-roam-node-insert)
+      (if (eq (current-buffer) start-loc)
+          (progn
+            (insert 32)
+            (my/roam-link-loop))
+        (unless (and (boundp 'my/in-roam-link-loop) my/in-roam-link-loop)
+          (setq my/in-roam-link-loop 't)
+          (advice-add 'org-capture-finalize :filter-return #'my/roam-link-loop--capture-advice)))))
+
   (map!
    (:map org-mode-map :localleader
     (:prefix "d"
      "l" #'my/org-insert-timestamped-list-item
-     "i" #'my/org-insert-timestamped-list-item-prompt)))
-  )
+     "i" #'my/org-insert-timestamped-list-item-prompt)
+    (:prefix "m"
+     "t" #'my/roam-link-loop)))
 
-(let ((notes-directory "~/Documents/Notes/roam"))
-  (setq deft-directory notes-directory)
-  (setq deft-recursive 't)
-  (setq org-roam-directory notes-directory))
+  (defun my/update-agenda-files (&optional rebuild-agenda)
+    "Update the `org-agenda-files` variable by adding all org-roam files which contain todo-like strings."
+    ;; (with-temp-buffer (org-agenda-mode) org-todo-keywords-for-agenda)
+    (interactive)
+    (let* ((todo-strings '("TODO" "WAIT" "HOLD" "IDEA" "STRT" "PROJ" "\\[ \\]" "\\[?\\]" "\\[X\\]"))
+           (args (mapcar (lambda (s) (concat "-e '" s "' ")) todo-strings))
+           (search-dir my/notes-directory)
+           (default-directory search-dir)
+           (exec (executable-find "rg"))
+           (cmd (apply #'concat "rg " "--fixed-strings " "--files-with-matches " args))
+           (original-agenda org-agenda-files))
+      (if exec
+          (async-start
+           `(lambda ()
+              (require 'subr-x)
+              (remq nil
+                    (mapcar
+                     (lambda (f) (when (and f (not (string-empty-p f))) (concat ,search-dir f)))
+                     (split-string
+                      (shell-command-to-string ,cmd) "\n"))))
+           `(lambda (result)
+              (if (boundp 'my/original-org-agenda-files)
+                  ;; TODO duplicates as in ~/foo and /home/user/foo are still possible; how to fix best?
+                  (setq org-agenda-files (delete-dups (append my/original-org-agenda-files result)))
+                (setq org-agenda-files (delete-dups (append org-agenda-files result)))
+                (setq my/original-org-agenda-files '(,@original-agenda))
+                (when ,rebuild-agenda
+                  (message "Rebuilding all agenda buffers after sync with roam files...")
+                  (org-agenda-redo-all 't)))))
+        (message "Couldn't find ripgrep for smart agenda file initialization."))))
+
+  (defun my/update-agenda-on-save ()
+    "Update org-agenda-files if in org mode"
+    (when (eq major-mode 'org-mode)
+      (my/update-agenda-files 't)))
+
+  (add-hook! org-agenda-mode
+    (unless (boundp 'my/original-org-agenda-files)
+      ;; org seems to set the variable to the org-directory if it's empty,
+      ;; and then searches this directory; this duplicates some of our logic,
+      ;; so set the variable to some file that doesn't exist
+      (when (or (not org-agenda-files) (eq (car org-agenda-files) org-directory))
+        (setq org-agenda-files (list (concat my/notes-directory ".agenda.org"))))
+      (my/update-agenda-files 't)))
+
+  (add-hook! org-mode
+    (add-hook! 'after-save-hook :local #'my/update-agenda-on-save))
+
+  ) ;; </org mode initialization>
 
 (when (featurep! :lang org +roam2)
   (after! org-roam
@@ -347,41 +422,7 @@ Use a prefix argument to insert an active timestamp instead."
   ;; doesn't work yet:
   ;; (error "Attempt to accept output from process emacsql-sqlite locked to thread #<thread 0x55ac05b5dc20>")
   ;; (advice-add 'org-roam-db-autosync--try-update-on-save-h :override #'my/org-roam-on-save-autosync)
-
-  (defun my/roam-update-agenda-files ()
-    "Update the `org-agenda-files` variable by adding all org-roam files which contain todo-like strings."
-    ;; (with-temp-buffer (org-agenda-mode) org-todo-keywords-for-agenda)
-    (let* ((todo-strings '("TODO" "WAIT" "HOLD" "IDEA" "STRT" "PROJ" "\\[ \\]" "\\[?\\]" "\\[X\\]"))
-           (args (mapcar (lambda (s) (concat "-e '" s "' ")) todo-strings))
-           (search-dir org-roam-directory)
-           (default-directory search-dir)
-           (exec (executable-find "rg"))
-           (cmd (apply #'concat "rg " "--fixed-strings " "--files-with-matches " args))
-           (original-agenda org-agenda-files))
-      (if exec
-          (async-start
-           `(lambda ()
-              (require 'subr-x)
-              (remq nil
-                    (mapcar
-                     (lambda (f) (when (and f (not (string-empty-p f))) (concat ,search-dir f)))
-                     (split-string
-                      (shell-command-to-string ,cmd) "\n"))))
-           `(lambda (result)
-              (if (boundp 'my/original-org-agenda-files)
-                  ;; TODO duplicates as in ~/foo and /home/user/foo are still possible; how to fix best?
-                  (setq org-agenda-files (delete-dups (append my/original-org-agenda-files result)))
-                (setq org-agenda-files (delete-dups (append org-agenda-files result)))
-                (setq my/original-org-agenda-files '(,@original-agenda)))))
-        (message "Couldn't find ripgrep for smart roam<->agenda file initialization."))))
-
-
-  (after! org-agenda ;; TODO is this delayed correctly?
-    (my/roam-update-agenda-files))
-
-  (after! roam
-    (add-hook! after-save-hook #'my/roam-update-agenda-files))
-  )
+  ) ;; </org roam initialization>
 
 (after! ess
   (map!

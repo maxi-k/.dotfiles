@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name:  org-roam-multiple-tags
+# key: taglist
+# condition: t
+# type: command
+# --
+
+(insert "- [[roam:tags][tags]] :: ")
+(my/roam-link-loop)
