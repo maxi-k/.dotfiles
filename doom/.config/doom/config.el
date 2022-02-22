@@ -77,40 +77,6 @@
 ;; - post-forward: display the directory name after the buffer name
 (setq uniquify-buffer-name-style 'post-forward)
 
-(when (featurep! :lang org)
-  (defun visit-notes-buffer ()
-    "Visit the main org mode notes buffer."
-    (interactive)
-    (find-file (expand-file-name +org-capture-notes-file org-directory)))
-
-  (defun org-directory-files (&optional root)
-    "List org files in the given directory.
-If no directory is given,assume the current one (`default-directory`)."
-    (let ((directory (or root default-directory)))
-      (directory-files directory nil ".org")))
-
-  (defun org-recursive-directory-files (&optional root)
-    "List org files in the given directory recursively.
-If no directory is given, assume the current one (`default-directory`)."
-    (let ((directory (or root default-directory)))
-      (directory-files-recursively directory (rx ".org" eos))))
-
-  ;; use "TODO" instead of "[ ]" for new todo entries as used by orgzly
-  (after! org
-    (add-to-list 'org-latex-packages-alist '("" "minted"))
-    (setq org-startup-folded 't
-          org-duration-format (quote h:mm)
-          org-capture-templates
-          (append '(("t" "Personal todo" entry
-                     (file+headline +org-capture-todo-file "Inbox")
-                     "* TODO %?\n" :prepend t)
-                    ("f" "File todo" entry
-                     (file+headline +org-capture-todo-file "Inbox")
-                     "* TODO %?\n%i\n%a" :prepend t))
-                  (cdr org-capture-templates))
-          org-latex-pdf-process '("latexmk -lualatex -shell-escape -interaction=nonstopmode -output-directory=%o %f")
-          org-latex-listings 'minted)))
-
 ;; (setq enable-local-variables t)
 
 (defun toggle-window-split ()
@@ -215,6 +181,63 @@ depending on the current stat."
 (defun pinentry-emacs (desc prompt ok error)
   (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
     str))
+
+(when (featurep! :lang org)
+  (defun visit-notes-buffer ()
+    "Visit the main org mode notes buffer."
+    (interactive)
+    (find-file (expand-file-name +org-capture-notes-file org-directory)))
+
+  (defun org-directory-files (&optional root)
+    "List org files in the given directory.
+If no directory is given,assume the current one (`default-directory`)."
+    (let ((directory (or root default-directory)))
+      (directory-files directory nil ".org")))
+
+  (defun org-recursive-directory-files (&optional root)
+    "List org files in the given directory recursively.
+If no directory is given, assume the current one (`default-directory`)."
+    (let ((directory (or root default-directory)))
+      (directory-files-recursively directory (rx ".org" eos))))
+
+  ;; use "TODO" instead of "[ ]" for new todo entries as used by orgzly
+  (after! org
+    (add-to-list 'org-latex-packages-alist '("" "minted"))
+    (setq org-startup-folded 't
+          org-duration-format (quote h:mm)
+          org-capture-templates
+          (append '(("t" "Personal todo" entry
+                     (file+headline +org-capture-todo-file "Inbox")
+                     "* TODO %?\n" :prepend t)
+                    ("f" "File todo" entry
+                     (file+headline +org-capture-todo-file "Inbox")
+                     "* TODO %?\n%i\n%a" :prepend t))
+                  (cdr org-capture-templates))
+          org-latex-pdf-process '("latexmk -lualatex -shell-escape -interaction=nonstopmode -output-directory=%o %f")
+          org-latex-listings 'minted))
+
+
+  (defun my/org-insert-timestamped-list-item (&optional other-time active)
+    "Insert a (inactive) timestamped list item with `+org/insert-item-below`.
+Use the prefix argument to specify the time.
+Use two prefix arguments to insert an active timestamp instead."
+    (interactive "P")
+    (+org/insert-item-below 1)
+    (org-time-stamp (if other-time 1 '(16)) (if active nil 'inactive))
+    (insert-char 32)) ;; space afterwards
+
+  (defun my/org-insert-timestamped-list-item-prompt (&optional active)
+    "Insert a (inactive) timestamped list item with `+org/insert-item-below`, prompting for the time.
+Use a prefix argument to insert an active timestamp instead."
+    (interactive "P")
+    (my/org-insert-timestamped-list-item 't active))
+
+  (map!
+   (:map org-mode-map :localleader
+    (:prefix "d"
+     "l" #'my/org-insert-timestamped-list-item
+     "i" #'my/org-insert-timestamped-list-item-prompt)))
+  )
 
 (let ((notes-directory "~/Documents/Notes/roam"))
   (setq deft-directory notes-directory)
@@ -352,8 +375,12 @@ depending on the current stat."
                 (setq my/original-org-agenda-files '(,@original-agenda)))))
         (message "Couldn't find ripgrep for smart roam<->agenda file initialization."))))
 
+
   (after! org-agenda ;; TODO is this delayed correctly?
     (my/roam-update-agenda-files))
+
+  (after! roam
+    (add-hook! after-save-hook #'my/roam-update-agenda-files))
   )
 
 (after! ess
