@@ -31,7 +31,7 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq my/notes-directory "~/Documents/Notes/"
-      org-directory "~/Documents/Notes")
+      org-directory my/notes-directory)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -63,8 +63,8 @@
 ;; Still new to doom, show which-key faster
 (setq which-key-idle-delay 1.5)
 (after! company
-  (setq company-idle-delay 1.0)
-  (setq company-tooltip-idle-delay 0.325))
+  (setq company-idle-delay 1.0
+        company-tooltip-idle-delay 0.325))
 
 ;; Keep a scroll margin
 (setq scroll-margin 7)
@@ -79,6 +79,10 @@
 (setq uniquify-buffer-name-style 'post-forward)
 
 ;; (setq enable-local-variables t)
+
+;;
+;; Some utility functions
+;;
 
 (defun toggle-window-split ()
   "Toggle the window split between horizontal and vertial."
@@ -106,7 +110,7 @@
         (select-window first-win)
         (if this-win-2nd (other-window 1))))))
 
- (defun open-external-terminal ()
+(defun open-external-terminal ()
   "Open an external terminal in the current directory asynchronously."
   (interactive)
   (let ((term (or (getenv "TERMINAL") "alacritty")))
@@ -121,13 +125,59 @@ depending on the current stat."
                             #'+popup/raise
                           #'+popup/buffer))))
 
-;; Import some important  keys from my own config
+(defun pinentry-emacs (desc prompt ok error)
+  "Function for using emacs as a pinentry service."
+  (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
+    str))
+
+;;
+;; Lisp language family setup
+;;
+
+(defun my/on-lisp-mode ()
+  "Call on entering a lisp mode."
+  (interactive)
+  (paredit-mode)
+  (rainbow-delimiters-mode)
+  (smartparens-mode -1) ;; also generates closing single quotes
+  (when (and (featurep! :editor evil)
+             (featurep! :editor evil-cleverparens))
+    (evil-cleverparens-mode 1)))
+
+(add-hook! 'lisp-mode-hook (my/on-lisp-mode))
+(add-hook! emacs-lisp-mode (my/on-lisp-mode))
+(when (featurep! :lang lfe)
+  (add-hook! lfe-mode (my/on-lisp-mode)))
+(when (featurep! :lang clojure)
+  (add-hook! clojure-mode (my/on-lisp-mode)))
+
+;; Language Server Protocol setup
+(when (featurep! :tools lsp)
+  (setq lsp-lens-auto-enable nil)  ;; lens seems to deteriorate performance (tested in c++ mode), disable it for now
+  (after! rustic (setq rustic-lsp-server 'rust-analyzer))
+  (after! ruby (setq lsp-solargraph-use-bundler 't)))
+
+;; Deft for note searching in the notes/roam directory
+(when (featurep! deft)
+  (setq deft-directory my/notes-directory
+        deft-recursive 't))
+
+;; Make macOS title bar transparent
+(when (eq system-type 'darwin)
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
+
+;;
+;; Global Keybindings
+;;
+
+;; Import some important keys from my own config
 (map!
  ;; Global Keys
  "M-O" #'toggle-window-split
 
  (:when (featurep! :tools magit)
-  :desc "Git"    "C-c g"    #'magit-status)
+  "C-c g"    #'magit-status)
+
  (:when (featurep! :emacs browse-kill-ring)
   "C-x C-y"  #'browse-kill-ring)
 
@@ -173,23 +223,9 @@ depending on the current stat."
  :desc "Jump Char" "J" #'avy-goto-char
  :desc "Jump Word" "j" #'avy-goto-word-or-subword-1)
 
-
-;; Mode Variables for the language server protocol
-(when (featurep! :tools lsp)
-  (setq lsp-lens-auto-enable nil)  ;; lens seems to deteriorate performance (tested in c++ mode), disable it for now
-  (after! rustic (setq rustic-lsp-server 'rust-analyzer))
-  (after! ruby (setq lsp-solargraph-use-bundler 't)))
-
-(defun pinentry-emacs (desc prompt ok error)
-  (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
-    str))
-
-;; set notes directory for the org-notes module
-
-
-(when (featurep! deft)
-  (setq deft-directory my/notes-directory
-        deft-recursive 't))
+;;
+;; Very package- / mode-specific keybindings
+;;
 
 (after! ess
   (map!
@@ -204,30 +240,9 @@ depending on the current stat."
     "u" #'elfeed-update
     "r" #'elfeed-search-update)))
 
-(defun my/on-lisp-mode ()
-  "Call on entering a lisp mode."
-  (interactive)
-  (paredit-mode)
-  (rainbow-delimiters-mode)
-  (smartparens-mode -1) ;; also generates closing single quotes
-  (when (and (featurep! :editor evil)
-             (featurep! :editor evil-cleverparens))
-    (evil-cleverparens-mode 1)))
-
-(add-hook! 'lisp-mode-hook (my/on-lisp-mode))
-(add-hook! emacs-lisp-mode (my/on-lisp-mode))
-(when (featurep! :lang lfe)
-  (add-hook! lfe-mode (my/on-lisp-mode)))
-(when (featurep! :lang clojure)
-  (add-hook! clojure-mode (my/on-lisp-mode)))
-
 (when (featurep! :editor lispy)
   (map!
    :map lispy-mode-map
    :localleader
    "s" #'lispy-splice-sexp-killing-backward
    "S" #'lispy-splice-sexp-killing-forward))
-
-;; Make macOS title bar transparent
-(when (eq system-type 'darwin)
-  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
