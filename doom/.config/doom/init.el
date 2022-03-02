@@ -179,6 +179,7 @@
        ;;irc               ; how neckbeards socialize
        (rss +org)          ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
+       org-notes           ; personal module for org(+roam) notes
 
        :config
        ;;literate
