@@ -111,13 +111,14 @@
   (let ((term (or (getenv "TERMINAL") "alacritty")))
     (async-shell-command term nil nil)))
 
-(defun +popup/toggle-for-buffer ()
-  "Raise or degrade the current buffer to/from a popup window
+(when (featurep! :ui popup)
+  (defun +popup/toggle-for-buffer ()
+    "Raise or degrade the current buffer to/from a popup window
 depending on the current stat."
-  (interactive)
-  (call-interactively (if (+popup-buffer-p)
-                          #'+popup/raise
-                        #'+popup/buffer)))
+    (interactive)
+    (call-interactively (if (+popup-buffer-p)
+                            #'+popup/raise
+                          #'+popup/buffer))))
 
 ;; Import some important  keys from my own config
 (map!
@@ -395,6 +396,20 @@ Use a prefix argument to insert an active timestamp instead."
       (my/org-roam-replace-link)
       (let ((org-roam-link-auto-replace nil))
         (org-open-at-point)))
+
+    (when (featurep! :ui popup)
+      (defun my/roam-daily-as-popup ()
+        "Open the daily roam file as a popup buffer."
+        (interactive)
+        (org-roam-dailies-goto-today)
+        (call-interactively #'+popup/buffer)
+        (set-window-parameter (selected-window) 'autosave 't))
+
+      (map!
+       :leader
+       (:prefix "n"
+        ;; leader-x is the normal scratch buffer
+        "x" #'my/roam-daily-as-popup)))
 
     (map!
      (:map org-mode-map
