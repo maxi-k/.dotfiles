@@ -6,7 +6,6 @@ alias la='ls -A'
 alias l='ls -CF'
 
 # cd
-alias .='ls -lah'
 alias ..='cd ../'
 
 ## Clipboard
