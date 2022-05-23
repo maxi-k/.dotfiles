@@ -210,6 +210,7 @@ depending on the current stat."
 
  ;; search commands
  (:prefix "s"
+  "I" #'imenu
   (:when (featurep! :emacs browse-kill-ring)
    "c" #'browse-kill-ring))
 

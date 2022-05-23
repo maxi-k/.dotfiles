@@ -5,6 +5,8 @@
   ;; set the roam directory
   (setq org-roam-directory (concat my/notes-directory "roam"))
 
+  ;;(add-to-list 'org-roam-mode-section-functions #'org-roam-unlinked-references-section)
+
   ;; Map autoloaded functions to keys
   (map!
    (:map org-mode-map
