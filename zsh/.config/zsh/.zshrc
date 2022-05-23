@@ -27,3 +27,4 @@ setopt incappendhistory  # Immediately append to the history file, not just when
 # Load direnv if installed
 command -v direnv 1>/dev/null && eval "$(direnv hook zsh)"
 
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ '

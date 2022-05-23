@@ -56,7 +56,8 @@ Use a prefix argument to insert an active timestamp instead."
             (require 'subr-x)
             (remq nil
                   (mapcar
-                   (lambda (f) (when (and f (not (string-empty-p f))) (concat ,search-dir f)))
+                   (lambda (f) (when (and f (not (string-empty-p f)) (string-suffix-p ".org" f))
+                                 (concat ,search-dir f)))
                    (split-string
                     (shell-command-to-string ,cmd) "\n"))))
          `(lambda (result)
