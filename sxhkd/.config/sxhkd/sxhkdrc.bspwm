@@ -11,7 +11,7 @@ super + p
 
 #@space
 super + shift + p 
-      MODE_HINT=run launcher
+      COMBINED_MODI=drun,run launcher -show-icons
 
 super + ctrl + p
   run-flatpak

@@ -2,10 +2,11 @@
 if [ -f $(which rofi) ]; then
   themefile=~/.cache/wal/colors-rofi-dark.rasi
   mode=${MODE_HINT:-combi}
-  rofi_base="rofi -modi $mode -show $mode"
+  combi_modi=${COMBINED_MODI:-"window,run,ssh"}
+  rofi_base="rofi -modi $mode -show $mode -combi-modi $combi_modi"
   [ -f $themefile ] && $rofi_base -theme $themefile "$@" || $rofi_base "$@"
 elif [ -f $(which dmenu) ]; then
   dmenu "$@"
 else
-  notify-send "no launcher found"
+  notify-send "no launcher found; install rofi or dmenu"
 fi

@@ -20,3 +20,11 @@ if command -v dwmc >/dev/null; then
   COL_LIST="$foreground$background$color8$foreground$color10$foreground"
   echo "c$COL_LIST" | dwmc | xargs notify-send "Changing dwm colors: "
 fi
+
+# Fix for rofi > 1.7.0
+[ -f $cachedir/wal/colors-rofi-dark.rasi ] && echo "
+element-text, element-icon {
+    background-color: inherit;
+    text-color:       inherit;
+}
+" >> $cachedir/wal/colors-rofi-dark.rasi
