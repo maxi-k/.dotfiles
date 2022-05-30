@@ -174,6 +174,7 @@ depending on the current stat."
 (map!
  ;; Global Keys
  "M-O" #'toggle-window-split
+ "C-;" #'avy-goto-word-or-subword-1
 
  (:when (featurep! :tools magit)
   "C-c g"    #'magit-status)

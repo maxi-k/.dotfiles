@@ -48,7 +48,7 @@ Use a prefix argument to insert an active timestamp instead."
          (search-dir my/notes-directory)
          (default-directory search-dir)
          (exec (executable-find "rg"))
-         (cmd (apply #'concat "rg " "--fixed-strings " "--files-with-matches " args))
+         (cmd (apply #'concat "rg " "--fixed-strings " "--files-with-matches" "--ignore-file" ".agenda-ignore" args))
          (original-agenda org-agenda-files))
     (if exec
         (async-start
