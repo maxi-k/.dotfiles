@@ -1,0 +1,7 @@
+#!/bin/sh
+
+confdir=${XDG_CONFIG_HOME:-$HOME/.config}
+configfile="$confdir/alacritty/alacritty.yml"
+theme=`grep -Eo '&\w+' $configfile | cut -c 2- | selector`
+sed -i'.oldtheme' -e "s/^colors: \*\w\+$/colors: *$theme/" $configfile
+command -v notify-send && notify-send "Changed alacritty theme to $theme."
