@@ -1,0 +1,25 @@
+#!/bin/sh
+
+do_client() {
+#while true; do
+    notify-send --urgency=low "waiting for $host..." "waiting for server continuously"
+    ## based on https://unix.stackexchange.com/questions/194224/how-can-i-alert-on-completion-of-a-long-task-over-ssh
+    ssh $host 'mkfifo /tmp/alert_fifo ; while cat /tmp/alert_fifo ; do : ; done' | \
+        while read icon_name text ; do
+            notify-send "$summary" "remote process finished"
+        done
+    sleep 1
+#done
+}
+
+do_server() {
+  echo "notifying client of completion"
+  echo $message >/tmp/alert_fifo
+}
+
+test `pgrep -c ssh-alert` -ge 2 && \
+    killall ssh-alert && \
+    notify-send "ssh-alert instance already running, killed it and now exiting" \
+    && exit 0
+
+test -z "$1" && do_server || host="$1" summary=${2:-"process on $1 finished"} do_client
