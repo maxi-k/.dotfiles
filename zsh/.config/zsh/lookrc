@@ -8,9 +8,13 @@ parse_git_branch() {
 # enable command substition in prompt (parse_git_branch) 
 setopt PROMPT_SUBST
 
+
+test -f ~/.cache/wal/colors.sh && source ~/.cache/wal/colors.sh
 # set the prompt
-PS1='%F{240}%n %F{180}%1~$(parse_git_branch) %F{240}%(!.#.$)%f ' # left aligned
-RPROMPT='%F{240}$(hostname)%f'  # right aligned
+#PS1='%F{240}%n %F{180}%1~$(parse_git_branch) %F{240}%(!.#.$)%f ' # left aligned
+#RPROMPT='%F{240}$(hostname)%f'  # right aligned
+PS1='%F{244}%n %F{180}%1~$(parse_git_branch) %F{244}%(!.#.$)%f ' # left aligned
+RPROMPT='%F{244}$(hostname)%f'  # right aligned
 
 # enable color support of ls
 if [ -x /usr/bin/dircolors ]; then
@@ -23,5 +27,3 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
-
-test -f ~/.cache/wal/colors.sh && source ~/.cache/wal/colors.sh
