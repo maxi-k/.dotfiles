@@ -100,7 +100,7 @@ font:
     #   - (macOS) Menlo
     #   - (Linux) monospace
     #   - (Windows) Consolas
-    family: Hack
+    family: JetBrains Mono
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -662,8 +662,7 @@ color_schemes:
       cyan:    '0x93a1a1'
       white:   '0xfdf6e3'
 
-colors: *nord
-
+colors: *doom_one
 
 # Visual Bell
 #
