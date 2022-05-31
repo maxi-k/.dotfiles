@@ -48,7 +48,7 @@ Use a prefix argument to insert an active timestamp instead."
          (search-dir my/notes-directory)
          (default-directory search-dir)
          (exec (executable-find "rg"))
-         (cmd (apply #'concat "rg " "--fixed-strings " "--files-with-matches" "--ignore-file" ".agenda-ignore" args))
+         (cmd (apply #'concat "rg " "--fixed-strings " "--files-with-matches " "--ignore-file " ".agenda-ignore " args))
          (original-agenda org-agenda-files))
     (if exec
         (async-start
@@ -61,6 +61,7 @@ Use a prefix argument to insert an active timestamp instead."
                    (split-string
                     (shell-command-to-string ,cmd) "\n"))))
          `(lambda (result)
+            ;;(message "Found %s agenda files" (length result))
             (if (boundp 'my/original-org-agenda-files)
                 ;; TODO duplicates as in ~/foo and /home/user/foo are still possible; how to fix best?
                 (setq org-agenda-files (delete-dups (append my/original-org-agenda-files result)))
