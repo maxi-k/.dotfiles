@@ -111,6 +111,14 @@
         (select-window first-win)
         (if this-win-2nd (other-window 1))))))
 
+(defun my/insert-git-commit-hash-at-point ()
+  "Insert a (short, 7 digit) git commit hash at the current point."
+  (interactive)
+  (shell-command "git rev-parse --verify HEAD | cut -c -7" 1)
+  ;; TODO better way to do this after insert?
+  ;; other version of `shell-command` that auto-moves cursor?
+  (right-char 7))
+
 (defun open-external-terminal ()
   "Open an external terminal in the current directory asynchronously."
   (interactive)
@@ -185,10 +193,12 @@ depending on the current stat."
 
  ;; Leader Keys
  :leader
+ ;; insert commands
  (:prefix "i"
   (:when (featurep! :editor evil)
    "i" #'evil-insert-digraph
-   "d" #'evil-ex-show-digraphs))
+   "d" #'evil-ex-show-digraphs
+   "c" #'my/insert-git-commit-hash-at-point))
 
  ;; buffer commands
  (:prefix "b"
