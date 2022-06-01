@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: org-mode-now-time
+# key: timestamp
+# condition: t
+# type: command
+# --
+
+(org-time-stamp 1 nil)
+(insert-char 32)
