@@ -105,3 +105,9 @@
       (unless (and (boundp 'my/in-roam-link-loop) my/in-roam-link-loop)
         (setq my/in-roam-link-loop 't)
         (advice-add 'org-capture-finalize :filter-return #'my/roam-link-loop--capture-advice)))))
+
+;;;###autoload
+(defun my/org-roam-add-draft-tag ()
+  "Add a 'draft' tag to the given org mode node or file"
+  (interactive)
+  (org-roam-tag-add '("draft")))

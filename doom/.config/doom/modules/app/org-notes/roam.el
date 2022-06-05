@@ -33,4 +33,8 @@
      :leader
      (:prefix "n"
       ;; leader-x is the normal scratch buffer
-      "x" #'my/roam-daily-as-popup))))
+      "x" #'my/roam-daily-as-popup)))
+
+  (add-hook! 'org-roam-capture-new-node-hook
+             #'my/org-roam-add-draft-tag)
+  )
