@@ -15,6 +15,7 @@ xmonad/.xmonad/*
 /X/.config/albert/core.db
 /X/.config/albert/last_used_version
 *.local
+!/*/.local/
 
 # Mac
 .DS_Store

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+## toggle
+hidden=$(bspc query -N -n .hidden -d focused)
+test -z "$hidden" && \
+  bspc node focused -g hidden=on || \
+  bspc node "$hidden" -g hidden=off
+
+# hiddenlist=$(bspc query -N -n .hidden)
+# echo "$hiddenlist"

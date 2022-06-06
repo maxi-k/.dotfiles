@@ -1,0 +1,39 @@
+#!/bin/sh
+manager='bsp-layout'
+command -v "$manager" || (notify-send "$manager not installed"; exit 1)
+
+choose_new_layout() {
+    once="$1"
+    notify-send "$once"
+    layouts=`$manager layouts`
+    selected=`echo "$layouts\nnone" | selector`
+    test -z "$selected" && (notify-send "no layout selected"; exit 1)
+    case $selected in
+        none)
+            $manager remove
+            notify-send "Removed layout"
+            ;;
+        *)
+            test -z "$once" && \
+                ($manager set "$selected" && notify-send "Applied layout $selected") || \
+                ($manager once "$selected" && notify-send "Layed out as $selected")
+            ;;
+    esac
+}
+
+print_layout() {
+    layout=`$manager get`
+    notify-send "Current layout:" "$layout"
+}
+
+case "$1" in
+    once)
+        choose_new_layout once
+        ;;
+    get)
+        print_layout
+        ;;
+    *)
+        choose_new_layout
+        ;;
+esac

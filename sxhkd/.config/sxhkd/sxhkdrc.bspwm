@@ -35,8 +35,12 @@ super + shift + d
 super + shift + f
     cat ~/.cache/searches.log | selector | tee -a ~/.cache/searches.log | xargs -I'%s' firefox --search "%s"
 
-super + F12
+super + F9
 	bspc rule -a \* -o state=floating sticky=on layer=above rectangle=720x360+600+26 && $TERMINAL
+
+# Choose bspwm layout
+super + {shift,ctrl} + space
+    bspwm-choose-layout {apply,once}
 
 # Cycle keyboard layout
 super + space
@@ -99,6 +103,9 @@ super + ctrl + {m,x,y,z}
         STATE={marked,locked,sticky,private};\
         bspc node -g $STATE;\
         notify-send "Set node state to $STATE"
+
+super + shift + period
+        bspwm-hide-window
 
 #
 # focus/swap/move
