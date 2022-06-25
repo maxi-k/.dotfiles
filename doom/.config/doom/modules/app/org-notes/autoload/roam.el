@@ -111,3 +111,11 @@
   "Add a 'draft' tag to the given org mode node or file"
   (interactive)
   (org-roam-tag-add '("draft")))
+
+
+;;;###autoload
+(defun my/org-roam-add-draft-tag-unless-daily ()
+  "Add a 'draft' tag to the given org mode node or file unless it's a daily node"
+  (interactive)
+  (unless (org-roam-dailies--daily-note-p)
+    (my/org-roam-add-draft-tag)))

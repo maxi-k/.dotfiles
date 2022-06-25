@@ -36,5 +36,5 @@
       "x" #'my/roam-daily-as-popup)))
 
   (add-hook! 'org-roam-capture-new-node-hook
-             #'my/org-roam-add-draft-tag)
+             #'my/org-roam-add-draft-tag-unless-daily)
   )
