@@ -1,0 +1,4 @@
+#!/bin/sh
+file=${1:-data.csv}
+sql=${2:-"select * from db limit 5"}
+sqlite3 :memory: -cmd '.mode csv' -cmd '.import $file db' $sql

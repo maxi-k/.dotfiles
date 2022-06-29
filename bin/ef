@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ -z "$1" ]; then
+    f=`fzf`
+    test -z "$f" || nohup emacs $f &
+else
+    fzf | xargs -ro devour emacs
+fi
