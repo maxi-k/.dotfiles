@@ -112,10 +112,22 @@
   (interactive)
   (org-roam-tag-add '("draft")))
 
-
 ;;;###autoload
 (defun my/org-roam-add-draft-tag-unless-daily ()
   "Add a 'draft' tag to the given org mode node or file unless it's a daily node"
   (interactive)
   (unless (org-roam-dailies--daily-note-p)
     (my/org-roam-add-draft-tag)))
+
+;;;###autoload
+(defun my/roam-daily-as-popup ()
+  "Open the daily roam file as a popup buffer."
+  (interactive)
+  (if (featurep! :ui popup)
+    (progn
+      (org-roam-dailies-goto-today)
+      (let ((buf (current-buffer)))
+        (bury-buffer)
+        (+popup-buffer buf (+popup-make-rule "." '(:size 0.4 :autosave t :quit nil :select t)))
+        (goto-char (point-max))))
+    (org-roam-dailies-goto-today)))

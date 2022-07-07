@@ -27,7 +27,7 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 
-(setq doom-theme (if window-system 'doom-nord 'bleak))
+(setq doom-theme (if window-system 'doom-nord 'doom-one))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -207,6 +207,12 @@ depending on the current stat."
   (:when (featurep! :ui popup)
    "~" #'+popup/toggle-for-buffer))
 
+ ;; additional note taking commands
+ (:prefix "n"
+  (:when (featurep! :ui popup)
+   ;; leader-x is the normal scratch buffer
+   "x" #'my/roam-daily-as-popup))
+
  ;; "open commands / apps"
  (:prefix "o"
   :desc "Term Here"    "h"    #'terminal-here-launch
@@ -231,6 +237,8 @@ depending on the current stat."
   "'" #'toggle-window-split
   (:when (featurep! :ui golden-ratio)
    "g" #'+golden-ratio-toggle))
+
+
 
  ;; Direct Keybindings for jumping with avy
  :desc "Jump Char" "J" #'avy-goto-char

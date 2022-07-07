@@ -20,21 +20,6 @@
     (:prefix "r"
      "t" #'org-roam-dailies-today)))
 
-  ;; if popups are enabled, add function for opening daily note as popup buffer
-  (when (featurep! :ui popup)
-    (defun my/roam-daily-as-popup ()
-      "Open the daily roam file as a popup buffer."
-      (interactive)
-      (org-roam-dailies-goto-today)
-      (call-interactively #'+popup/buffer)
-      (set-window-parameter (selected-window) 'autosave 't))
-    ;; bind it
-    (map!
-     :leader
-     (:prefix "n"
-      ;; leader-x is the normal scratch buffer
-      "x" #'my/roam-daily-as-popup)))
-
   (add-hook! 'org-roam-capture-new-node-hook
              #'my/org-roam-add-draft-tag-unless-daily)
   )
