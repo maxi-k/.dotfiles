@@ -1,3 +1,3 @@
 #!/bin/sh
 # from https://news.ycombinator.com/item?id=32106126
-fzf --preview='vi {}' --bind shift-up:preview-page-up,shift-down:preview-page-down
+fzf --preview='less {}' --bind shift-up:preview-page-up,shift-down:preview-page-down
