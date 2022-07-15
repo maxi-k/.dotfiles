@@ -30,3 +30,15 @@ alias tmk="tmux kill-session -t $1" # kill session
 alias sl='sl -e'
 
 alias du-gui='ncdu'
+
+## utility functions
+
+# adapted from https://news.ycombinator.com/item?id=32106126
+fcd() {
+    local dir;
+    while true; do
+        # exit with ^D
+        dir="$(ls -a1p | grep '/$' | grep -v '^./$' | fzf --height 40% --reverse --no-multi --preview 'pwd' --preview-window=up,1,border-none --no-info)"
+        test -z "${dir}" && break || cd "${dir}"
+    done
+}
