@@ -175,6 +175,10 @@ depending on the current stat."
 (when (eq system-type 'darwin)
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
+(defun my/grep-page-break ()
+  "Grep the current buffer for page breaks ()."
+  (interactive)
+  (counsel-grep-or-swiper ""))
 ;;
 ;; Global Keybindings
 ;;
@@ -230,7 +234,9 @@ depending on the current stat."
  (:prefix "s"
   "I" #'imenu
   (:when (featurep! :emacs browse-kill-ring)
-   "c" #'browse-kill-ring))
+   "c" #'browse-kill-ring)
+  (:when (featurep! :completion ivy)
+   "z" #'my/grep-page-break))
 
  ;; window commands
  (:prefix "w"
