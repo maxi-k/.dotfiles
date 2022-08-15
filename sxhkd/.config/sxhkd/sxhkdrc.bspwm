@@ -26,7 +26,7 @@ super + shift + c
 super + shift + o
     select-recent-dir "emacsclient -c"
 
-super + shift + s
+super + ctrl + s
     tmux list-sessions | selector | awk -F: '\{ print $1 \}' | xargs $TERMINAL -e tmux new-session -A -s
 
 super + shift + d
@@ -35,8 +35,11 @@ super + shift + d
 super + shift + f
     cat ~/.cache/searches.log | selector | tee -a ~/.cache/searches.log | xargs -I'%s' firefox --search "%s"
 
+super + shift + s
+	bspc rule -a \* -o state=floating sticky=on layer=above rectangle=2000x500+820+30 && $TERMINAL
+
 super + F9
-	bspc rule -a \* -o state=floating sticky=on layer=above rectangle=720x360+600+26 && $TERMINAL
+	bspc rule -a \* -o state=floating sticky=on layer=above rectangle=2000x500+820+30 && $TERMINAL
 
 # Choose bspwm layout
 super + {shift,ctrl} + space
@@ -153,8 +156,9 @@ super + {grave,Tab}
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}'
 
-super + control + {1-9,0}
-    bspc desktop -s '^{1-9,10}'
+# swap desktops
+# super + control + {1-9,0}
+#     bspc desktop -s '^{1-9,10}'
 
 #
 # preselect
