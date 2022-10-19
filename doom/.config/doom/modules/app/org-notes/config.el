@@ -1,5 +1,5 @@
 ;;; tools/org-notes/config.el -*- lexical-binding: t; -*-
-;;;###if (featurep! :lang org)
+;;;###if (modulep! :lang org)
 
 (after! org
   ;; some relevant variables

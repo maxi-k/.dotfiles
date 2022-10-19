@@ -1,5 +1,5 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; lang/evil-cleverparens/packages.el
 
-(when (featurep! :editor evil)
+(when (modulep! :editor evil)
   (package! evil-cleverparens))

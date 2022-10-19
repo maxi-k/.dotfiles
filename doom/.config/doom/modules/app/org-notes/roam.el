@@ -1,5 +1,5 @@
 ;;; app/org-notes/roam.el -*- lexical-binding: t; -*-
-;;;###if (featurep! :lang org +roam2)
+;;;###if (modulep! :lang org +roam2)
 
 (after! org-roam
   ;; set the roam directory

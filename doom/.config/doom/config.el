@@ -125,7 +125,7 @@
   (let ((term (or (getenv "TERMINAL") "alacritty")))
     (async-shell-command term nil nil)))
 
-(when (featurep! :ui popup)
+(when (modulep! :ui popup)
   (defun +popup/toggle-for-buffer ()
     "Raise or degrade the current buffer to/from a popup window
 depending on the current stat."
@@ -149,27 +149,35 @@ depending on the current stat."
   (paredit-mode)
   (rainbow-delimiters-mode)
   (smartparens-mode -1) ;; also generates closing single quotes
-  (when (and (featurep! :editor evil)
-             (featurep! :editor evil-cleverparens))
+  (when (and (modulep! :editor evil)
+             (modulep! :editor evil-cleverparens))
     (evil-cleverparens-mode 1)))
 
 (add-hook! 'lisp-mode-hook (my/on-lisp-mode))
 (add-hook! emacs-lisp-mode (my/on-lisp-mode))
-(when (featurep! :lang lfe)
+(when (modulep! :lang lfe)
   (add-hook! lfe-mode (my/on-lisp-mode)))
-(when (featurep! :lang clojure)
+(when (modulep! :lang clojure)
   (add-hook! clojure-mode (my/on-lisp-mode)))
 
 ;; Language Server Protocol setup
-(when (featurep! :tools lsp)
+(when (modulep! :tools lsp)
   (setq lsp-lens-auto-enable nil)  ;; lens seems to deteriorate performance (tested in c++ mode), disable it for now
   (after! rustic (setq rustic-lsp-server 'rust-analyzer))
   (after! ruby (setq lsp-solargraph-use-bundler 't)))
 
 ;; Deft for note searching in the notes/roam directory
-(when (featurep! deft)
+(when (modulep! :ui deft)
   (setq deft-directory my/notes-directory
         deft-recursive 't))
+
+(when (modulep! :lang (org +roam2))
+  ;; use weekly files for org roam dailies
+  (setq org-roam-dailies-capture-templates
+        `(("d" "default" entry
+           "* %?"
+           :target (file+head+olp "%<%Y-w%W>.org" "#+title: %<%Y-w%W>\n" ("%<%A, %Y-%m-%d>")))))
+  )
 
 ;; Make macOS title bar transparent
 (when (eq system-type 'darwin)
@@ -189,31 +197,31 @@ depending on the current stat."
  "M-O" #'toggle-window-split
  "C-;" #'avy-goto-word-or-subword-1
 
- (:when (featurep! :tools magit)
+ (:when (modulep! :tools magit)
   "C-c g"    #'magit-status)
 
- (:when (featurep! :emacs browse-kill-ring)
+ (:when (modulep! :emacs browse-kill-ring)
   "C-x C-y"  #'browse-kill-ring)
 
  ;; Leader Keys
  :leader
  ;; insert commands
  (:prefix "i"
-  (:when (featurep! :editor evil)
+  (:when (modulep! :editor evil)
    "i" #'evil-insert-digraph
    "d" #'evil-ex-show-digraphs
    "c" #'my/insert-git-commit-hash-at-point))
 
  ;; buffer commands
  (:prefix "b"
-  (:when (featurep! :editor evil)
+  (:when (modulep! :editor evil)
    "v" #'evil-switch-to-windows-last-buffer)
-  (:when (featurep! :ui popup)
+  (:when (modulep! :ui popup)
    "~" #'+popup/toggle-for-buffer))
 
  ;; additional note taking commands
  (:prefix "n"
-  (:when (featurep! :ui popup)
+  (:when (modulep! :ui popup)
    ;; leader-x is the normal scratch buffer
    "x" #'my/roam-daily-as-popup))
 
@@ -223,25 +231,25 @@ depending on the current stat."
   :desc "Term Project" "p"    #'terminal-here-project-launch
   :desc "Calc"         "c"    #'calc
   :desc "Calc Region"  "C"    #'calc-grab-region
-  (:when (featurep! :app rss)
+  (:when (modulep! :app rss)
    :desc "News"        "n"    #'elfeed)
-  (:when (featurep! :ui doom-dashboard)
+  (:when (modulep! :ui doom-dashboard)
    :desc "Doom"        "d"    #'+doom-dashboard/open)
-  (:when (featurep! :lang org)
+  (:when (modulep! :lang org)
    :desc "Org"         "o"    #'visit-notes-buffer))
 
  ;; search commands
  (:prefix "s"
   "I" #'imenu
-  (:when (featurep! :emacs browse-kill-ring)
+  (:when (modulep! :emacs browse-kill-ring)
    "c" #'browse-kill-ring)
-  (:when (featurep! :completion ivy)
+  (:when (modulep! :completion ivy)
    "z" #'my/grep-page-break))
 
  ;; window commands
  (:prefix "w"
   "'" #'toggle-window-split
-  (:when (featurep! :ui golden-ratio)
+  (:when (modulep! :ui golden-ratio)
    "g" #'+golden-ratio-toggle))
 
 
@@ -267,9 +275,39 @@ depending on the current stat."
     "u" #'elfeed-update
     "r" #'elfeed-search-update)))
 
-(when (featurep! :editor lispy)
+(when (modulep! :editor lispy)
   (map!
    :map lispy-mode-map
    :localleader
    "s" #'lispy-splice-sexp-killing-backward
    "S" #'lispy-splice-sexp-killing-forward))
+
+
+(after! notmuch
+
+  ;; receiving mail
+  (setq +notmuch-sync-backend 'mbsync)
+  ;; sending mail
+  (setq send-mail-function 'message-send-mail-with-sendmail
+        sendmail-program "/usr/bin/msmtp"
+        mail-specify-envelope-from t
+        mail-envelope-from 'header
+        ;; mail-sendmail-extra-arguments nil
+        )
+
+  ;; (defun my/notmuch-inbox ()
+  ;;   (interactive)
+  ;;   (notmuch-search "tag:unread or (tag:flagged and tag:inbox and not (tag:trash or tag:deleted))"))
+
+  ;; (setq +notmuch-home-function #'my/notmuch-inbox)
+  ;; (setq notmuch-fcc-dirs ...) for properly putting items in outboxes
+
+  (advice-add '+notmuch/compose
+              :override (lambda ()
+                          (notmuch-mua-mail
+                           nil
+                           nil
+                           (list (cons 'From
+                                       (format "%s <%s>" user-full-name
+                                               (completing-read "From: " (notmuch-user-emails))))))))
+  )
