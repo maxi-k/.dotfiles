@@ -172,11 +172,33 @@ depending on the current stat."
         deft-recursive 't))
 
 (when (modulep! :lang (org +roam2))
-  ;; use weekly files for org roam dailies
   (setq org-roam-dailies-capture-templates
         `(("d" "default" entry
            "* %?"
-           :target (file+head+olp "%<%Y-w%W>.org" "#+title: %<%Y-w%W>\n" ("%<%A, %Y-%m-%d>"))))))
+           :target (file+head+olp "%<%Y-w%W>.org" "#+title: %<%Y-w%W>\n" ("%<%A, %Y-%m-%d>")))))
+
+  ;; adapted from https://jethrokuan.github.io/org-roam-guide/
+  (setq org-roam-capture-templates
+        `(("d" "default" plain "%?"
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+           :unnarrowed t)
+          ("e" "event" plain "%?"
+           :if-new (file+head "events/<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :event:\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("r" "reference" plain "%?"
+           :if-new (file+head "papers/${title}.org" "#+title: ${title}\n#+filetags: :paper:\n")
+           :immediate-finish t
+           :unnarrowed t)
+          ("p" "project" plain "%?"
+           :if-new (file+head "projects/${title}.org" "#+title: ${title}\n#+filetags: :project:\n")
+           :immediate-finish t
+           :unnarrowed t)))
+
+  (setq org-roam-node-display-template
+        (format "%s ${doom-hierarchy:*} %s"
+                (propertize "${doom-type:15}" 'face 'font-lock-comment-face)
+                (propertize "${doom-tags:42}" 'face 'org-tag))))
 
 ;; Make macOS title bar transparent
 (when (eq system-type 'darwin)
