@@ -176,8 +176,7 @@ depending on the current stat."
   (setq org-roam-dailies-capture-templates
         `(("d" "default" entry
            "* %?"
-           :target (file+head+olp "%<%Y-w%W>.org" "#+title: %<%Y-w%W>\n" ("%<%A, %Y-%m-%d>")))))
-  )
+           :target (file+head+olp "%<%Y-w%W>.org" "#+title: %<%Y-w%W>\n" ("%<%A, %Y-%m-%d>"))))))
 
 ;; Make macOS title bar transparent
 (when (eq system-type 'darwin)
@@ -221,7 +220,7 @@ depending on the current stat."
 
  ;; additional note taking commands
  (:prefix "n"
-  (:when (modulep! :ui popup)
+  (:when (and  (modulep! :ui popup) (modulep! :lang (org +roam2)))
    ;; leader-x is the normal scratch buffer
    "x" #'my/roam-daily-as-popup))
 
