@@ -38,6 +38,9 @@ super + shift + f
 super + shift + s
 	bspc rule -a \* -o state=floating sticky=on layer=above rectangle=2000x500+820+30 && $TERMINAL
 
+super + shift + v
+    awk '/^\ +[a-zA-Z]/ && last {print substr($0,0,50),"\t",last}  {last=""} /^[a-zA-Z]/{last=$0}' ~/.config/sxhkd/sxhkdrc.bspwm | sed -E 's/^\s+/\t/' | column -t -s $'\t' | selector
+
 super + F9
 	bspc rule -a \* -o state=floating sticky=on layer=above rectangle=2000x500+820+30 && $TERMINAL
 
@@ -191,3 +194,24 @@ super + alt + shift + {h,j,k,l}
 # move a floating window
 super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+#
+# tabs using suckless tabbed + tab.sh integration script
+# adapted from https://www.reddit.com/r/bspwm/comments/etfm3m/for_those_who_like_tabs/
+#
+
+# Add focused window to a tabbed instance in given direction
+super + t; {h,j,k,l}
+    tabc.sh $(bspc query -N -n {west,south,north,east}) add $(bspc query -N -n focused)
+
+# Remove one tab from tabbed
+super + t; r
+    tabbed=$(bspc query -N -n focused); \
+    child=$(tabc.sh $tabbed list | head -n1); \
+    tabc.sh $tabbed remove $child
+
+super + t; q
+      notify-send $(bspc query -T -n focused)
+
+super + t; s
+      tabbed
