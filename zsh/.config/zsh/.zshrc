@@ -16,9 +16,9 @@ test -f ~/.config/shell/localrc && source ~/.config/shell/localrc
 test -f ~/.dotfiles/bin/z/z.sh && . ~/.dotfiles/bin/z/z.sh
 
 setopt sharehistory
-HISTSIZE=5000               
+HISTSIZE=5000
 HISTFILE=~/.cache/.zsh_history     
-SAVEHIST=5000               
+SAVEHIST=100000               
 HISTDUP=erase              
 setopt appendhistory     # Append history to the history file (no overwriting)
 setopt sharehistory      # Share history across terminals

@@ -1,3 +1,4 @@
 #!/bin/sh
-# from https://news.ycombinator.com/item?id=32106126
+# adapted from https://news.ycombinator.com/item?id=32106126
+command -v rg >/dev/null && export FZF_DEFAULT_COMMAND='rg --hidden --iglob "!.git" -l ""'
 fzf --preview='less {}' --bind shift-up:preview-page-up,shift-down:preview-page-down
