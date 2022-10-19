@@ -14,7 +14,7 @@ start_themed_apps() {
 }
 
 tiling_wm() {
-  command -v mktheme && mktheme && start_themed_apps & # Create a theme for this session
+  (command -v mktheme && mktheme && start_themed_apps) & # Create a theme for this session
   command -v unclutter && (pgrep unclutter || unclutter) & # Hide mouse cursor when unused
   command -v nm-applet && (pgrep nm-applet || nm-applet) &
   command -v gsettings && export GTK_THEME=$(gsettings get org.gnome.desktop.interface gtk-theme | sed "s/'//g")
