@@ -171,7 +171,7 @@ depending on the current stat."
   (setq deft-directory my/notes-directory
         deft-recursive 't))
 
-(when (modulep! :lang (org +roam2))
+(when (modulep! :lang org +roam2)
   (setq org-roam-dailies-capture-templates
         `(("d" "default" entry
            "* %?"
@@ -187,11 +187,11 @@ depending on the current stat."
            :immediate-finish t
            :unnarrowed t)
           ("r" "reference" plain "%?"
-           :if-new (file+head "papers/${title}.org" "#+title: ${title}\n#+filetags: :paper:\n")
+           :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+filetags: :paper:\n")
            :immediate-finish t
            :unnarrowed t)
           ("p" "project" plain "%?"
-           :if-new (file+head "projects/${title}.org" "#+title: ${title}\n#+filetags: :project:\n")
+           :if-new (file+head "projects/${slug}.org" "#+title: ${title}\n#+filetags: :project:\n")
            :immediate-finish t
            :unnarrowed t)))
 

@@ -39,5 +39,5 @@
     (add-hook! 'after-save-hook :local #'my/update-agenda-on-save)))
 
 ;; load the roam config if available
-(when (featurep! :lang org +roam2)
+(when (modulep! :lang org +roam2)
   (load! "roam"))

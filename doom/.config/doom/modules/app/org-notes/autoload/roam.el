@@ -123,7 +123,7 @@
 (defun my/roam-daily-as-popup ()
   "Open the daily roam file as a popup buffer."
   (interactive)
-  (if (featurep! :ui popup)
+  (if (modulep! :ui popup)
     (progn
       (org-roam-dailies-goto-today)
       (let ((buf (current-buffer)))
