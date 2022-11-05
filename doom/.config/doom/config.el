@@ -242,7 +242,7 @@ depending on the current stat."
 
  ;; additional note taking commands
  (:prefix "n"
-  (:when (and  (modulep! :ui popup) (modulep! :lang (org +roam2)))
+          (:when (and  (modulep! :ui popup) (modulep! :lang org +roam2))
    ;; leader-x is the normal scratch buffer
    "x" #'my/roam-daily-as-popup))
 
