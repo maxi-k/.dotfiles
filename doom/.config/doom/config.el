@@ -217,6 +217,7 @@ depending on the current stat."
  ;; Global Keys
  "M-O" #'toggle-window-split
  "C-;" #'avy-goto-word-or-subword-1
+ "C-," #'er/expand-region
 
  (:when (modulep! :tools magit)
   "C-c g"    #'magit-status)
@@ -296,13 +297,17 @@ depending on the current stat."
     "u" #'elfeed-update
     "r" #'elfeed-search-update)))
 
+(after! paredit
+  (map!
+   :map paredit-mode-map
+   [(meta shift backspace)] #'paredit-splice-sexp-killing-backward))
+
 (when (modulep! :editor lispy)
   (map!
    :map lispy-mode-map
    :localleader
    "s" #'lispy-splice-sexp-killing-backward
    "S" #'lispy-splice-sexp-killing-forward))
-
 
 (after! notmuch
 
