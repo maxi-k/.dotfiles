@@ -4,4 +4,4 @@ define hook-next
 end
 #tui enable
 set print thread-events off
-set debuginfod enabled on
+set debuginfod enabled off
