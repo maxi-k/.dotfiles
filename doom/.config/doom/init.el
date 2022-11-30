@@ -180,6 +180,7 @@
        (rss +org)          ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
        org-notes           ; personal module for org(+roam) notes
+       notebook            ; [wip] module for jupyter-like notebooks in org
 
        :config
        ;;literate
