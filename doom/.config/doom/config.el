@@ -171,6 +171,10 @@ depending on the current stat."
   (setq deft-directory my/notes-directory
         deft-recursive 't))
 
+(when (modulep! :lang org)
+  (after! ox-latex
+    (setq org-latex-inputenc-alist '(("utf8" . "utf8x")))))
+
 (when (modulep! :lang org +roam2)
   (setq org-roam-dailies-capture-templates
         `(("d" "default" entry
@@ -180,18 +184,18 @@ depending on the current stat."
   ;; adapted from https://jethrokuan.github.io/org-roam-guide/
   (setq org-roam-capture-templates
         `(("d" "default" plain "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "${title}\n")
            :unnarrowed t)
           ("e" "event" plain "%?"
-           :if-new (file+head "events/<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :event:\n")
+           :if-new (file+head "events/<%Y%m%d%H%M%S>-${slug}.org" "${title}\n#+filetags: :event:\n")
            :immediate-finish t
            :unnarrowed t)
           ("r" "reference" plain "%?"
-           :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+filetags: :paper:\n")
+           :if-new (file+head "references/${slug}.org" "${title}\n#+filetags: :paper:\n")
            :immediate-finish t
            :unnarrowed t)
           ("p" "project" plain "%?"
-           :if-new (file+head "projects/${slug}.org" "#+title: ${title}\n#+filetags: :project:\n")
+           :if-new (file+head "projects/${slug}.org" "${title}\n#+filetags: :project:\n")
            :immediate-finish t
            :unnarrowed t)))
 
@@ -243,7 +247,7 @@ depending on the current stat."
 
  ;; additional note taking commands
  (:prefix "n"
-          (:when (and  (modulep! :ui popup) (modulep! :lang org +roam2))
+  (:when (and (modulep! :ui popup) (modulep! :lang org +roam2))
    ;; leader-x is the normal scratch buffer
    "x" #'my/roam-daily-as-popup))
 

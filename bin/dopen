@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+command -v "open" && \
+  cmd="open" || \
+  (command -v "xdg-open" && cmd="xdg-open" || (echo "no open command found"; exit))
+
+command -v devour && \
+  devour $cmd $@ || \
+  $cmd $@
