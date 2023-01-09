@@ -270,7 +270,10 @@ depending on the current stat."
   (:when (modulep! :emacs browse-kill-ring)
    "c" #'browse-kill-ring)
   (:when (modulep! :completion ivy)
-   "z" #'my/grep-page-break))
+    "z" #'my/grep-page-break)
+  (:when (modulep! :tools translation)
+    ;; replaces dooms default 'thesaurus' keybinding
+    "T" #'+translate/online))
 
  ;; window commands
  (:prefix "w"

@@ -11,7 +11,7 @@
         gts-buffer-follow-p t)
   (add-hook 'gts-after-buffer-prepared-hook #'evil-motion-state))
 
-(defun +translate ()
+(defun +translate/online ()
   "Translate a prompted string or region using an online api."
   (interactive)
   (gts-do-translate))
