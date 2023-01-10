@@ -46,7 +46,7 @@
        ;;treemacs          ; a project drawer, like neotree but cooler
        ;;unicode           ; extended unicode support for various languages
        vc-gutter           ; vcs diff in the fringe
-       vi-tilde-fringe     ; fringe tildes to mark beyond EOB
+       ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        ;;window-select     ; visually switch windows
        workspaces          ; tab emulation, persistence & separate workspaces
        ;;zen               ; distraction-free coding or writing
@@ -88,6 +88,7 @@
 
        :tools
        ;;ansible
+       ;;biblio            ; Writes a PhD for you (citation needed)
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        ;;direnv
        docker
@@ -112,6 +113,7 @@
 
        :lang
        ;;agda              ; types of types of types of types...
+       ;;beancount         ; mind the GAAP
        (cc +lsp)           ; C/C++/Obj-C madness
        (clojure +lsp)      ; java with a lisp
        common-lisp         ; if you've seen one lisp, you've seen them all
@@ -120,17 +122,20 @@
        ;;csharp            ; unity, .NET, and mono shenanigans
        data                ; config/data formats
        (dart +flutter +lsp); paint ui and not much else
+       ;;dhall
        elixir              ; erlang done right
        ;;elm               ; care for a cup of TEA?
        emacs-lisp          ; drown in parentheses
        erlang              ; an elegant language for a more civilized age
        ess                 ; emacs speaks statistics
        ;;faust             ; dsp, but you get to keep your soul
+       ;;fortran           ; in FORTRAN, GOD is REAL (unless declared INTEGER)
        ;;fsharp            ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;gdscript          ; the language you waited for
        (go +lsp)           ; the hipster dialect
-       ;;(haskell +dante)  ; a language that's lazier than I am
+       (graphql +lsp)      ; Give queries a REST
+       ;;(haskell +lsp +dante)  ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ;
        ;;json              ; At least it ain't XML
@@ -141,7 +146,7 @@
        latex               ; writing papers in Emacs has never been so fun
        ;;lean
        ;;factor
-       ledger              ; an accounting system in Emacs
+       ;;ledger            ; an accounting system in Emacs
        lfe                 ; lisp flavoured erlang
        ;;lua               ; one-based indices? one-based indices
        markdown            ; writing docs for people to ignore
@@ -169,6 +174,7 @@
        ;;terra             ; Earth and Moon in alignment for performance.
        web                 ; the tubes
        yaml                ; JSON, but readable
+       ;;zig               ; C, but simpler
 
        :email
        ;;(mu4e +gmail)
@@ -177,6 +183,8 @@
 
        :app
        ;;calendar
+       ;;emms
+       everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
        (rss +org)          ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
