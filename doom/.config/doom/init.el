@@ -50,6 +50,7 @@
        ;;window-select     ; visually switch windows
        workspaces          ; tab emulation, persistence & separate workspaces
        ;;zen               ; distraction-free coding or writing
+       org-dashboard       ; personal module for a notion-like dashboard in roam [WIP]
 
        :editor
        (evil +everywhere)  ; come to the dark side, we have cookies
@@ -189,7 +190,7 @@
        (rss +org)          ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
        org-notes           ; personal module for org(+roam) notes
-       notebook            ; [wip] module for jupyter-like notebooks in org
+       notebook            ; [wip] module for jupyter-like notebooks in org [WIP]
 
        :config
        ;;literate

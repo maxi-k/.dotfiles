@@ -21,11 +21,6 @@
   ""
   :group 'org-dashboard-faces)
 
-(defface org-dashboard-info-keyword
-  `((default :inherit org-hide :height 0.1))
-  ""
-  :group 'org-dashboard-faces)
-
 (defface org-dashboard-h1
   `((default :inherit (org-dashboard-heading org-level-1) :height 2.0))
  "" :group 'org-dashboard-faces)
@@ -42,24 +37,38 @@
 
 (defvar-local org-dashboard--face-remap-fn nil)
 
+(defun org-dashboard--face-transformation ()
+  (mapcar (lambda (cs) (face-remap-add-relative (car cs) (cdr cs)))
+          '((org-document-title . org-dashboard-title)
+            (org-level-1 . org-dashboard-h1)
+            (org-level-2 . org-dashboard-h2)
+            (org-default . org-dashboard-faces))))
+
+(cl-defun org-dashboard-reload-faces (&key (reinit t) (deinit t))
+  (when deinit
+    (mapc #'face-remap-remove-relative org-dashboard--face-remap-fn)
+    (setq org-dashboard--face-remap-fn nil))
+  (when reinit
+    (setq org-dashboard--face-remap-fn (org-dashboard--face-transformation))))
+
 (defun org-dashboard-mode--on ()
   (interactive)
   (solaire-mode +1)
-  (setq-local org-hide-leading-stars t)
-  (setq org-dashboard--face-remap-fn
-        (mapcar (lambda (cs) (face-remap-add-relative (car cs) (cdr cs)))
-                '((org-document-title . org-dashboard-title)
-                  (org-document-info-keyword . org-dashboard-info-keyword)
-                  (org-level-1 . org-dashboard-h1)
-                  (org-level-2 . org-dashboard-h2)
-                  (org-default . org-dashboard-faces)))))
+  ;;(setq-local org-hide-leading-stars t)
+  (setq-local org-hidden-keywords (cons 'title org-hidden-keywords))
+  (org-dashboard-reload-faces)
+  (add-hook! doom-load-theme-hook :local #'org-dashboard-reload-faces))
 
 (defun org-dashboard-mode--off ()
   (interactive)
   (solaire-mode -1)
-  (mapc #'face-remap-remove-relative
-        org-dashboard--face-remap-fn)
-  (setq org-dashboard--face-remap-fn nil))
+  (org-dashboard-reload-faces :reinit nil)
+  (remove-hook! doom-load-theme-hook :local #'org-dashboard-reload-faces))
+
+(defun org-dashboard--reload ()
+  (interactive)
+  (org-dashboard-mode--off)
+  (org-dashboard-mode--on))
 
 (define-minor-mode org-dashboard-mode
   "Automatically export the current org file on save. Local mode.
