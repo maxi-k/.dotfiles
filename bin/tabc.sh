@@ -32,25 +32,44 @@ get_class() {
 # Main Program
 #
 
-tabbed=$1; shift
-if [ "$(get_class $tabbed)" != "tabbed" ]; then
-  echo "Not an instance of tabbed" 2>&1
-fi
+pop_tabbed() {
+  tabbed=$1; shift
+  if [ "$(get_class $tabbed)" != "tabbed" ]; then
+     notify-send "Not an instance of tabbed"
+     exit 1
+  fi
+}
 
 cmd=$1; shift
 
-test command -v "xdotool" || (notify-send "please install xdotool"; exit 1)
+command -v "xdotool" 1>/dev/null || (notify-send "please install xdotool"; exit 1)
 
 case $cmd in
   add)
+    pop_tabbed $@; shift
     wid=$1; shift
+    # notify-send "adding $wid to $tabbed"
     xdotool windowreparent $wid $tabbed
+    break
     ;;
   remove)
+    pop_tabbed $@; shift
     wid=$1; shift
+    # notify-send "removing $wid from $tabbed"
     xdotool windowreparent $wid $(get_root_wid)
+    break
     ;;
   list)
+    pop_tabbed $@; shift
+    # notify-send "listing $tabbed"
     get_clients $tabbed
+    break
+    ;;
+  wrap)
+    wid=$1
+    inst=`tabbed -d`
+    # notify-send "wrapping $wid in $inst"
+    xdotool windowreparent $wid $inst
+    break
     ;;
 esac

@@ -202,16 +202,23 @@ super + {Left,Down,Up,Right}
 
 # Add focused window to a tabbed instance in given direction
 super + t; {h,j,k,l}
-    tabc.sh $(bspc query -N -n {west,south,north,east}) add $(bspc query -N -n focused)
+    tabc.sh add $(bspc query -N -n {west,south,north,east}) $(bspc query -N -n focused)
 
 # Remove one tab from tabbed
 super + t; r
     tabbed=$(bspc query -N -n focused); \
-    child=$(tabc.sh $tabbed list | head -n1); \
-    tabc.sh $tabbed remove $child
+    child=$(tabc.sh list $tabbed | head -n1); \
+    notify-send "tabbed $tabbed child $child"; \
+    tabc.sh remove $tabbed $child
 
+# Query bspwm information about the current (tabbed?) window
 super + t; q
       notify-send $(bspc query -T -n focused)
 
+# Wrap the current window in a tabbed instance
+super + t; w
+    tabc.sh wrap $(bspc query -N -n focused)
+
+# Spawn a new tabbed instance
 super + t; s
       tabbed
