@@ -200,9 +200,12 @@ depending on the current stat."
            :unnarrowed t)))
 
   (setq org-roam-node-display-template
-        (format "%s ${doom-hierarchy:*} %s"
+        (format "%s ${doom-hierarchy:*} %s %s"
                 (propertize "${doom-type:15}" 'face 'font-lock-comment-face)
-                (propertize "${doom-tags:42}" 'face 'org-tag))))
+                ;; right align doom tags; simplified version of
+                ;; https://github.com/org-roam/org-roam/issues/1775#issue-971157225
+                (propertize " " 'display `(space :align-to (- right 30)))
+                (propertize "${doom-tags:30}" 'face 'org-tag))))
 
 ;; Make macOS title bar transparent
 (when (eq system-type 'darwin)
