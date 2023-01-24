@@ -272,7 +272,11 @@ depending on the current stat."
  (:prefix "n"
   (:when (and (modulep! :ui popup) (modulep! :lang org +roam2))
    ;; leader-x is the normal scratch buffer
-   "x" #'my/roam-daily-as-popup))
+    "x" #'my/roam-daily-as-popup)
+  (:prefix "r"
+           (:when (modulep! :ui org-dashboard-roam)
+             "h" (lambda () (interactive) (find-file (concat my/notes-directory "roam/home.org")))))
+  )
 
  ;; "open commands / apps"
  (:prefix "o"
