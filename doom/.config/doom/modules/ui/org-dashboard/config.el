@@ -79,15 +79,22 @@ Only manually added dynamic content generators should have this property."
   "Org property keyword indicating whether the dynamic content should be hidden (folded) by for the"
   :group 'org-dashboard)
 
+(defcustom org-dashboard-solaire-mode nil
+  "Whether to use `solaire-mode' for the dashboard buffer when enabling org-dashboard-mode"
+  :group 'org-dashboard)
+
+(defcustom org-dashboard-dynamic-content-face 'org-block
+  "Face to use for dynamic content regions (or nil to not set any face)"
+  :group 'org-dashboard)
+
 (defun org-dashboard-parse-dynamic-content (content)
   "Parses a string representing a dynamic content function of the form \"content-fn arg1 arg2...\".
 Returns a plist (:fn [function symbol] :args (list of args)). "
-  (let* ((parts (split-string content " "))
-         (fn (intern (car parts)))
-         (alt-fn (intern (concat "org-dashboard-" (car parts))))
+  (let* ((parts (read (concat "(" content ")")))
+         (fn (car parts))
+         (alt-fn (intern (concat "org-dashboard-" (symbol-name fn))))
          (fn (if (fboundp fn) fn (if (fboundp alt-fn) alt-fn (user-error "neither %s nor %s are defined functions" fn alt-fn)))))
     (list :fn fn :args (cdr parts))))
-
 
 (defun org-dashboard-spec-at-point ()
   "Returns the dashboard spec at point.
@@ -141,7 +148,7 @@ Expands dynamically expanded content recursively. It is the responsibility of co
            (insert-end))
       ;;(message "found %s \nfrom %s %s" elem beg end)
       (setq prev-content (buffer-substring beg end))
-      (condition-case nil
+      (condition-case expansion-error
           (progn
             ;; clear previous results
             (when (and beg end) (delete-region beg end))
@@ -149,7 +156,7 @@ Expands dynamically expanded content recursively. It is the responsibility of co
             (insert "\n\n")
             (forward-line -1)
             (setq insert-start (point))
-            (apply fn recur args)
+            (funcall fn recur args)
             (setq insert-end (point))
             ;; recurse
             (let ((props (org-dashboard-collect-specs insert-start insert-end)))
@@ -168,16 +175,18 @@ Expands dynamically expanded content recursively. It is the responsibility of co
                 (org-fold--hide-drawers pos insert-end)
                 (when org-dashboard-dynamic-content-is-read-only
                   ;;(message "marking as read-only")
-                  (add-text-properties beg insert-end '(read-only t))))))
+                  (add-text-properties beg insert-end '(read-only t)))
+                ;;(when org-dashboard-dynamic-content-face (add-text-properties beg insert-end `(face highlight)))
+                )))
         (error ;; XXX doesn't catch all error cases
-         (message "Caught error, restoring content at %s..." beg)
+         (message "Caught error \"%s\", restoring content at %s..." expansion-error beg)
          (let ((del-end (or insert-end end)))
            (delete-region beg del-end))
          (goto-char beg)
          (insert prev-content)
          )))))
 
-(defun org-dashboard-test-content (recur &rest args)
+(defun org-dashboard-test-content (recur args)
   (let* ((level (+ 1 (org-current-level)))
          (stars (make-string level ?*))
          (fold (if (>= recur 1) "nil" t))
@@ -227,7 +236,7 @@ some content %s
 
 (defun org-dashboard-mode--on ()
   (interactive)
-  (solaire-mode +1)
+  (when (and (fboundp solaire-mode) org-dashboard-solaire-mode) (solaire-mode -1))
   ;;(setq-local org-hide-leading-stars t)
   (setq-local org-hidden-keywords (delete-dups (cons 'title org-hidden-keywords)))
   ;;(read-only-mode)
@@ -239,7 +248,7 @@ some content %s
 
 (defun org-dashboard-mode--off ()
   (interactive)
-  (solaire-mode -1)
+  (when (and (fboundp solaire-mode) org-dashboard-solaire-mode) (solaire-mode -1))
   ;;(read-only-mode)
   (org-dashboard-reload-faces :reinit nil)
   (org-mode)

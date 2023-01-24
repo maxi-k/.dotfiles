@@ -51,6 +51,7 @@
        workspaces          ; tab emulation, persistence & separate workspaces
        ;;zen               ; distraction-free coding or writing
        org-dashboard       ; personal module for a notion-like dashboard in roam [WIP]
+       org-dashboard-roam  ; roam-related convenience functions for org-dashboard
 
        :editor
        (evil +everywhere)  ; come to the dark side, we have cookies
