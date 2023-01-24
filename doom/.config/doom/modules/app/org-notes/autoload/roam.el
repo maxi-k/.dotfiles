@@ -113,10 +113,12 @@
   (org-roam-tag-add '("draft")))
 
 ;;;###autoload
-(defun my/org-roam-add-draft-tag-unless-daily ()
+(defun my/org-roam-add-draft-tag-unless-daily-or-existing ()
   "Add a 'draft' tag to the given org mode node or file unless it's a daily node"
   (interactive)
-  (unless (org-roam-dailies--daily-note-p)
+  (message " found tags %s" (org-get-tags))
+  (unless (or (and (fboundp 'org-roam-dailies--daily-note-p) (org-roam-dailies--daily-note-p))
+              (not (eq '() (org-get-tags))))
     (my/org-roam-add-draft-tag)))
 
 ;;;###autoload

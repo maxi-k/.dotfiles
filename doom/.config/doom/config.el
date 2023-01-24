@@ -139,6 +139,13 @@ depending on the current stat."
   (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
     str))
 
+(defun my/capitalize-words-in-string (str)
+  "Capitalize the words in the given string."
+  (string-join
+   (mapcar (lambda (s) (and s (not (string-blank-p s)) (concat (capitalize (substring s nil 1)) (substring s 1))))
+           (split-string str))
+   " "))
+
 ;;
 ;; Lisp language family setup
 ;;
@@ -183,23 +190,34 @@ depending on the current stat."
            "* %?"
            :target (file+head+olp "%<%Y-w%W>.org" "#+title: %<%Y-w%W>\n" ("%<%A, %Y-%m-%d>")))))
 
-  ;; adapted from https://jethrokuan.github.io/org-roam-guide/
-  (setq org-roam-capture-templates
-        `(("d" "default" plain "%?"
-           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
-           :unnarrowed t)
-          ("e" "event" plain "%?"
-           :if-new (file+head "events/<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :event:\n")
-           :immediate-finish t
-           :unnarrowed t)
-          ("r" "reference" plain "%?"
-           :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+filetags: :paper:\n")
-           :immediate-finish t
-           :unnarrowed t)
-          ("p" "project" plain "%?"
-           :if-new (file+head "projects/${slug}.org" "#+title: ${title}\n#+filetags: :project:\n")
-           :immediate-finish t
-           :unnarrowed t)))
+  (after! org
+    (setq org-tags-exclude-from-inheritance (delete-dups (cons "list" org-tags-exclude-from-inheritance)))
+    ;; adapted from https://jethrokuan.github.io/org-roam-guide/
+    (setq org-roam-capture-templates
+          `(("d" "default" plain "%?"
+             :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+             :unnarrowed t)
+            ("e" "event" plain "%?"
+             :if-new (file+head "events/<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :event:\n")
+             :immediate-finish t
+             :unnarrowed t)
+            ("r" "reference" plain "%?"
+             :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+filetags: :paper:\n")
+             :immediate-finish t
+             :unnarrowed t)
+            ("i" "idea" plain "%?"
+             :if-new (file+head "ideas/${slug}.org" "#+title: ${title}\n#+filetags: :idea:\n")
+             :immediate-finish t
+             :unnarrowed t)
+            ("p" "project" plain "%?"
+             :if-new (file+head "projects/${slug}.org" "#+title: ${title}\n#+filetags: :project:\n")
+             :immediate-finish t
+             :unnarrowed t)
+            ("P" "person" plain "* %(my/capitalize-words-in-string \"${title}\")\n:PROPERTIES:\n:ID:  %(org-id-uuid)\n:END:\n %?"
+             :target (node "persons")
+             :prepend nil
+             :immediate-finish t)
+            )))
 
   (setq org-roam-node-display-template
         (format "%s ${doom-hierarchy:*} %s %s"

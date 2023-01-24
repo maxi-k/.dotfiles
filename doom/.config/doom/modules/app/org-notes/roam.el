@@ -21,5 +21,4 @@
      "t" #'org-roam-dailies-today)))
 
   (add-hook! 'org-roam-capture-new-node-hook
-             #'my/org-roam-add-draft-tag-unless-daily)
-  )
+             #'my/org-roam-add-draft-tag-unless-daily-or-existing))
