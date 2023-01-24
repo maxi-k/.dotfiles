@@ -1,4 +1,6 @@
 ;;; ui/org-dashboard/config.el -*- lexical-binding: t; -*-
+;;;###if (modulep! :lang org)
+
 ;; (defface org-dashboard-title-face
 ;;   '((default :inherit italic)
 ;;     (((class color) (min-colors 88) (background light))
@@ -69,6 +71,14 @@ Only manually added dynamic content generators should have this property."
   "Whether the dynamically generated content should be marked as read-only text."
   :group 'org-dashboard)
 
+(defcustom org-dashboard-fold-dynamic-content t
+  "Whether the dynamic content should be folded (hidden) by default"
+  :group 'org-dashboard)
+
+(defcustom org-dashboard-fold-property-name "dashboard-content-fold"
+  "Org property keyword indicating whether the dynamic content should be hidden (folded) by for the"
+  :group 'org-dashboard)
+
 (defun org-dashboard-parse-dynamic-content (content)
   "Parses a string representing a dynamic content function of the form \"content-fn arg1 arg2...\".
 Returns a plist (:fn [function symbol] :args (list of args)). "
@@ -78,96 +88,87 @@ Returns a plist (:fn [function symbol] :args (list of args)). "
          (fn (if (fboundp fn) fn (if (fboundp alt-fn) alt-fn (user-error "neither %s nor %s are defined functions" fn alt-fn)))))
     (list :fn fn :args (cdr parts))))
 
-(defun org-dashboard-test-content (recur &rest args)
-  (let* ((level (+ 1 (org-current-level)))
-         (stars (make-string level ?*))
-         (res (if (>= recur 2)
-                  (format "%s %s" recur args)
-                (format "%s Headline %s.1
-:PROPERTIES:
-:dashboard-content: test-content recursion1
-:END:
-some content %s
-%s Headline %s.2
-:PROPERTIES:
-:dashboard-content: test-content recursion2
-:END:
-some content %s
-%s Headline %s.3
-some content %s
-" stars recur args stars recur args stars recur args)
-                ))
-         )
-    (insert res)))
 
-(defun org-dashboard-collect-properties (&optional beg end)
+(defun org-dashboard-spec-at-point ()
+  "Returns the dashboard spec at point.
+A dashboard spec has the shape (:point [point at property] :fn [dynamic content function] :args [dynamic content args] :id [unique content id] :fold [bool-like]) "
+  (interactive)
+  (let* ((pos (point))
+         (content-id-key org-dashboard-dynamic-content-id-property-name)
+         (content-key org-dashboard-dynamic-content-property-name)
+         (content-id (org-entry-get pos content-id-key))
+         (do-fold (org-not-nil (or (org-entry-get pos org-dashboard-fold-property-name t t) org-dashboard-fold-dynamic-content)))
+         (dynamic-spec (org-dashboard-parse-dynamic-content (org-entry-get pos content-key))))
+    (org-combine-plists (list :point pos :id content-id :fold do-fold) dynamic-spec)))
+
+(defun org-dashboard-collect-specs (&optional beg end)
   "Collect information about entries in the buffer where the `org-dashboard-dynamic-content-property-name' property is set.
 Limits search to range between `beg' and `end' if non-nil.
 Adds a unique id to the property with key `org-dashboard-dynamic-content-id-property-name' if it is not set yet.
-Returns a list of plists with attributes (:point [point at property] :fn [dynamic content function] :args [dynamic content args] :id [unique content id])."
+Returns a list of spec plists as defined by `org-dashboard-spec-at-point'."
   (org-with-wide-buffer ;; adapted from `org-property-values'
    (save-excursion
      (let* ((beg (or beg (point-min)))
             (end (or end (point-max)))
             (case-fold-search t)
             (content-key org-dashboard-dynamic-content-property-name)
-            (content-id-key org-dashboard-dynamic-content-id-property-name)
             (re (org-re-property content-key))
             values)
        (goto-char beg)
        (while (re-search-forward re end t)
-         (let* ((pos (point))
-                (content-id (org-entry-get pos content-id-key)))
-           (push (org-combine-plists (list :point pos :id content-id) (org-dashboard-parse-dynamic-content (org-entry-get pos content-key))) values)))
+         (push (org-dashboard-spec-at-point) values))
        (setq values ;; sort list back-to-front to ensure buffer modifications don't destroy :point
              (sort (delete-dups values)
                    (lambda (x y) (> (plist-get x :point) (plist-get y :point)))))))))
 
 (defun org-dashboard-generate-dynamic-content (content &optional recur)
-  "Given a dynamic-content-describing plist as returned by `org-dashboard-collect-properties', renders the dynamic content into the buffer.
+  "Given a dynamic-content-describing plist as returned by `org-dashboard-collect-specs', renders the dynamic content into the buffer.
 Expands dynamically expanded content recursively. It is the responsibility of content functions to ensure recursion is not infinite."
   (let* ((recur (or recur 0))
-         (content-id (plist-get content :id))
          (fn (plist-get content :fn))
          (args (plist-get content :args))
          (pos (plist-get content :point))
-         (content-id-key org-dashboard-dynamic-output-id-property-name)
-         (prev-content)
-         )
+         (foldp (plist-get content :fold))
+         (prev-content))
     (goto-char pos)
     (org-back-to-heading)
     (let* ((elem (org-element-at-point))
            (end (org-element-property :end elem))
            (drawer-end (re-search-forward "^[ \t]*:END:.*" end t))
-           (beg)
+           (beg (+ drawer-end 1))
+           (inhibit-read-only t)
            (insert-start)
            (insert-end))
-      (forward-line)
-      (setq beg (point))
-      (message "found %s \nfrom %s %s" elem beg end)
+      ;;(message "found %s \nfrom %s %s" elem beg end)
       (setq prev-content (buffer-substring beg end))
       (condition-case nil
           (progn
             ;; clear previous results
             (when (and beg end) (delete-region beg end))
             (goto-char beg)
-            (insert "\n\n\n")
+            (insert "\n\n")
             (forward-line -1)
             (setq insert-start (point))
             (apply fn recur args)
             (setq insert-end (point))
             ;; recurse
-            (let ((props (org-dashboard-collect-properties insert-start insert-end)))
+            (let ((props (org-dashboard-collect-specs insert-start insert-end)))
               (dolist (prop props)
                 (org-dashboard-generate-dynamic-content prop (+ recur 1))))
             (setq insert-end (point))
-            (when (and org-dashboard-dynamic-content-is-read-only (zerop recur))
-              (save-excursion
-                (goto-char pos)
-                (org-back-to-heading)
-                (setq insert-end (org-element-property :end (org-element-at-point)))
-                (message "marking as read-only")
-                (add-text-properties beg insert-end '(read-only t)))))
+            (save-excursion
+              (goto-char pos)
+              (org-back-to-heading)
+              (setq insert-end (org-element-property :end (org-element-at-point)))
+              (when foldp
+                (org-fold-hide-subtree)
+                (org-fold-show-entry)
+                (org-fold-show-children))
+              (when (zerop recur)
+                (org-fold--hide-drawers pos insert-end)
+                (when org-dashboard-dynamic-content-is-read-only
+                  ;;(message "marking as read-only")
+                  (add-text-properties beg insert-end '(read-only t))))))
         (error ;; XXX doesn't catch all error cases
          (message "Caught error, restoring content at %s..." beg)
          (let ((del-end (or insert-end end)))
@@ -176,31 +177,53 @@ Expands dynamically expanded content recursively. It is the responsibility of co
          (insert prev-content)
          )))))
 
+(defun org-dashboard-test-content (recur &rest args)
+  (let* ((level (+ 1 (org-current-level)))
+         (stars (make-string level ?*))
+         (fold (if (>= recur 1) "nil" t))
+         (res (if (>= recur 2)
+                  (format "%s %s" recur args)
+                (format "%s Headline %s.1
+:PROPERTIES:
+:dashboard-content: test-content recursion1
+:dashboard-content-fold: %s
+:END:
+some content %s
+%s Headline %s.2
+:PROPERTIES:
+:dashboard-content: test-content recursion2
+:dashboard-content-fold: %s
+:END:
+some content %s
+%s Headline %s.3
+some content %s
+" stars recur fold args stars recur fold args stars recur args)
+                ))
+         )
+    (insert res)))
+
 (defun org-dashboard-setup-buffer ()
   (let ((window (get-buffer-window))
         ;; only use entries with an ID value on first level to avoid looping over
         ;; auto-generated recursive entries that will be deleted anyway
-        (props (seq-filter (lambda (spec) (plist-get spec :id)) (org-dashboard-collect-properties))))
+        (props (seq-filter (lambda (spec) (plist-get spec :id)) (org-dashboard-collect-specs))))
+    ;;(dolist (spec props) (message "found %s" spec))
     (dolist (spec props)
-      (message "found %s" spec))
-    (dolist (spec props)
-      (message "inserting content for %s" spec)
+      ;;(message "inserting content for %s" spec)
       (org-dashboard-generate-dynamic-content spec))))
 
-;; (when window
-;;       ;; clean up buffer contents
-;;       (ignore-errors
-;;         (goto-char (point-min))
-;;         (when (re-search-forward "^$") ;; XXX searching for first empty line to find end of header; better way to do this?
-;;           (forward-line)
-;;           (let ((res (buffer-substring (point) (point-max))))
-;;             (kill-region (point) (point-max))
-;;             res)))
-;;       ;; load dashboard contents into the window
-;;       (goto-char (point-max))
-;;       (insert "\n")
-;;       (insert (symbol-name org-dashboard-name))
-;;       )
+(defun org-dashboard-update-buffer ()
+  "Update dynamic content patches in the current buffer."
+  (interactive)
+  (save-excursion
+    (org-dashboard-setup-buffer)))
+
+(defun org-dashboard-update-at-point ()
+  "Update the dynamic content on the current point."
+  (interactive)
+  (save-excursion
+    (let ((spec (org-dashboard-spec-at-point)))
+      (org-dashboard-generate-dynamic-content spec))))
 
 (defun org-dashboard-mode--on ()
   (interactive)
@@ -210,6 +233,8 @@ Expands dynamically expanded content recursively. It is the responsibility of co
   ;;(read-only-mode)
   (org-dashboard-reload-faces)
   (org-dashboard-setup-buffer)
+  (font-lock-flush)
+  (add-hook! after-save-hook :local #'org-dashboard-setup-buffer)
   (add-hook! doom-load-theme-hook :local #'org-dashboard-reload-faces))
 
 (defun org-dashboard-mode--off ()
@@ -217,6 +242,8 @@ Expands dynamically expanded content recursively. It is the responsibility of co
   (solaire-mode -1)
   ;;(read-only-mode)
   (org-dashboard-reload-faces :reinit nil)
+  (org-mode)
+  (remove-hook! after-save-hook :local #'org-dashboard-setup-buffer)
   (remove-hook! doom-load-theme-hook :local #'org-dashboard-reload-faces))
 
 (define-minor-mode org-dashboard-mode
@@ -238,4 +265,4 @@ Set the export command to be used with `org-auto-export-command`."
     (org-dashboard-mode--off)
     (org-dashboard-mode--on)))
 
-(org-dashboard--reload)
+;;(org-dashboard--reload)
