@@ -172,10 +172,10 @@ Expands dynamically expanded content recursively. It is the responsibility of co
                 (org-fold-show-entry)
                 (org-fold-show-children))
               (when (zerop recur)
-                (org-fold--hide-drawers pos insert-end)
+                ;;(org-fold--hide-drawers pos insert-end)
                 (when org-dashboard-dynamic-content-is-read-only
                   ;;(message "marking as read-only")
-                  (add-text-properties beg insert-end '(read-only t)))
+                  (add-text-properties beg (- insert-end 1) '(read-only t)))
                 ;;(when org-dashboard-dynamic-content-face (add-text-properties beg insert-end `(face highlight)))
                 )))
         (error ;; XXX doesn't catch all error cases
@@ -234,6 +234,13 @@ some content %s
     (let ((spec (org-dashboard-spec-at-point)))
       (org-dashboard-generate-dynamic-content spec))))
 
+(defun org-dashboard-ctrl-c-ctrl-c ()
+  "Update the dynamic content on the current point if we are in a property drawer."
+  (when (and (or (org-at-property-drawer-p) (org-at-property-p))
+             (org-entry-get (point) org-dashboard-dynamic-content-property-name))
+    (org-dashboard-update-at-point)
+    t))
+
 (defun org-dashboard-mode--on ()
   (interactive)
   (when (and (fboundp solaire-mode) org-dashboard-solaire-mode) (solaire-mode -1))
@@ -243,6 +250,7 @@ some content %s
   (org-dashboard-reload-faces)
   (org-dashboard-setup-buffer)
   (font-lock-flush)
+  (add-hook! org-ctrl-c-ctrl-c :local #'org-dashboard-ctrl-c-ctrl-c)
   (add-hook! after-save-hook :local #'org-dashboard-setup-buffer)
   (add-hook! doom-load-theme-hook :local #'org-dashboard-reload-faces))
 
@@ -252,6 +260,7 @@ some content %s
   ;;(read-only-mode)
   (org-dashboard-reload-faces :reinit nil)
   (org-mode)
+  (remove-hook! org-ctrl-c-ctrl-c :local #'org-dashboard-ctrl-c-ctrl-c)
   (remove-hook! after-save-hook :local #'org-dashboard-setup-buffer)
   (remove-hook! doom-load-theme-hook :local #'org-dashboard-reload-faces))
 
