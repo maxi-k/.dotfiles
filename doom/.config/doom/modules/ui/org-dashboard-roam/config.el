@@ -23,10 +23,12 @@
   :group 'org-dashboard-roam)
 ;;(setq org-dashboard-roam-tag-emoji-alist (eval (car (get 'org-dashboard-roam-tag-emoji-alist 'standard-value))))
 
-(defcustom org-dashboard-roam-tag-format-string "%s [[elisp:(org-roam-node-find nil \"#%s \")][%s%s]] (%s)"
+(defcustom org-dashboard-roam-tag-format-string "%s [[elisp:(org-roam-node-find nil \"%s \")][%s%s]] (%s)"
   "Format string for the headlines inserted by `org-dashboard-roam-tags'.
 Formatted with args: stars tag emoji tag count. XXX make this use named format strings; how does org-roam-capture-templates do it?"
   :group 'org-dashboard-roam)
+
+;;(setq org-dashboard-roam-tag-format-string (eval (car (get 'org-dashboard-roam-tag-format-string 'standard-value))))
 
 (defun org-dashboard-roam-symbol-as-string (s)
   (if (symbolp s) (symbol-name s) s))
@@ -69,10 +71,13 @@ Params is expected to be a valid plist with the following keys (all optional):
     (dolist (row tags)
       (pcase-let* ((`(,tag ,count) row)
                    (emoji (alist-get tag org-dashboard-roam-tag-emoji-alist nil nil #'equal))
+                   (search-str (string-join (cons (concat "#" tag) ;; XXX exclude-search not working yet
+                                                  (mapcar (lambda (x) (format "!#%s" x)) (plist-get params :exclude-search)))
+                                            " "))
                    (heading
                     (format org-dashboard-roam-tag-format-string
                                     stars
-                                    tag
+                                    search-str
                                     (if emoji (concat emoji " ") "")
                                     tag
                                     count)))
@@ -93,11 +98,14 @@ Params is expected to be a valid plist of the following keys (required):
 
 and the following optional keys
 
-:exclude-tags [bool] (default t)
+:hide-tags [bool] (default t)
         whether to display the tags of each nodes in the headline
+:exlucde [list-of-symbol-or-string] (default nil)
+        list of tags to exclude
 "
   (let* ((stars (make-string (+ 1 (org-current-level)) ?*))
-         (exclude-tags (plist-get params :exclude-tags))
+         (hide-tags (plist-get params :hide-tags))
+         (exclude (plist-get params :exclude))
          (join-idx 0)
          ;; build list of (tag-join-select-clause . tag-join-clause) cons cells
          (join-exprs (mapcar (lambda (taglist)
@@ -112,16 +120,25 @@ and the following optional keys
                                             taglist)
                                     ", ") ")")))
                              (plist-get params :tags)))
+         (where-exp (when exclude
+                      (concat " where not exists (select * from tags aj where aj.node_id = n.id and aj.tag in ("
+                              (string-join
+                               (mapcar (lambda (s)
+                                         (concat "'\"" (org-dashboard-roam-symbol-as-string s) "\"'"))
+                                       exclude)
+                               ", ") "))")))
          (expr (concat "select n.id, n.title, " (string-join (mapcar #'car join-exprs) ", ")
                        " from nodes n "
-                       (string-join (mapcar #'cdr join-exprs) " ")))
+                       (string-join (mapcar #'cdr join-exprs) " ")
+                       where-exp))
+         (_ (message expr))
          (nodes (org-roam-db-query expr))
          (alignment (seq-reduce (lambda (m x) (max (length (cadr x)) m)) nodes 1))) ;; find max title length
     (dolist (row nodes)
       (let* ((id (car row))
              (name (cadr row))
              (tags (cddr row))
-             (tag-str (if exclude-tags "" (concat (make-string (- alignment (length name)) ?\s) ":" (string-join tags ":") ":"))))
+             (tag-str (if hide-tags "" (concat (make-string (- alignment (length name)) ?\s) ":" (string-join tags ":") ":"))))
         (insert (format "%s [[id:%s][%s]] %s" stars id name tag-str))
         (insert "\n")))))
 
