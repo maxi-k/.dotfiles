@@ -172,6 +172,8 @@ depending on the current stat."
         deft-recursive 't))
 
 (when (modulep! :lang org)
+  (after! org-fold-core ;; fixes evil-mode search issue in folded org sections, see: https://github.com/doomemacs/doomemacs/issues/6478
+    (setq org-fold-core-style 'overlays))
   (after! ox-latex
     (setq org-latex-inputenc-alist '(("utf8" . "utf8x")))))
 
