@@ -107,38 +107,23 @@ and the following optional keys
          (hide-tags (plist-get params :hide-tags))
          (exclude (plist-get params :exclude))
          (join-idx 0)
-         ;; build list of (tag-join-select-clause . tag-join-clause) cons cells
-         (join-exprs (mapcar (lambda (taglist)
-                               (setq join-idx (+ join-idx 1))
-                               `(,(format "t%i.tag" join-idx)
-                                 .
-                                 ,(concat
-                                   (format "join tags t%i on t%i.node_id = n.id and t%i.tag in (" join-idx join-idx join-idx)
-                                   (string-join
-                                    (mapcar (lambda (s)
-                                              (concat "'\"" (org-dashboard-roam-symbol-as-string s) "\"'"))
-                                            taglist)
-                                    ", ") ")")))
-                             (plist-get params :tags)))
-         (where-exp (when exclude
-                      (concat " where not exists (select * from tags aj where aj.node_id = n.id and aj.tag in ("
-                              (string-join
-                               (mapcar (lambda (s)
-                                         (concat "'\"" (org-dashboard-roam-symbol-as-string s) "\"'"))
-                                       exclude)
-                               ", ") "))")))
-         (expr (concat "select n.id, n.title, " (string-join (mapcar #'car join-exprs) ", ")
-                       " from nodes n "
-                       (string-join (mapcar #'cdr join-exprs) " ")
-                       where-exp))
-         (_ (message expr))
+         (make-tag-list (lambda (tags) (string-join (mapcar (lambda (s) (concat "'\"" (org-dashboard-roam-symbol-as-string s) "\"'")) tags) ", ")))
+         (tag-select (string-join (mapcar (lambda (taglist)
+                                            (format "select node_id from tags where tag in (%s)" (funcall make-tag-list taglist)))
+                                          (plist-get params :tags))
+                                  " intersect "))
+         (tag-exclude (when exclude
+                      (format " intersect select node_id from tags where tag not in (%s)" (funcall make-tag-list exclude) "))")))
+         (expr (concat "select n.id, n.title, group_concat(t.tag, '') as alltags from ("
+                       tag-select tag-exclude
+                       ") tsel join nodes n on tsel.node_id = n.id join tags t on t.node_id = n.id group by n.id, n.title"))
+         ;;(_ (message expr))
          (nodes (org-roam-db-query expr))
          (alignment (seq-reduce (lambda (m x) (max (length (cadr x)) m)) nodes 1))) ;; find max title length
     (dolist (row nodes)
       (let* ((id (car row))
              (name (cadr row))
-             (tags (cddr row))
-             (tag-str (if hide-tags "" (concat (make-string (- alignment (length name)) ?\s) ":" (string-join tags ":") ":"))))
+             (tags (string-join (delete-dups (cddr row)) ":"))
+             (tag-str (if hide-tags "" (concat (make-string (- alignment (length name)) ?\s) ":" tags ":"))))
         (insert (format "%s [[id:%s][%s]] %s" stars id name tag-str))
         (insert "\n")))))
-
