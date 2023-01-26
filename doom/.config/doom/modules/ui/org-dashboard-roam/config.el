@@ -113,16 +113,16 @@ and the following optional keys
                                           (plist-get params :tags))
                                   " intersect "))
          (tag-exclude (when exclude
-                      (format " intersect select node_id from tags where tag not in (%s)" (funcall make-tag-list exclude) "))")))
+                        (format " except select node_id from tags where tag in (%s)" (funcall make-tag-list exclude) )))
          (expr (concat "select n.id, n.title"
                        (unless hide-tags ", group_concat(t.tag, '') as alltags ")
                        " from ("
                        tag-select tag-exclude
-                       ") tsel join nodes n on tsel.node_id = n.id"
+                       ") tsel join nodes n on tsel.node_id = n.id "
                        (unless hide-tags " join tags t on t.node_id = n.id")
                        " group by n.id, n.title"
                        ))
-         ;;(_ (message expr))
+         (_ (message expr))
          (nodes (org-roam-db-query expr))
          (alignment (seq-reduce (lambda (m x) (max (length (cadr x)) m)) nodes 1))) ;; find max title length
     (dolist (row nodes)

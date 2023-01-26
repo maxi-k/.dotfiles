@@ -145,7 +145,7 @@ Expands dynamically expanded content recursively. It is the responsibility of co
            (beg (+ drawer-end 1))
            (inhibit-read-only t)
            (insert-start)
-           (insert-end))
+           (insert-end end))
       ;;(message "found %s \nfrom %s %s" elem beg end)
       (setq prev-content (buffer-substring beg end))
       (condition-case expansion-error
@@ -180,7 +180,10 @@ Expands dynamically expanded content recursively. It is the responsibility of co
                 )))
         (error ;; XXX doesn't catch all error cases
          (message "Caught error \"%s\", restoring content at %s..." expansion-error beg)
-         (let ((del-end (or insert-end end)))
+         (let ((del-end (save-excursion
+                          (goto-char pos)
+                          (org-back-to-heading)
+                          (org-element-property :end (org-element-at-point)))))
            (delete-region beg del-end))
          (goto-char beg)
          (insert prev-content)
