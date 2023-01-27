@@ -213,6 +213,10 @@ depending on the current stat."
              :if-new (file+head "projects/${slug}.org" "#+title: ${title}\n#+filetags: :project:\n")
              :immediate-finish t
              :unnarrowed t)
+            ("x" "experiment" plain "%?"
+             :if-new (file+head "experiments/${slug}.org" "#+title: ${title}\n#+filetags: :experiment:research:\n")
+             :immediate-finish t
+             :unnarrowed t)
             ("P" "person" plain "* %(my/capitalize-words-in-string \"${title}\")\n:PROPERTIES:\n:ID:  %(org-id-uuid)\n:END:\n %?"
              :target (node "persons")
              :prepend nil
@@ -270,12 +274,14 @@ depending on the current stat."
 
  ;; additional note taking commands
  (:prefix "n"
-  (:when (and (modulep! :ui popup) (modulep! :lang org +roam2))
-   ;; leader-x is the normal scratch buffer
-    "x" #'my/roam-daily-as-popup)
-  (:prefix "r"
-           (:when (modulep! :ui org-dashboard-roam)
-             "h" (lambda () (interactive) (find-file (concat my/notes-directory "roam/home.org")))))
+          (:when (modulep! :lang org +roam2)
+            "g" #'org-open-at-point-global
+            (:when (modulep! :ui popup)
+              ;; leader-x is the normal scratch buffer
+              "x" #'my/roam-daily-as-popup)
+            (:prefix "r"
+                     (:when (modulep! :ui org-dashboard-roam)
+                       "h" (lambda () (interactive) (find-file (concat my/notes-directory "roam/home.org"))))))
   )
 
  ;; "open commands / apps"
