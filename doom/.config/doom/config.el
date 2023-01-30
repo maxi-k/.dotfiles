@@ -182,7 +182,11 @@ depending on the current stat."
   (after! org-fold-core ;; fixes evil-mode search issue in folded org sections, see: https://github.com/doomemacs/doomemacs/issues/6478
     (setq org-fold-core-style 'overlays))
   (after! ox-latex
-    (setq org-latex-inputenc-alist '(("utf8" . "utf8x")))))
+    (setq org-latex-inputenc-alist '(("utf8" . "utf8x"))))
+  (after! org
+    ;; used by org capture; default doom popup rule (:slot -1 :vslot -2 :ttl 0 :size 0.25)
+    ;; seems to break this, causing the select buffer content to be inserted into the current buffer
+    (set-popup-rule! "\\*Org Select\\*" :size 0.42 :quit nil :select t :autosave 'ignore)))
 
 (when (modulep! :lang org +roam2)
   (setq org-roam-dailies-capture-templates
