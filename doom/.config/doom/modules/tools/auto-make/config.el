@@ -19,6 +19,6 @@ Set the export command to be used with `org-auto-export-command`."
   :lighter "auto-export"
   (if auto-make-mode
       ;; enabled
-      (add-hook 'after-save-hook #'auto-make-run-make)
+      (add-hook! 'after-save-hook :local #'auto-make-run-make)
       ;; disabled
-      (remove-hook 'after-save-hook #'auto-make-run-make)))
+      (remove-hook! 'after-save-hook :local #'auto-make-run-make)))
