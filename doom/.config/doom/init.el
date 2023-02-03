@@ -111,6 +111,7 @@
        ;;terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
+       auto-make           ; automatically call 'make' on file save
        translation         ; (human) language translation (own module)
 
        :lang
