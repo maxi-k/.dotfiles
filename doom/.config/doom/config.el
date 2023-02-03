@@ -206,7 +206,7 @@ depending on the current stat."
              :immediate-finish t
              :unnarrowed t)
             ("r" "reference" plain "%?"
-             :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+filetags: :paper:\n")
+             :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+filetags: :paper:reference:\n")
              :immediate-finish t
              :unnarrowed t)
             ("i" "idea" plain "%?"
