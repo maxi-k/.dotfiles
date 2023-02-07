@@ -4,7 +4,8 @@
 hidden=$(bspc query -N -n .hidden -d focused)
 test -z "$hidden" && \
   bspc node focused -g hidden=on || \
-  bspc node "$hidden" -g hidden=off
+  (bspc node "$hidden" -g hidden=off &&
+     bspc node -f "$hidden")
 
 # hiddenlist=$(bspc query -N -n .hidden)
 # echo "$hiddenlist"
