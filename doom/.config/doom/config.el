@@ -34,6 +34,10 @@
 (setq my/notes-directory "~/Documents/Notes/"
       org-directory my/notes-directory)
 
+(defvar my/notes-dashboard-file
+  (concat my/notes-directory "roam/home.org")
+  "A 'default' file to use when opening notes.")
+
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type nil)
@@ -285,7 +289,7 @@ depending on the current stat."
               "x" #'my/roam-daily-as-popup)
             (:prefix "r"
                      (:when (modulep! :ui org-dashboard-roam)
-                       "h" (lambda () (interactive) (find-file (concat my/notes-directory "roam/home.org"))))))
+                       "h" (lambda () (interactive) (find-file my/notes-dashboard-file)))))
   )
 
  ;; "open commands / apps"
@@ -352,6 +356,37 @@ depending on the current stat."
    :localleader
    "s" #'lispy-splice-sexp-killing-backward
    "S" #'lispy-splice-sexp-killing-forward))
+
+(defvar *scratchpad-action*
+  :scratch
+  "The action to take when running `my/scratchpad-profile':
+:scratch
+        Opens the *scratch* buffer
+:dashboard
+        Opens `my/notes-dashboard-file
+:daily
+        If `org-roam' is loaded, opens the daily note
+:mail
+        If `notmuch' is loaded, opens notmuch ")
+(defvar *scratchpad-theme* 'doom-opera-light)
+
+(defun my/scratchpad-profile (&optional action)
+  "Run commands that make emacs usable as a 'scratchpad'"
+  (interactive)
+  (message "loading scratchpad profile")
+  (setq doom-theme *scratchpad-theme*)
+  (if doom-init-time
+      (load-theme *scratchpad-theme*)
+    (add-hook 'window-setup-hook (lambda () (load-theme *scratchpad-theme*))))
+  (let ((x (or action *scratchpad-action*)))
+    (cond
+     ((eq x :scratch) (switch-to-buffer "*scratch*"))
+     ((eq x :dashboard) (find-file my/notes-dashboard-file))
+     ((eq x :daily) (when (modulep! :lang org +roam2)
+                     (org-roam-dailies-goto-today)))
+     ((eq x :notmuch) (when (modulep! :email notmuch)
+                       (=notmuch)))
+     (t (message "Unknown *scratchpad-action* %s, doing nothing" x)))))
 
 (after! notmuch
 

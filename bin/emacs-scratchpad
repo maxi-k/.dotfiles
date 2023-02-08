@@ -1,0 +1,5 @@
+#!/bin/sh
+
+test -z "$1" \
+    && emacs --eval='(my/scratchpad-profile)' --title 'emacs-scratchpad' \
+    || emacs --eval="(my/scratchpad-profile :$1)" --title 'emacs-scratchpad'

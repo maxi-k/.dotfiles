@@ -1,0 +1,47 @@
+#!/bin/sh
+
+notify() {
+    #notify-send "$1"
+    echo "$1" #> /tmp/out.log
+}
+
+filter_name() {
+    while read line; do
+        winname=`xdotool getwindowname "$line" | grep -i "$progname"`
+        if ! [ -z "$winname" ] ; then
+            $1 $line
+            return 0
+        fi
+    done
+    return 1
+}
+
+show_and_focus() {
+    notify "showing and focusing $1"
+    bspc node "$1" -g hidden=off -f
+}
+
+hide_window() {
+    bspc node focused -g hidden=on
+}
+
+if [ "$#" -eq "0" ]; then
+    # no arguments given - interactively choose hidden window to show
+    notify "interactive mode"
+    bspc query -N -n .hidden | while read line; do
+        echo $(xdotool getwindowname "$line") " - $line"
+    done | selector | awk '{ print $NF }' | xargs -I"{}" bspc node "{}" -g hidden=off -f
+else
+    notify "mode~!"
+    progname=$1
+
+    # there is a hidden instance - show it
+    bspc query -N -n .hidden | filter_name "show_and_focus" && exit 0 || notify "hidden $progname not found, hiding or spawning..."
+
+    # we are on a focused instance - hide it
+    bspc query -N -n .focused | filter_name "hide_window" && exit 0 || notify "not on $progname node, spawning"
+
+    # program neither hidden nor focused, spawn it
+    # using second arg or first arg
+    bspc rule -a \* -o state=floating sticky=on layer=above && (test -z "$2" && $progname || $2)
+fi

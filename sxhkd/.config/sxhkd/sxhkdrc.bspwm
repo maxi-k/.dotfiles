@@ -35,14 +35,8 @@ super + shift + d
 super + shift + f
     cat ~/.cache/searches.log | selector | tee -a ~/.cache/searches.log | xargs -I'%s' firefox --search "%s"
 
-super + shift + s
-	bspc rule -a \* -o state=floating sticky=on layer=above rectangle=2000x500+820+30 && $TERMINAL
-
 super + shift + v
     awk '/^\ +[a-zA-Z]/ && last {print substr($0,0,50),"\t",last}  {last=""} /^[a-zA-Z]/{last=$0}' ~/.config/sxhkd/sxhkdrc.bspwm | sed -E 's/^\s+/\t/' | column -t -s $'\t' | selector
-
-super + F9
-	bspc rule -a \* -o state=floating sticky=on layer=above rectangle=2000x500+820+30 && $TERMINAL
 
 # Choose bspwm layout
 super + {shift,ctrl} + space
@@ -93,7 +87,7 @@ super + shift + o
 	bspc node @focused:/ -R 90
 
 # swap the current node and the biggest node
-super + Enter
+super + Return
 	bspc node -s biggest.local
   
 #
@@ -105,13 +99,23 @@ super + {y,shift + y,g,f}
 	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 # set the node flags
-super + ctrl + {m,x,y,z}
-        STATE={marked,locked,sticky,private};\
-        bspc node -g $STATE;\
-        notify-send "Set node state to $STATE"
+# super + ctrl + {m,x,y,z}
+#         STATE={marked,locked,sticky,private};\
+#         bspc node -g $STATE;\
+#         notify-send "Set node state to $STATE"
+super + shift + s
+    echo "marked\nlocked\nsticky\nprivate" | selector | xargs bspc node -g
 
 super + shift + period
-        bspwm-hide-window
+        bspwm-scratch-program emacs-scratchpad
+        #bspc rule -a \* -o state=floating sticky=on layer=above rectangle=2000x500+820+30 && $TERMINAL
+        #bspwm-hide-window
+
+super + ctrl + period
+        bspwm-scratch-program
+
+super + ctrl + alt + period
+        bspc node -g hidden=on
 
 #
 # focus/swap/move
