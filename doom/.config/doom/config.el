@@ -357,8 +357,10 @@ depending on the current stat."
    "s" #'lispy-splice-sexp-killing-backward
    "S" #'lispy-splice-sexp-killing-forward))
 
+
+(defvar *scratchpad-theme* 'doom-opera-light)
 (defvar *scratchpad-action*
-  :scratch
+  :daily
   "The action to take when running `my/scratchpad-profile':
 :scratch
         Opens the *scratch* buffer
@@ -368,7 +370,6 @@ depending on the current stat."
         If `org-roam' is loaded, opens the daily note
 :mail
         If `notmuch' is loaded, opens notmuch ")
-(defvar *scratchpad-theme* 'doom-opera-light)
 
 (defun my/scratchpad-profile (&optional action)
   "Run commands that make emacs usable as a 'scratchpad'"
@@ -388,31 +389,69 @@ depending on the current stat."
                        (=notmuch)))
      (t (message "Unknown *scratchpad-action* %s, doing nothing" x)))))
 
-(after! notmuch
+(when (modulep! :email notmuch)
 
-  ;; receiving mail
-  (setq +notmuch-sync-backend 'mbsync)
-  ;; sending mail
-  (setq send-mail-function 'message-send-mail-with-sendmail
-        sendmail-program "/usr/bin/msmtp"
-        mail-specify-envelope-from t
-        mail-envelope-from 'header
-        ;; mail-sendmail-extra-arguments nil
-        )
+  (defvar my/notmuch-todo-query "tag:unread or (tag:flagged and tag:inbox and not (tag:trash or tag:deleted))")
+  (defun my/notmuch-inbox ()
+    (interactive)
+    (notmuch-search my/notmuch-todo-query))
 
-  ;; (defun my/notmuch-inbox ()
-  ;;   (interactive)
-  ;;   (notmuch-search "tag:unread or (tag:flagged and tag:inbox and not (tag:trash or tag:deleted))"))
+  (setq +notmuch-home-function #'my/notmuch-inbox ;; directly go to the inbox instead of opening notmuch-hello
+        +notmuch-sync-backend 'mbsync
+        notmuch-show-logo nil)
 
-  ;; (setq +notmuch-home-function #'my/notmuch-inbox)
-  ;; (setq notmuch-fcc-dirs ...) for properly putting items in outboxes
+    ;; sending mail
+    (setq send-mail-function 'message-send-mail-with-sendmail
+          sendmail-program "/usr/bin/msmtp"
+          ;; sendmail should figure out the 'from' address from the envelope
+          ;; instead of generating a weird ID
+          mail-specify-envelope-from t
+          mail-envelope-from ""
+          ;;message-sendmail-extra-arguments '("--read-envelope-from")
+          mail-sendmail-extra-arguments nil
+          message-sendmail-envelope-from 'obey-mail-envelope-from
+          mail-host-address "maxi.fyi")
 
-  (advice-add '+notmuch/compose
-              :override (lambda ()
-                          (notmuch-mua-mail
-                           nil
-                           nil
-                           (list (cons 'From
-                                       (format "%s <%s>" user-full-name
-                                               (completing-read "From: " (notmuch-user-emails))))))))
-  )
+
+
+    (after! notmuch
+
+      (setq notmuch-archive-tags  '("-inbox" "-unread" "+archive"))
+
+      (setq notmuch-tagging-keys
+            `((,(kbd "a") notmuch-archive-tags "Archive")
+              (,(kbd "r") notmuch-show-mark-read-tags "Mark read")
+              (,(kbd "u") ("+inbox +unread") "Mark unread")
+              (,(kbd "f") ("+flagged") "Flag")
+              (,(kbd "A") +notmuch-spam-tags "Mark as spam")
+              (,(kbd "d") ("+deleted" "-inbox") "Delete")))
+
+      (setq notmuch-saved-searches
+            `((:name "todo" :query ,my/notmuch-todo-query :key "t")
+              (:name "inbox" :query "tag:inbox not tag:trash" :key "i")
+              (:name "unread" :query "tag:unread" :key "u")
+              (:name "flagged" :query "tag:flagged" :key "f")
+              (:name "sent" :query "tag:sent or tag:replied or path:/Sent.*/" :key "s")
+              (:name "drafts" :query "tag:draft" :key "d")
+              (:name "archive" :query "tag:archive" :key "A")
+              (:name "all mail" :query "*" :key "a")))
+
+
+      (map! :map (notmuch-search-mode-map notmuch-tree-mode-map)
+            "T" #'notmuch-tag-jump
+            :localleader
+            "t" #'notmuch-tag-jump)
+
+      (advice-add '+notmuch/compose
+                  :override (lambda ()
+                              (notmuch-mua-mail
+                               nil
+                               nil
+                               (list (cons 'From
+                                           (format "%s <%s>" user-full-name
+                                                   (completing-read "From: " (notmuch-user-emails))))))))))
+
+;; TODO is there a better way to do this built into doom?
+;; private git-ignored configuration variables
+(when (file-exists-p! "config.local.el" doom-user-dir)
+  (load! "config.local.el" doom-user-dir))
