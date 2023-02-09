@@ -391,7 +391,7 @@ depending on the current stat."
 
 (when (modulep! :email notmuch)
 
-  (defvar my/notmuch-todo-query "tag:unread or (tag:flagged and tag:inbox and not (tag:trash or tag:deleted))")
+  (defvar my/notmuch-todo-query "tag:unread or tag:flagged or (tag:inbox and not (tag:trash or tag:deleted))")
   (defun my/notmuch-inbox ()
     (interactive)
     (notmuch-search my/notmuch-todo-query))
