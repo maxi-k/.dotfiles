@@ -46,3 +46,16 @@ calc() {
         fi
         printf "\n"
 }
+
+# enable autocompletion
+autoload -U compinit; compinit
+
+zstyle ':completion:*' completer _extensions _complete _approximate
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
+zstyle ':completion:*' menu select
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+
+# load plugin config if it exists
+#test -f ~/.config/zsh/pluginrc && source ~/.config/zsh/pluginrc
