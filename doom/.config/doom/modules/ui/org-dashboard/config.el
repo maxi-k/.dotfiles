@@ -75,6 +75,10 @@ Only manually added dynamic content generators should have this property."
   "Whether the dynamic content should be folded (hidden) by default"
   :group 'org-dashboard)
 
+(defcustom org-dashboard-save-after-update t
+  "Whether to save the buffer after changing dynamic content."
+  :group 'org-dashboard)
+
 (defcustom org-dashboard-fold-property-name "dashboard-content-fold"
   "Org property keyword indicating whether the dynamic content should be hidden (folded) by for the"
   :group 'org-dashboard)
@@ -215,14 +219,14 @@ some content %s
     (insert res)))
 
 (defun org-dashboard-setup-buffer ()
-  (let ((window (get-buffer-window))
-        ;; only use entries with an ID value on first level to avoid looping over
-        ;; auto-generated recursive entries that will be deleted anyway
-        (props (seq-filter (lambda (spec) (plist-get spec :id)) (org-dashboard-collect-specs))))
-    ;;(dolist (spec props) (message "found %s" spec))
-    (dolist (spec props)
+  ;; only use entries with an ID value on first level to avoid looping over
+  ;; auto-generated recursive entries that will be deleted anyway)
+  (dolist (spec (seq-filter (lambda (spec) (plist-get spec :id))
+                            (org-dashboard-collect-specs)))
       ;;(message "inserting content for %s" spec)
-      (org-dashboard-generate-dynamic-content spec))))
+      (org-dashboard-generate-dynamic-content spec)
+      (when org-dashboard-save-after-update
+        (save-buffer))))
 
 (defun org-dashboard-update-buffer ()
   "Update dynamic content patches in the current buffer."
