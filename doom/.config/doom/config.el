@@ -21,13 +21,15 @@
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "JetBrains Mono" :size 16))
+(setq doom-font (font-spec :family "JetBrains Mono" :size 16)
+      doom-variable-pitch-font (font-spec :family "SF Pro" :size 16))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 
-(setq doom-theme 'doom-nord)
+;;(setq doom-theme 'doom-nord)
+(setq doom-theme nil)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -453,12 +455,23 @@ depending on the current stat."
 
 (when (modulep! :tools openai)
   (setq gptel-playback nil ;; t ;; whether to simulate piece-by-piece output
-        gptel-default-mode 'org-mode)
+        gptel-default-mode 'org-mode
+        gptel-prompt-string "** ")
+  (after! gptel
+    (setq gptel--system-message-alist
+           `((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
+             (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
+             (writing . "You are a large language model and a writing assistant. Respond concisely.")
+             (revise . "You are a large language model and a writing assistant. Revise the given text without any additional text, prompt or not. Your response text should change the original meaning as little as possible.")
+             (chat . "You are a large language model and a conversation partner. Respond concisely."))))
   (map! :leader
         (:prefix ("a" . "AI")
+                 "." #'gptel
                  "a" #'gptel-send
-                 "A" #'openai-send-user-prompt
-                 "s" #'gptel)))
+                 "A" #'gptel-send-menu
+                 "p" #'openai-with-custom-system
+                 "R" #'openai-reset-system-prompt
+                 )))
 
 ;; TODO is there a better way to do this built into doom?
 ;; private git-ignored configuration variables
