@@ -113,6 +113,7 @@
        ;;upload            ; map local to remote projects via ssh/ftp
        auto-make           ; automatically call 'make' on file save
        translation         ; (human) language translation (own module)
+       openai              ; openai tools (own module based on github package)
 
        :lang
        ;;agda              ; types of types of types of types...
@@ -145,6 +146,7 @@
        (java +lsp)         ; the poster child for carpal tunnel syndrome
        javascript          ; all(hope(abandon(ye(who(enter(here))))))
        (julia +lsp)        ; a better, faster MATLAB
+       janet               ; OWN janet lispy scripting language
        ;;kotlin            ; a better, slicker Java(Script)
        latex               ; writing papers in Emacs has never been so fun
        ;;lean

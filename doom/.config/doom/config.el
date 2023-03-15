@@ -451,7 +451,26 @@ depending on the current stat."
                                            (format "%s <%s>" user-full-name
                                                    (completing-read "From: " (notmuch-user-emails))))))))))
 
+(when (modulep! :tools openai)
+  (setq gptai-model "gpt-3.5-turbo")
+  (map! :leader
+        (:prefix ("a" . "AI")
+                 (:prefix ("c" . "Code")
+                          "q" #'gptai-code-query-region
+                          "f" #'gptai-fix-code-region
+                          "e" #'gptai-explain-code-region
+                          "d" #'gptai-document-code-region
+                          "o" #'gptai-optimize-code-region
+                          "i" #'gptai-improve-code-region)
+                 (:prefix ("q" . "Query")
+                          "q" #'gptai-send-query-region
+                          "b" #'gptai-send-query-buffer
+                          "p" #'gptai-send-query)
+                 "s" #'gptai-spellcheck-text-region
+                 "e" #'gptai-elaborate-on-text-region)))
+
 ;; TODO is there a better way to do this built into doom?
 ;; private git-ignored configuration variables
 (when (file-exists-p! "config.local.el" doom-user-dir)
   (load! "config.local.el" doom-user-dir))
+
