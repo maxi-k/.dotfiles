@@ -6,6 +6,9 @@
   :commands (gptel gptel-send gptel-send-menu)
   :init
   (defvar openai-prompt-history '())
+  (defun openai-reset-prompt-history ()
+    (interactive)
+    (setq openai-prompt-history '()))
   (if (bound-and-true-p savehist-loaded)
       (add-to-list 'savehist-additional-variables 'openai-prompt-history)
     (defvar savehist-additional-variables nil)

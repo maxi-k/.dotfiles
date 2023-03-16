@@ -460,7 +460,8 @@ depending on the current stat."
            `((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
              (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
              (writing . "You are a large language model and a writing assistant. Respond concisely.")
-             (revise . "You are a large language model and a writing assistant. Revise the given text without any additional text, prompt or not. Your response text should change the original meaning as little as possible.")
+             (revise . "You are a large language model and a writing assistant. Revise the given text without any additional text, prompt or note. Your response text should change the original meaning as little as possible.")
+             (spellcheck . "You are a large language model and a writing assistant. Only correct any spelling mistakes you find. Change the input text as little as possibler. Do not comment on the semantic meaning of the input. If you don't find any mistakes then reply with \"No mistakes found!\". Respond consicely.")
              (chat . "You are a large language model and a conversation partner. Respond concisely."))))
   (map! :leader
         (:prefix ("a" . "AI")
@@ -468,7 +469,8 @@ depending on the current stat."
                  "a" #'gptel-send
                  "A" #'gptel-send-menu
                  "p" #'openai-with-custom-system
-                 "R" #'openai-reset-system-prompt
+                 "r" #'openai-reset-system-prompt
+                 "H" #'openai-reset-prompt-history
                  )))
 
 ;; TODO is there a better way to do this built into doom?
