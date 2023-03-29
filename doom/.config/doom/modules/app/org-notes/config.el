@@ -1,10 +1,12 @@
 ;;; tools/org-notes/config.el -*- lexical-binding: t; -*-
 ;;;###if (modulep! :lang org)
 
+(defvar my/notes-directory "~/Documents/Notes/")
 (after! org
   ;; some relevant variables
   (add-to-list 'org-latex-packages-alist '("" "minted"))
-  (setq org-startup-folded 't
+  (setq org-directory my/notes-directory
+        org-startup-folded 't
         org-duration-format (quote h:mm)
         org-capture-templates
         (append '(("t" "Personal todo" entry
@@ -15,7 +17,9 @@
                    "* TODO %?\n%i\n%a" :prepend t))
                 (cdr org-capture-templates))
         org-latex-pdf-process '("latexmk -lualatex -shell-escape -interaction=nonstopmode -output-directory=%o %f")
-        org-latex-listings 'minted)
+        org-latex-listings 'minted
+
+        )
 
   ;; map some of the autoloaded functions
   (map!
@@ -31,6 +35,7 @@
       ;; org seems to set the variable to the org-directory if it's empty,
       ;; and then searches this directory; this duplicates some of our logic,
       ;; so set the variable to some file that doesn't exist
+      (defvar my/notes-directory)
       (when (or (not org-agenda-files) (eq (car org-agenda-files) org-directory))
         (setq org-agenda-files (list (concat my/notes-directory ".agenda.org"))))
       (my/update-agenda-files 't)))

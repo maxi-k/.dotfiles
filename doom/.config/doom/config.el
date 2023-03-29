@@ -30,10 +30,9 @@
 (setq doom-theme 'doom-nord)
 
 ;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq my/notes-directory "~/Documents/Notes/"
-      org-directory my/notes-directory)
+;; change `org-directory'.
 
+(setq my/notes-directory "~/Documents/Notes/")
 (defvar my/notes-dashboard-file
   (concat my/notes-directory "roam/home.org")
   "A 'default' file to use when opening notes.")

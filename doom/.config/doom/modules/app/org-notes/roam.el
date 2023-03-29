@@ -3,6 +3,7 @@
 
 (after! org-roam
   ;; set the roam directory
+  (defvar my/notes-directory)
   (setq org-roam-directory (concat my/notes-directory "roam"))
 
   ;;(add-to-list 'org-roam-mode-section-functions #'org-roam-unlinked-references-section)
