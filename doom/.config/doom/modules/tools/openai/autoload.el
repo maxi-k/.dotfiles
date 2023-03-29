@@ -38,6 +38,8 @@
 ;;;###autoload
 (defun openai-select-model (use-default)
   (interactive "P")
-  (setq gptel-model (if use-default
+  (let ((new-val (if use-default
                         openai-default-model
-                      (openai--read-user-model-prompt))))
+                   (openai--read-user-model-prompt))))
+    (setq gptel-model new-val)
+    (setq-default gptel-model new-val)))
