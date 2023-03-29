@@ -456,7 +456,7 @@ depending on the current stat."
         gptel-default-mode 'org-mode
         gptel-prompt-string "** ")
   (after! gptel
-    (setq gptel--system-message-alist
+    (setq gptel-directives
            `((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
              (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
              (writing . "You are a large language model and a writing assistant. Respond concisely.")
@@ -471,7 +471,7 @@ depending on the current stat."
                  "p" #'openai-with-custom-system
                  "r" #'openai-reset-system-prompt
                  "H" #'openai-reset-prompt-history
-                 )))
+                 "m" #'openai-select-model)))
 
 ;; TODO is there a better way to do this built into doom?
 ;; private git-ignored configuration variables

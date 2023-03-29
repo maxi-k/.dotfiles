@@ -2,7 +2,7 @@
 
 ;;;###autoload
 (defun openai--get-system-prompt-options ()
-  (delete-dups (append gptel--system-message-alist openai-prompt-history nil)))
+  (delete-dups (append gptel-directives openai-prompt-history nil)))
 
 ;;;###autoload
 (defun openai--read-user-system-prompt-options (&rest config)
@@ -26,6 +26,18 @@
   (interactive "P")
   (require 'gptel)
   (let ((new-prompt (if use-default
-                        (alist-get 'default gptel--system-message-alist)
+                        (alist-get 'default gptel-directives)
                         (openai--read-user-system-prompt-options :prompt "New Global System Role:"))))
     (setq gptel--system-message new-prompt)))
+
+;;;###autoload
+(defun openai--read-user-model-prompt (&rest config)
+  (completing-read (or (plist-get config :prompt) "Model: ")
+                   (or (plist-get config :options) openai-model-list)))
+
+;;;###autoload
+(defun openai-select-model (use-default)
+  (interactive "P")
+  (setq gptel-model (if use-default
+                        openai-default-model
+                      (openai--read-user-model-prompt))))
