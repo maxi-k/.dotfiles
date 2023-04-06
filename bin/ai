@@ -18,17 +18,28 @@ res=$(printf "%s" "$raw" | jq --raw-output '.choices[0].message.content')
 test "$res" = "null" -o -z "$res" && echo "Error:
 $raw" && exit 1
 
+# extract shell command, replace newlines with ';'
+cmd=$(echo "$res" | grep -zo "\`\`\`\(.*\)\`\`\`" | sed -n 2p | sed 's/\n/; /g')
+
 # Print response in full
-echo "
+echo "--------------------------------------------------------------------------------
 $res
+--------------------------------------------------------------------------------
+
+Extracted Command: \033[1;34m"
+
+
+# use xdotool to write suggested command to output prommpt
+xdotool type "$cmd" 1>/dev/null
+
+echo "
+\033[0m
 "
 
-# extract shell command
-cmd=$(echo "$res" | grep -zo "\`\`\`\(.*\)\`\`\`" | sed -n 2p)
-
-# confirm with user and run
-read -p "Run[1;33m $cmd [0m(y/n)?> " yn
-case $yn in
-    [Nn]* ) echo "NOT Running"; exit;;
-    * ) echo "Running..."; $cmd; break;;
-esac
+# alternative: confirm with user and run from inside this script;
+# I currently prefer the xdotool solution, though that makes it linux-only
+#read -p "Run[1;34m $cmd [0m(y/n)?> " yn
+#case $yn in
+#    [Nn]* ) echo "NOT Running"; exit;;
+#    * ) echo "Running..."; $SHELL -c "print -s \"$cmd\""; $cmd; break;;
+#esac
