@@ -59,7 +59,7 @@ XF86Audio{Raise,Lower}Volume
 
 # Spotify media keys
 XF86Audio{Play,Pause,Stop,Prev,Next}
-    playerctl {play,pause,stop,previous,next}
+    command -v playerctl && playerctl {play,pause,stop,previous,next} || notify-send "please install playerctl"
 
 # Restart sxhkd
 super + Delete
