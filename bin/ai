@@ -3,6 +3,7 @@
 sysprompt='{"role": "system", "content": "You are a helpful AI assistant living in a ubuntu 22.04 shell environment. Respond consicely and put an executable shell command in a code section."}'
 data="{
      \"model\": \"gpt-3.5-turbo\",
+     \"temperature\": "0.5",
      \"messages\": [$sysprompt, {\"role\": \"user\", \"content\": \"$@\"}]
      }"
 
@@ -19,7 +20,7 @@ test "$res" = "null" -o -z "$res" && echo "Error:
 $raw" && exit 1
 
 # extract shell command, replace newlines with ';'
-cmd=$(echo "$res" | grep -zo "\`\`\`\(.*\)\`\`\`" | sed -n 2p | sed 's/\n/; /g')
+cmd=$(echo "$res" | grep -zo "\`\`\`\n\(.*\)\n\`\`\`" | sed -n 2p | sed 's/\n/; /g')
 
 # Print response in full
 echo "--------------------------------------------------------------------------------
@@ -30,16 +31,17 @@ Extracted Command: \033[1;34m"
 
 
 # use xdotool to write suggested command to output prommpt
-xdotool type "$cmd" 1>/dev/null
-
+if command -v xdotool; then  
+  xdotool type "$cmd" 
+else
+  # alternative: confirm with user and run from inside this script;
+  printf "%s" "$cmd"
+  read -p "Run[1;34m $cmd [0m(y/n)?> " yn
+  case $yn in
+      [Nn]* ) echo "NOT Running"; exit;;
+      * ) echo "Running..."; $cmd; break;;
+  esac
+fi
 echo "
 \033[0m
 "
-
-# alternative: confirm with user and run from inside this script;
-# I currently prefer the xdotool solution, though that makes it linux-only
-#read -p "Run[1;34m $cmd [0m(y/n)?> " yn
-#case $yn in
-#    [Nn]* ) echo "NOT Running"; exit;;
-#    * ) echo "Running..."; $SHELL -c "print -s \"$cmd\""; $cmd; break;;
-#esac
