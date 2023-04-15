@@ -465,6 +465,8 @@ depending on the current stat."
   (map! :leader
         (:prefix ("a" . "AI")
                  "." #'gptel
+                 "s" #'chatgpt-shell
+                 "S" #'chatgpt-shell-send-region
                  "a" #'gptel-send
                  "A" #'gptel-send-menu
                  "p" #'openai-with-custom-system

@@ -18,3 +18,14 @@
               (lambda ()
                 (add-to-list 'savehist-additional-variables 'openai-prompt-history)))))
 
+
+(use-package! chatgpt-shell
+  :defer t
+  :commands (chatgpt-shell chatgpt-shell-explain-code chatgpt-shell-chatgpt-prompt chatgpt-shell-send-region chatgpt-shell-send-and-review-region)
+  :config
+  (setq chatgpt-shell-model-version "gpt-4")
+  (when (modulep! :lang org)
+    (add-hook 'org-mode-hook (lambda () (require 'ob-chatgpt-shell)))))
+
+(use-package! dall-e-shell
+  :commands (dall-e-shell))
