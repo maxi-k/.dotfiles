@@ -111,6 +111,9 @@ super + shift + period
         #bspc rule -a \* -o state=floating sticky=on layer=above rectangle=2000x500+820+30 && $TERMINAL
         #bspwm-hide-window
 
+super + shift + a
+	bspwm-scratch-program chatgpt-scratchpad 
+
 super + ctrl + period
         bspwm-scratch-program
 
