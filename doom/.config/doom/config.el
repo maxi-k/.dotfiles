@@ -451,28 +451,15 @@ depending on the current stat."
                                                    (completing-read "From: " (notmuch-user-emails))))))))))
 
 (when (modulep! :tools openai)
-  (setq gptel-playback nil ;; t ;; whether to simulate piece-by-piece output
-        gptel-default-mode 'org-mode
-        gptel-prompt-string "** ")
-  (after! gptel
-    (setq gptel-directives
-           `((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
-             (programming . "You are a large language model and a careful programmer. Provide code and only code as output without any additional text, prompt or note.")
-             (writing . "You are a large language model and a writing assistant. Respond concisely.")
-             (revise . "You are a large language model and a writing assistant. Revise the given text without any additional text, prompt or note. Your response text should change the original meaning as little as possible.")
-             (spellcheck . "You are a large language model and a writing assistant. Only correct any spelling mistakes you find. Change the input text as little as possibler. Do not comment on the semantic meaning of the input. If you don't find any mistakes then reply with \"No mistakes found!\". Respond consicely.")
-             (chat . "You are a large language model and a conversation partner. Respond concisely."))))
   (map! :leader
         (:prefix ("a" . "AI")
-                 "." #'gptel
+                 "." #'chatgpt-shell-prompt
                  "s" #'chatgpt-shell
                  "S" #'chatgpt-shell-send-region
-                 "a" #'gptel-send
-                 "A" #'gptel-send-menu
-                 "p" #'openai-with-custom-system
-                 "r" #'openai-reset-system-prompt
-                 "H" #'openai-reset-prompt-history
-                 "m" #'openai-select-model)))
+                 "p" #'myai-with-custom-system
+                 "r" #'myai-reset-system-prompt
+                 "H" #'myai-reset-prompt-history
+                 "m" #'myai-select-model)))
 
 ;; TODO is there a better way to do this built into doom?
 ;; private git-ignored configuration variables

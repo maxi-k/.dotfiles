@@ -1,45 +1,46 @@
 ;;; tools/openai/autoload.el -*- lexical-binding: t; -*-
 
 ;;;###autoload
-(defun openai--get-system-prompt-options ()
-  (delete-dups (append gptel-directives openai-prompt-history nil)))
+(defun myai--get-system-prompt-options ()
+  (delete-dups (append myai-system-prompts myai-prompt-history nil)))
 
 ;;;###autoload
-(defun openai--read-user-system-prompt-options (&rest config)
-  (let ((options (or (plist-get config :options) (openai--get-system-prompt-options)))
-        (prompt (or (plist-get config :prompt) "System Role:")))
-    (completing-read prompt options)))
+(defun myai--read-user-system-prompt-options (&rest config)
+  (let* ((options (or (plist-get config :options) (myai--get-system-prompt-options)))
+        (prompt (or (plist-get config :prompt) "System Role: "))
+        (result (completing-read prompt options))
+        (known (alist-get (intern result) myai-system-prompts)))
+    (unless known (add-to-list 'myai-prompt-history result))
+    (or known result)))
 
 ;;;###autoload
-(defun openai-with-custom-system (set-globally)
+(defun myai-with-custom-system (set-globally)
   (interactive "P")
-  (require 'gptel)
-  (let ((system-prompt (openai--read-user-system-prompt-options)))
+  (let ((system-prompt (myai--read-user-system-prompt-options)))
     (when set-globally
-      (setq gptel--system-message system-prompt))
-    (add-to-list 'openai-prompt-history system-prompt)
-    (let ((gptel--system-message system-prompt))
-      (call-interactively #'gptel-send))))
+      (setq chatgpt-shell-system-prompt system-prompt))
+
+    (let ((chatgpt-shell-system-prompt system-prompt))
+      (call-interactively #'chatgpt-shell-prompt))))
 
 ;;;###autoload
-(defun openai-reset-system-prompt (use-default)
+(defun myai-reset-system-prompt (use-default)
   (interactive "P")
-  (require 'gptel)
   (let ((new-prompt (if use-default
-                        (alist-get 'default gptel-directives)
-                        (openai--read-user-system-prompt-options :prompt "New Global System Role:"))))
-    (setq gptel--system-message new-prompt)))
+                        (alist-get 'default myai-system-prompts)
+                        (myai--read-user-system-prompt-options :prompt "New Global System Role: "))))
+    (setq chatgpt-shell-system-prompt new-prompt)))
 
 ;;;###autoload
-(defun openai--read-user-model-prompt (&rest config)
+(defun myai--read-user-model-prompt (&rest config)
   (completing-read (or (plist-get config :prompt) "Model: ")
-                   (or (plist-get config :options) openai-model-list)))
+                   (or (plist-get config :options) myai-model-versions)))
 
 ;;;###autoload
-(defun openai-select-model (use-default)
+(defun myai-select-model (use-default)
   (interactive "P")
   (let ((new-val (if use-default
-                        openai-default-model
-                   (openai--read-user-model-prompt))))
-    (setq gptel-model new-val)
-    (setq-default gptel-model new-val)))
+                        myai-default-model
+                   (myai--read-user-model-prompt))))
+    (setq chatgpt-shell-model-version new-val)
+    (setq-default chatgpt-shell-model-version new-val)))
