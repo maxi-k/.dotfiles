@@ -1,0 +1,94 @@
+#!/bin/sh
+
+set -e
+
+signal1="perf_point_1"
+signal2="perf_point_2"
+
+pcolor() {
+    echo "\033[1;34m$1\033[0m $2"
+}
+
+usage() {
+   pcolor "usage:" "$1 [perf-args...] -- [program-args...]"
+   echo "\tthe program has to print \033[1;34m$signal1/$signal2\033[0m to stdout when it wants to start/stop recording with perf.\n"
+   echo "\timmediately after printing either, it has to read from stdin."
+   exit 1
+}
+
+# parse perf args
+perf_args=""
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --)
+            break;
+            ;;
+        *)
+            perf_args="$perf_args $1"
+            ;;
+    esac
+    shift
+done
+
+# parse program args
+if [ $# -gt 0 ]; then
+    shift # remove '--'
+    program_name="$1"
+    shift
+    program_args="$@"
+else
+    usage "$0"
+fi
+
+progin=/tmp/PERF_PROG_IN
+rm -f $progin
+mkfifo $progin
+# keep fifo open throughout other writer open/close calls
+while sleep 1; do :; done >$progin &
+writer_pid=$!
+
+cleanup_pipe() {
+    echo "removing fifo"
+    kill $writer_pid
+    rm -f $progin
+}
+
+trap 'cleanup_pipe' INT TERM
+
+interruption_id=0
+
+# wait until program signals first stop
+correspondent() {
+    while read line; do
+        if [ "$line" = "$signal1" ]; then
+            # start perf
+            progpid=`pidof $program_name`
+            pcolor "calling" "perf record $perf_args -p $progpid -o perf$interruption_id.data"
+            perf record -p $progpid -o perf$interruption_id.data $perf_args &
+            perf_pid=$!
+            trap 'echo signal received, killing perf ($perf_pid); kill -s INT $perf_pid' INT TERM
+            interruption_id=$((interruption_id+1))
+            sleep 1
+            # echo "got perf pid $perf_pid"
+            # make program continue
+            echo "perf_point_1_ack" > $progin
+        elif [ "$line" = "$signal2" ]; then
+            pcolor "stopping perf"
+            # stop perf
+            kill -s INT "$perf_pid"
+            sleep 1
+            # make program continue beyond second stop
+            echo "perf_point_2_ack" > $progin
+        else
+            echo "$line"
+        fi
+    done
+}
+
+# execute program
+pcolor "calling" "$program_name $program_args <$progin"
+PERF=true $program_name $program_args <$progin | correspondent
+
+
+# wait for program to finish and clean up
+cleanup_pipe

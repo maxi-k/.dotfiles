@@ -1,0 +1,8 @@
+#!/bin/sh
+
+remote=${1:-"fau-desktop"}
+file=${2:-"~"}
+
+ssh -Y $remote <<EOF
+    devour emacs $file
+EOF

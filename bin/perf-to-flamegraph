@@ -1,0 +1,12 @@
+#!/bin/sh
+
+input=${1:-perf.data}
+name=${2:-flamegraph}
+
+perf script -i perf.data > /tmp/$name.perf
+
+$( cd /home/maxi/dev/build/flamegraph \
+		&& ./stackcollapse-perf.pl /tmp/$name.perf > /tmp/$name.folded  \
+		&& ./flamegraph.pl /tmp/$name.folded > /tmp/$name.svg)
+
+echo "/tmp/$name.svg"
