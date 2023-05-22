@@ -1,4 +1,15 @@
 #!/bin/sh
-file=${1:-data.csv}
-sql=${2:-"select * from db limit 5"}
-sqlite3 :memory: -cmd '.mode csv' -cmd '.import $file db' $sql
+
+if [ -t 0 ]; then
+  # running interactively: read from file
+  file=${1:-data.csv}
+  sql=${2:-"select * from db limit 5"}
+  test -f "$file" && sqlite3 :memory: -cmd '.mode csv' -cmd '.import $file db' $sql || echo "File $file not found" 
+else
+  # running thru pipe: read from stdin
+  test -z "$output" && output='column'
+  sql=${@:-"select * from db limit 5"}
+  test -z "$sql" && echo "usage: [output=column|csv|line|] $0 [sqlite-string]" && exit 1
+  # remove spaces after line start and commas (padding spaces), then pipe to sqlite
+  sed 's/, */,/g' | sed 's/^ *//g' |  sqlite3 :memory: -cmd '.mode csv' -cmd ".import '|cat -' db" -cmd ".mode $output" "$sql"
+fi
