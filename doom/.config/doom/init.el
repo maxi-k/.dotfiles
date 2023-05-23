@@ -52,6 +52,7 @@
        ;;zen               ; distraction-free coding or writing
        org-dashboard       ; personal module for a notion-like dashboard in roam [WIP]
        org-dashboard-roam  ; roam-related convenience functions for org-dashboard
+       presentation-theme  ; high-contrast theme(s) for presentations
 
        :editor
        (evil +everywhere)  ; come to the dark side, we have cookies
