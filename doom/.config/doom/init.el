@@ -19,7 +19,7 @@
        ;;japanese
 
        :completion
-       company             ; the ultimate code completion backend
+       (company +childframe) ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        (ivy +fuzzy+)        ; a search engine for love and life
@@ -67,6 +67,7 @@
        ;;rotate-text       ; cycle region at point between text candidates
        snippets            ; my elves. They type so I don't have to
        ;;word-wrap         ; soft wrapping with language-aware indent
+       copilot             ; own module based on copilot.el
 
        :emacs
        browse-kill-ring    ; Visually browse the kill ring and insert stuff
@@ -85,7 +86,7 @@
 
        :checkers
        syntax              ; tasing you for every semicolon you forge
-       (spell +aspell)     ; tasing you for misspelling mispelling
+       (spell +enchant-2 +flyspell) ; tasing you for misspelling mispelling
        grammar             ; tasing grammar mistake every you make
 
        :tools
@@ -112,10 +113,10 @@
        ;;tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
        auto-make           ; automatically call 'make' on file save
-       translation         ; (human) language translation (own module)
+       ;;translation         ; (human) language translation (own module)
        openai              ; openai tools (own module based on github package)
        ;;notion            ; org-mode <-> notion integration (github package doesn't work yet)
-       org-sketch          ; add (inline) sketches to org-mode; best used with a graphic tablet
+       ;;org-sketch          ; add (inline) sketches to org-mode; best used with a graphic tablet
 
        :lang
        ;;agda              ; types of types of types of types...
@@ -147,8 +148,8 @@
        ;;json              ; At least it ain't XML
        (java +lsp)         ; the poster child for carpal tunnel syndrome
        javascript          ; all(hope(abandon(ye(who(enter(here))))))
-       (julia +lsp)        ; a better, faster MATLAB
-       janet               ; OWN janet lispy scripting language
+       ;;(julia +lsp)      ; a better, faster MATLAB
+       ;;janet             ; OWN janet lispy scripting language
        ;;kotlin            ; a better, slicker Java(Script)
        latex               ; writing papers in Emacs has never been so fun
        ;;lean
