@@ -70,6 +70,7 @@ chatgpt-shell buffer."
 
   (setq chatgpt-shell-system-prompt (alist-get 'default myai-system-prompts))
   (setq chatgpt-shell-model-version (car myai-model-versions))
+  (setq chatgpt-shell-request-timeout 100)
 
   (when (modulep! :lang org)
     (add-hook 'org-mode-hook (lambda ()
