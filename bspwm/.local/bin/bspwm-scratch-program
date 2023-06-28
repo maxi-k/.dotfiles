@@ -1,5 +1,13 @@
 #!/bin/sh
 
+stop() {
+	notify-send "$1"
+	exit 1
+}
+
+command -v xdotool || stop "xdotool not found"
+command -v jq || stop "jq not found"
+
 notify() {
     #notify-send "$1"
     echo "$1" #> /tmp/out.log
