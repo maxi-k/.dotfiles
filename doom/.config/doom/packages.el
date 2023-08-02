@@ -50,3 +50,5 @@
 ;(unpin! t)
 
 (package! map :pin "bb50dba")
+
+(package! org :pin "ca873f7")
