@@ -6,7 +6,7 @@
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
               ("TAB" . 'copilot-accept-completion)
-              ("C-RET" . 'copilot-accept-completion)
+              ("C-<return>" . 'copilot-accept-completion)
               ("M-p" . 'copilot-previous-completion)
               ("M-n" . 'copilot-next-completion)
               ("C-c" . 'copilot-clear-overlay)

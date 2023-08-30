@@ -121,6 +121,7 @@ and the following optional keys
                        ") tsel join nodes n on tsel.node_id = n.id "
                        (unless hide-tags " join tags t on t.node_id = n.id")
                        " group by n.id, n.title"
+                       " order by n.title asc"
                        ))
          (_ (message expr))
          (nodes (org-roam-db-query expr))

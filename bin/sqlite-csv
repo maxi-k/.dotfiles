@@ -2,6 +2,22 @@
 
 test -z "$output" && output='column'
 test -z "$headers" && headers='on'
+test -z "$setup" && setup=''
+test -z "$export" && export=''
+
+print_usage() { 
+    echo "usage: $(basename $0) [file-if-not-piped] [sqlite-string]"
+    echo "
+respected environment variables: 
+   output  = [column|csv|line]
+   headers = [on|off]
+   setup   = sqlite command string to execute before the import, e.g '.separator ;'
+   export  = sqlite command string to execute before the export, e.g '.separator ;'
+   
+"
+}
+
+test -z "$1" && print_usage && exit 1
 
 if [ -t 0 ]; then
   # running interactively: read from file
@@ -15,11 +31,10 @@ else
   echo "$sql"
 fi
 
-test -z "$sql" && echo "usage: [output=column|csv|line|] $0 [file-if-not-piped] [sqlite-string]" && exit 1
 
 sql_pipe() {
   # remove spaces after line start and commas (padding spaces), then pipe to sqlite
-  sed 's/, */,/g' | sed 's/^ *//g' |  sqlite3 :memory: -cmd '.mode csv' -cmd ".import '|cat -' db" -cmd ".mode $output" -cmd ".headers $headers" "$sql"
+  sed 's/, */,/g' | sed 's/^ *//g' |  sqlite3 :memory: -cmd '.mode csv' -cmd "$setup" -cmd ".import '|cat -' db" -cmd ".mode $output" -cmd ".headers $headers" -cmd "$export" "$sql"
 }
 
 if [ -t 0 ]; then

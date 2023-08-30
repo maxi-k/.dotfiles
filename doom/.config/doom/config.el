@@ -186,6 +186,10 @@ depending on the current stat."
     (setq org-fold-core-style 'overlays))
   (after! ox-latex
     (setq org-latex-inputenc-alist '(("utf8" . "utf8x"))))
+  (map!
+   (:map org-mode-map
+    :localleader
+    ("L" #'org-cycle-list-bullet)))
   (after! org
     ;; used by org capture; default doom popup rule (:slot -1 :vslot -2 :ttl 0 :size 0.25)
     ;; seems to break this, causing the select buffer content to be inserted into the current buffer
@@ -205,7 +209,7 @@ depending on the current stat."
              :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
              :unnarrowed t)
             ("e" "event" plain "%?"
-             :if-new (file+head "events/<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :event:\n")
+             :if-new (file+head "events/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :event:\n")
              :immediate-finish t
              :unnarrowed t)
             ("r" "reference" plain "%?"
@@ -356,6 +360,11 @@ depending on the current stat."
    "s" #'lispy-splice-sexp-killing-backward
    "S" #'lispy-splice-sexp-killing-forward))
 
+;; (when (modulep! :checkers spell)
+;;   (add-hook! spell-fu-mode
+;;     (spell-fu-dictionary-add (spell-fu-get-ispell-dictionary "german-new8"))
+;;     (spell-fu-dictionary-add (spell-fu-get-ispell-dictionary "deutsch8"))
+;;   ))
 
 (defvar *scratchpad-theme* 'doom-opera-light)
 (defvar *scratchpad-action*

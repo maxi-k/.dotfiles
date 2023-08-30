@@ -171,10 +171,12 @@ Expands dynamically expanded content recursively. It is the responsibility of co
               (goto-char pos)
               (org-back-to-heading)
               (setq insert-end (org-element-property :end (org-element-at-point)))
-              (when foldp
-                (org-fold-hide-subtree)
-                (org-fold-show-entry)
-                (org-fold-show-children))
+              (org-fold-hide-subtree)
+              (if foldp
+                  (org-fold-hide-entry)
+                (progn
+                  (org-fold-show-entry)
+                  (org-fold-show-children)))
               (when (zerop recur)
                 ;;(org-fold--hide-drawers pos insert-end)
                 (when org-dashboard-dynamic-content-is-read-only
