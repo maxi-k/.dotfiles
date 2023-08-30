@@ -42,3 +42,5 @@ fcd() {
         test -z "${dir}" && break || cd "${dir}"
     done
 }
+
+command -v nix >/dev/null && alias findpkg='nix search nixpkgs'

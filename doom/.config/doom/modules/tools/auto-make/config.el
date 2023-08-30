@@ -1,16 +1,10 @@
 ;;; tools/auto-make/config.el -*- lexical-binding: t; -*-
 
-(defcustom auto-make-make-command "make"
-  "Command to use for auto export on file save."
-  :group 'convenience
-  :local t
-  :type 'string)
+(defvar-local auto-make-make-command "make"
+  "Command to use for auto export on file save.")
 
-(defcustom auto-make-make-async-p t
-  "Whether to export asynchronously when auto-exporting on file save."
-  :group 'convenience
-  :local nil
-  :type 'boolean)
+(defvar auto-make-make-async-p t
+  "Whether to export asynchronously when auto-exporting on file save.")
 
 (define-minor-mode auto-make-mode
   "Automatically export the current org file on save. Local mode.

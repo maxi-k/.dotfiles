@@ -59,3 +59,5 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 # load plugin config if it exists
 #test -f ~/.config/zsh/pluginrc && source ~/.config/zsh/pluginrc
+
+if [ -e /home/maxi/.nix-profile/etc/profile.d/nix.sh ]; then . /home/maxi/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
