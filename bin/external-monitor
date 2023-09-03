@@ -1,18 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 usage() {
-  echo "$0 [mirror|same-as|above|right-of|...] [output=HDMI-A-0]"
+  echo "$0 [off|mirror|same-as|above|right-of|...] [output=HDMI-A-0]"
 }
 
 test -z "$1" && usage && exit 1
 
 # parse args
 position="$1"
+secondary=${2:-"HDMI-1"}
 if [ "$position" = "mirror" ]; then
    position="same-as"
 fi
-
-secondary=${2:-"HDMI-A-0"}
 
 # fetch primary
 primary=`xrandr | grep primary | awk '{ print $1 }'`

@@ -44,10 +44,13 @@ else
     progname=$1
 
     # there is a hidden instance - show it
-    bspc query -N -n .hidden | filter_name "show_and_focus" && exit 0 || notify "hidden $progname not found, hiding or spawning..."
+    bspc query -N -n .window.hidden | filter_name "show_and_focus" && exit 0 || notify "hidden $progname not found, focusing, hiding or spawning..."
 
     # we are on a focused instance - hide it
-    bspc query -N -n .focused | filter_name "hide_window" && exit 0 || notify "not on $progname node, spawning"
+    bspc query -N -n .window.focused | filter_name "hide_window" && exit 0 || notify "window neither hidden nor focused, $progname node, focusing or spawning"
+
+    # the window is not focused but visible - focus it
+    bspc query -N -n .window.\!focused.\!hidden | filter_name "show_and_focus" && exit 0 || notify "window doesn't exist, spawning"
 
     # program neither hidden nor focused, spawn it
     # using second arg or first arg
