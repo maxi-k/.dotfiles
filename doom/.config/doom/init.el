@@ -185,6 +185,7 @@
        web                 ; the tubes
        yaml                ; JSON, but readable
        ;;zig               ; C, but simpler
+       bison               ; bison/yacc parser generator
 
        :email
        ;;(mu4e +gmail)
@@ -194,7 +195,8 @@
        :app
        ;;calendar
        ;;emms
-       everywhere        ; *leave* Emacs!? You must be joking
+       ement               ; matrix client
+       everywhere          ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
        (rss +org)          ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
