@@ -20,18 +20,19 @@ test "$res" = "null" -o -z "$res" && echo "Error:
 $raw" && exit 1
 
 # extract shell command, replace newlines with ';'
-cmd=$(echo "$res" | grep -zo "\`\`\`\n\(.*\)\n\`\`\`" | sed -n 2p | sed 's/\n/; /g')
+cmd=$(echo "$res" | sed -n '/^```/,/^```/ p' | sed '/^```/ d' | sed 's/\n/; /g')
+#cmd=$(echo "$res" | grep -zo "\`\`\`\n\(.*\)\n\`\`\`" | sed -n 2p | sed 's/\n/; /g')
 
 # Print response in full
 echo "--------------------------------------------------------------------------------
 $res
 --------------------------------------------------------------------------------
 
-Extracted Command: \033[1;34m"
+Extracted Command: $cmd \033[1;34m"
 
 
 # use xdotool to write suggested command to output prommpt
-if command -v xdotool; then  
+if command -v xdotool >/dev/null; then
   xdotool type "$cmd" 
 else
   # alternative: confirm with user and run from inside this script;
