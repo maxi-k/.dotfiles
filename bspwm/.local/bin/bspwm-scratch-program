@@ -36,7 +36,7 @@ hide_window() {
 if [ "$#" -eq "0" ]; then
     # no arguments given - interactively choose hidden window to show
     notify "interactive mode"
-    bspc query -N -n .hidden | while read line; do
+    bspc query -N -n .window.hidden | while read line; do
         echo $(xdotool getwindowname "$line") " - $line"
     done | selector | awk '{ print $NF }' | xargs -I"{}" bspc node "{}" -g hidden=off -f
 else
