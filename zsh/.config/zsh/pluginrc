@@ -1,0 +1,7 @@
+ZSH_PLUGIN_DIR=~/.config/zsh/plugins
+
+# autocompletion
+test -d $ZSH_PLUGIN_DIR/zsh-autocomplete  && (
+  zstyle ':autocomplete:*' min-delay 1;
+  zstyle ':autocomplete:*' min-input 3;
+) && source $ZSH_PLUGIN_DIR/zsh-autocomplete/zsh-autocomplete.plugin.zsh

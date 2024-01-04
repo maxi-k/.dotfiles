@@ -26,7 +26,7 @@ bspc config bottom_monocle_padding  -23
 
 # Set up mouse cursor
 xsetroot -cursor_name left_ptr
-bspc config pointer_follows_focus true
+bspc config pointer_follows_focus false
 
 # Application specific rules
 bspc rule -a Emacs state=tiled
@@ -39,3 +39,9 @@ bspc rule -a Zoom state=floating
 # Start polybar
 POLYBAR_PATH="$HOME/.config/polybar/start.sh"
 test -f "$POLYBAR_PATH" && (`$POLYBAR_PATH` &) || notify-send "Could not start polybar"
+
+# with eww
+# pgrep eww && eww kill
+# eww daemon
+# eww open bar
+bspc config bottom_padding 0

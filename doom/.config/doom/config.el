@@ -34,7 +34,7 @@
 
 (setq my/notes-directory "~/Documents/Notes/")
 (defvar my/notes-dashboard-file
-  (concat my/notes-directory "roam/home.org")
+  (concat my/notes-directory "home.org")
   "A 'default' file to use when opening notes.")
 
 ;; This determines the style of line numbers in effect. If set to `nil', line

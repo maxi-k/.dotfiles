@@ -24,6 +24,8 @@ tiling_wm() {
   command -v xinput && xinput --set-prop "pointer:Logitech MX Master 3" 'libinput Accel Speed' -0.5 &
   command -v xset && xset mouse 3 6 &
   command -v setup-wacom && setup-wacom &
+  # Bind hotkeys
+  command -v start-keybindings && start-keybindings &
 }
 
 if [ "$XDG_SESSION_DESKTOP" = "dwm" ]; then
@@ -34,10 +36,6 @@ fi
 if [ "$XDG_SESSION_DESKTOP" = "bspwm" -o "$XDG_SESSION_DESKTOP" = "none+bspwm" ]; then
   tiling_wm
 fi
-
-
-# Bind hotkeys
-command -v start-keybindings && start-keybindings &
 
 # Start syncthing if not started yet and not running
 command -v syncthing && (pgrep syncthing || syncthing -no-browser) &

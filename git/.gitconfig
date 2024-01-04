@@ -16,3 +16,5 @@
 	process = git-lfs filter-process
 [init]
 	defaultBranch = master
+[safe]
+	directory = /etc/nixos/shared-setup
