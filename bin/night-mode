@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
 # Set the screen temperature to a warmer temperature (default is 6500K)
 redshift -O 5000

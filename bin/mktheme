@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # This script does the following:
 #	Run by itself, set the wallpaper (at X start).
@@ -10,13 +10,18 @@
 # From lukesmith.xyz's voidrice
 confdir=${XDG_CONFIG_HOME:-$HOME/.config}
 bgloc="${XDG_CACHE_HOME:-$HOME/.cache}/bg"
+logfile="/tmp/mktheme.log"
+
+log() {
+   echo "[$(date)] $1" >> $logfile
+}
 
 [ -f "$1" ] \
-  && (ln -sf "$(readlink -f "$1")" "$bgloc" || notify-send "Could not find $bgloc as file")
+  && (ln -sf "$(readlink -f "$1")" "$bgloc" || log "Could not find $bgloc as file")
 
 [ -d "$1" ] \
   && ln -sf "$(find "$(readlink -f "$1")" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$bgloc" \
-  && notify-send -i "$bgloc" "Random Wallpaper chosen."
+  && log "Random Wallpaper chosen: $bgloc"
 
 # If pywal is installed, use it.
 [[ -z "$NO_DYNAMIC_COLORS" ]] \
