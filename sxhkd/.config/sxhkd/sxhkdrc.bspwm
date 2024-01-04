@@ -60,6 +60,9 @@ XF86AudioMute
 XF86Audio{Raise,Lower}Volume
     amixer sset Master 5%{+,-}
 
+XF86MonBrightness{Up,Down}  
+  brightnessctl s 10{+,-}  
+
 # Spotify media keys
 XF86Audio{Play,Pause,Stop,Prev,Next}
     command -v playerctl && playerctl {play,pause,stop,previous,next} || notify-send "please install playerctl"
@@ -120,7 +123,7 @@ super + shift + a
 super + ctrl + period
         bspwm-scratch-program
 
-super + ctrl + alt + period
+super + ctrl + comma
         bspc node -g hidden=on
 
 #

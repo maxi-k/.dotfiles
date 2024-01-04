@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+window_name=${1:-"sysmenu-bottom-left"}
+
+pgrep eww || eww daemon
+
+# if we have a compositor, open the '-closer' window
+# as well, which tracks onclick events outside of the
+# opened window (but has to be transparent)
+if pgrep picom > /dev/null ; then
+    eww open-many --toggle "$window_name-closer" "$window_name"
+else
+    eww open --toggle "$window_name"
+fi

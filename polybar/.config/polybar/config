@@ -29,9 +29,9 @@ margin-bottom = 0
 [bar/bottom]
 inherit         = bar/base
 bottom          = true
-modules-left = bspwm
+modules-left = sysmenu bspwm
 modules-center = xwindow
-modules-right = pulseaudio xkeyboard memory cpu wlan eth battery temperature date powermenu
+modules-right = pulseaudio xkeyboard memory cpu wlan eth battery temperature date
 tray-position = right
 tray-padding = 2
 tray-transparent = true

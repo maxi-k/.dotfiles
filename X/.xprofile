@@ -14,7 +14,8 @@ start_themed_apps() {
 }
 
 tiling_wm() {
-  (command -v mktheme && mktheme && start_themed_apps) & # Create a theme for this session
+  command -v picom && (pgrep picom || picom) & # Compositor
+  command -v mktheme && mktheme && start_themed_apps & # Create a theme for this session
   command -v unclutter && (pgrep unclutter || unclutter) & # Hide mouse cursor when unused
   command -v nm-applet && (pgrep nm-applet || nm-applet) &
   command -v gsettings && export GTK_THEME=$(gsettings get org.gnome.desktop.interface gtk-theme | sed "s/'//g")
@@ -30,9 +31,10 @@ if [ "$XDG_SESSION_DESKTOP" = "dwm" ]; then
   command -v slstatus && (pgrep slstatus || slstatus) & # slstatus for dwm
 fi
 
-if [ "$XDG_SESSION_DESKTOP" = "bspwm" ]; then
+if [ "$XDG_SESSION_DESKTOP" = "bspwm" -o "$XDG_SESSION_DESKTOP" = "none+bspwm" ]; then
   tiling_wm
 fi
+
 
 # Bind hotkeys
 command -v start-keybindings && start-keybindings &

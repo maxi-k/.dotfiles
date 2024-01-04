@@ -14,10 +14,12 @@ while pgrep -x polybar >/dev/null; do sleep 1; done
 monitors=$(xrandr | grep " connected" | awk '{ print $1 }')
 # # Launch polybar on all monitors
 echo "Found $monitors"
+logdir="~/.cache/polybar/log"
+mkdir -p $logdir
 for m in $monitors
 do
   echo "Activating polybar on monitor $m"
-  MONITOR=$m polybar bottom >~/.cache/polybar/log &
+  MONITOR=$m polybar bottom 1> "$logdir/stdout" 2> "$logdir/stderr" &
 done
 echo "Activated polybar on all monitors"
 
