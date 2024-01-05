@@ -1,0 +1,11 @@
+;; -*- mode: lisp-interaction -*-
+
+;; see https://github.com/elkowar/eww/issues/472#issuecomment-1146860335
+;; no way to detect when clicking outside a window
+;; so we create a window that covers the whole screen
+;; and close the menu when it is clicked
+;;
+;; should only use this when a compositor is running in X
+;; beacuse it will cover the whole screen otherwise
+(defwidget closer [window]
+           (eventbox :onclick "eww close ${window} && eww close ${window}-closer"))

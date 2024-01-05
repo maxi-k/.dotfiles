@@ -1,0 +1,5 @@
+;; -*- mode: lisp-interaction -*-
+;; make utilities available to all
+
+(include "util/closer.yuck")
+(include "sysmenu/sysmenu.yuck")

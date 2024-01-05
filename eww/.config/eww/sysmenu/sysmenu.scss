@@ -1,0 +1,134 @@
+.sysmenu {
+    background-color: $background-darker;
+    border-radius: 0.2rem;
+    padding: .8rem .8rem;
+    min-width: 18rem;
+}
+
+@mixin smbox {
+    background-color: $background;
+    padding: .8rem;
+    border-radius: 0.5rem;
+}
+
+.timebox {
+    margin: 0 2.5rem;
+
+    &, & > * {
+        background: none;
+    }
+
+    .time-container {
+        .content {
+            font-weight: bold;
+            font-size: 3.6rem;
+        }
+    }
+    .date-container {
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin: 3px 0;
+    }
+}
+
+.usercard {
+    @include smbox;
+}
+
+.face {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 65px;
+    min-width: 65px;
+    //border: .2rem solid $bg;
+    border-radius: 100%;
+    box-shadow: 0 0 7px 1px rgba($foreground, 0.3);
+    margin: 10px -8px 10px 10px;
+}
+
+
+
+.hostinfo {
+    padding-left: 0.2rem;
+    .uptime {
+        margin-top: .5rem;
+    }
+}
+
+.launcher-pfp-label {
+    font-family: Inconsolata SemiCondensed Medium;
+    font-weight: Bold;
+    font-size: 1rem;
+}
+
+.weatherbox {
+    @include smbox;
+}
+
+.weathericon {
+    padding: 0 .8rem;
+    border-radius: 0.5rem;
+    margin-left: .6rem;
+    background-color: $background;
+    font-size: 1.5rem;
+    font-family: $fontawesome;
+}
+
+.weatherdesc {
+    font-size: 1.75rem;
+    font-weight: Bold;
+}
+
+.weathertemp {
+    font-family: $nerdfont;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.weathercity {
+    font-size: .9rem;
+    margin-top: .2rem;
+    color: $foreground;
+    font-weight: bold;
+}
+
+.launcher-apps {
+    @include smbox;
+}
+
+.launcher-btn, .sys-btn {
+    color: $color7;
+    font-family: $fontawesome;
+    font-size: 1.5rem;
+}
+
+.launcher-btn:hover, .sys-btn:hover {
+    color: $color5;
+    font-family: $fontawesome;
+    font-size: 1.5rem;
+    text-shadow: 0 0 0.2rem $foreground;
+}
+
+
+.progress {
+    @include smbox;
+
+    circular-progress {
+        background-color: #000;
+
+        &:nth-child(even) {
+            color: $color5;
+        }
+
+        &:nth-child(odd) {
+            color: $color6;
+        }
+    }
+
+    .icon {
+        font-family: $fontawesome;
+        font-size: 1rem;
+        padding: 1.1rem;
+    }
+}

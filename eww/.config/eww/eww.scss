@@ -1,0 +1,24 @@
+////////////////////////////////////////////////////////////////////////////////
+// common styles
+
+* { all: unset; }
+@import "theme.scss";
+
+$nerdfont: "Symbols Nerd Font Mono";
+$fontawesome: "Font Awesome 5 Free";
+
+.icon-nf {
+    font-family: $nerdfont;
+}
+
+.icon-fa, .icon {
+    font-family: $fontawesome;
+}
+
+.text {
+    font-family: "Roboto"
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// imports
+@import "./sysmenu/sysmenu.scss";

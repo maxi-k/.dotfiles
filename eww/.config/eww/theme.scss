@@ -1,0 +1,33 @@
+// import wal-based colors if available,
+// set defaults if not set
+@import "wal-colors.scss";
+$background: #001C35 !default;
+$foreground: #c3cddb !default;
+
+
+// Colors
+$color0: #001C35 !default;
+$color1: #0079C9 !default;
+$color2: #0289CB !default;
+$color3: #2B91C3 !default;
+$color4: #3396CB !default;
+$color5: #00A9EA !default;
+$color6: #5EA4D1 !default;
+$color7: #c3cddb !default;
+$color8: #888f99 !default;
+$color9: #0079C9 !default;
+$color10: #0289CB !default;
+$color11: #2B91C3 !default;
+$color12: #3396CB !default;
+$color13: #00A9EA !default;
+$color14: #5EA4D1 !default;
+$color15: #c3cddb !default;
+
+// derived colors
+$background-darker: darken($background, 10%);
+$background-lighter: lighten($background, 10%);
+
+.container {
+    background: $background;
+    color: $foreground;
+}
