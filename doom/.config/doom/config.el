@@ -208,7 +208,7 @@ depending on the current stat."
     ;; adapted from https://jethrokuan.github.io/org-roam-guide/
     (setq org-roam-capture-templates
           `(("d" "default" plain "%?"
-             :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+             :if-new (file+head "resources/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
              :unnarrowed t)
             ("e" "event" plain "%?"
              :if-new (file+head "events/%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n#+filetags: :event:\n")
@@ -219,7 +219,7 @@ depending on the current stat."
              :immediate-finish t
              :unnarrowed t)
             ("i" "idea" plain "%?"
-             :if-new (file+head "ideas/${slug}.org" "#+title: ${title}\n#+filetags: :idea:\n")
+             :if-new (file+head "resources/${slug}.org" "#+title: ${title}\n#+filetags: :idea:\n")
              :immediate-finish t
              :unnarrowed t)
             ("p" "project" plain "%?"
