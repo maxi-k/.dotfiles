@@ -1,8 +1,8 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 command -v "open" && \
   cmd="open" || \
-  (command -v "xdg-open" && cmd="xdg-open" || (echo "no open command found"; exit))
+  command -v "xdg-open" >/dev/null && cmd="xdg-open" || (echo "no open command found"; exit)
 
 command -v devour && \
   devour $cmd $@ || \

@@ -274,8 +274,7 @@ some content %s
   (remove-hook! doom-load-theme-hook :local #'org-dashboard-reload-faces))
 
 (define-minor-mode org-dashboard-mode
-  "Automatically export the current org file on save. Local mode.
-Set the export command to be used with `org-auto-export-command`."
+  "Mode for automatically updating dynamic content in org files."
   :global nil
   :lighter "org-dashboard"
   (if org-dashboard-mode
