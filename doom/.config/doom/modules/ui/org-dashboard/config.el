@@ -23,16 +23,16 @@
   :group 'org-dashboard)
 
 (defface org-dashboard-title
-  `((default :inherit (org-dashboard-heading org-document-title) :weight bold :height 2.5))
+  `((default :inherit (org-dashboard-heading org-document-title) :weight bold :height 2.3))
   ""
   :group 'org-dashboard)
 
 (defface org-dashboard-h1
-  `((default :inherit (org-dashboard-heading org-level-1) :height 2.0))
+  `((default :inherit (org-dashboard-heading org-level-1) :height 1.8))
  "" :group 'org-dashboard)
 
 (defface org-dashboard-h2
-  `((default :inherit (org-dashboard-heading org-level-2) :height 1.7 :weight normal))
+  `((default :inherit (org-dashboard-heading org-level-2) :height 1.5 :weight normal))
  ""
  :group 'org-dashboard)
 
@@ -67,7 +67,7 @@
 Only manually added dynamic content generators should have this property."
   :group 'org-dashboard)
 
-(defcustom org-dashboard-dynamic-content-is-read-only t
+(defcustom org-dashboard-dynamic-content-is-read-only nil
   "Whether the dynamically generated content should be marked as read-only text."
   :group 'org-dashboard)
 
@@ -132,14 +132,17 @@ Returns a list of spec plists as defined by `org-dashboard-spec-at-point'."
              (sort (delete-dups values)
                    (lambda (x y) (> (plist-get x :point) (plist-get y :point)))))))))
 
-(defun org-dashboard-generate-dynamic-content (content &optional recur)
-  "Given a dynamic-content-describing plist as returned by `org-dashboard-collect-specs', renders the dynamic content into the buffer.
-Expands dynamically expanded content recursively. It is the responsibility of content functions to ensure recursion is not infinite."
-  (let* ((recur (or recur 0))
+(defun org-dashboard-generate-dynamic-content (content &rest kwargs)
+  "Given a dynamic-content-describing plist as returned by
+`org-dashboard-collect-specs', renders the dynamic content into
+the buffer. Expands dynamically expanded content recursively. It
+is the responsibility of content functions to ensure recursion is
+not infinite."
+  (let* ((recur (or (plist-get kwargs :recur) 0))
          (fn (plist-get content :fn))
          (args (plist-get content :args))
          (pos (plist-get content :point))
-         (foldp (plist-get content :fold))
+         (foldp (and (plist-get content :fold) (not (plist-get kwargs :inhibit-fold))))
          (prev-content))
     (goto-char pos)
     (org-back-to-heading)
@@ -157,7 +160,7 @@ Expands dynamically expanded content recursively. It is the responsibility of co
             ;; clear previous results
             (when (and beg end) (delete-region beg end))
             (goto-char beg)
-            (insert "\n\n")
+            (insert "\n")
             (forward-line -1)
             (setq insert-start (point))
             (funcall fn recur args)
@@ -165,7 +168,7 @@ Expands dynamically expanded content recursively. It is the responsibility of co
             ;; recurse
             (let ((props (org-dashboard-collect-specs insert-start insert-end)))
               (dolist (prop props)
-                (org-dashboard-generate-dynamic-content prop (+ recur 1))))
+                (org-dashboard-generate-dynamic-content prop :recur (+ recur 1))))
             (setq insert-end (point))
             (save-excursion
               (goto-char pos)
@@ -176,7 +179,11 @@ Expands dynamically expanded content recursively. It is the responsibility of co
                   (org-fold-hide-entry)
                 (progn
                   (org-fold-show-entry)
-                  (org-fold-show-children)))
+                  (org-fold-show-children)
+                  ;; *after* unfolding, insert newline at the end
+                  ;; for some better spacing to potential next headline
+                  (goto-char insert-end)
+                  (insert "\n")))
               (when (zerop recur)
                 ;;(org-fold--hide-drawers pos insert-end)
                 (when org-dashboard-dynamic-content-is-read-only
@@ -236,37 +243,36 @@ some content %s
   (save-excursion
     (org-dashboard-setup-buffer)))
 
-(defun org-dashboard-update-at-point ()
+(defun org-dashboard-update-at-point (&rest kwargs)
   "Update the dynamic content on the current point."
   (interactive)
   (save-excursion
     (let ((spec (org-dashboard-spec-at-point)))
-      (org-dashboard-generate-dynamic-content spec))))
+      (apply #'org-dashboard-generate-dynamic-content spec kwargs))))
 
 (defun org-dashboard-ctrl-c-ctrl-c ()
   "Update the dynamic content on the current point if we are in a property drawer."
   (when (and (or (org-at-property-drawer-p) (org-at-property-p))
              (org-entry-get (point) org-dashboard-dynamic-content-property-name))
-    (org-dashboard-update-at-point)
+    (org-dashboard-update-at-point :inhibit-fold t)
     t))
 
-(defun org-dashboard-mode--on ()
+(defun org-dashboard-mode--on (&rest kwargs)
   (interactive)
-  (when (and (fboundp solaire-mode) org-dashboard-solaire-mode) (solaire-mode -1))
   ;;(setq-local org-hide-leading-stars t)
-  (setq-local org-hidden-keywords (delete-dups (cons 'title org-hidden-keywords)))
-  ;;(read-only-mode)
-  (org-dashboard-reload-faces)
+  (when (plist-get kwargs :theme)
+    (when (and (fboundp solaire-mode) org-dashboard-solaire-mode) (solaire-mode -1))
+    (setq-local org-hidden-keywords (delete-dups (cons 'title org-hidden-keywords)))
+    (org-dashboard-reload-faces))
   (org-dashboard-setup-buffer)
   (font-lock-flush)
   (add-hook! org-ctrl-c-ctrl-c :local #'org-dashboard-ctrl-c-ctrl-c)
   (add-hook! after-save-hook :local #'org-dashboard-setup-buffer)
-  (add-hook! doom-load-theme-hook :local #'org-dashboard-reload-faces))
+  (when (plist-get kwargs :theme) (add-hook! doom-load-theme-hook :local #'org-dashboard-reload-faces)))
 
-(defun org-dashboard-mode--off ()
+(defun org-dashboard-mode--off (&rest kwargs)
   (interactive)
-  (when (and (fboundp solaire-mode) org-dashboard-solaire-mode) (solaire-mode -1))
-  ;;(read-only-mode)
+  ;; (when (and (fboundp solaire-mode) org-dashboard-solaire-mode) (solaire-mode -1))
   (org-dashboard-reload-faces :reinit nil)
   (org-mode)
   (remove-hook! org-ctrl-c-ctrl-c :local #'org-dashboard-ctrl-c-ctrl-c)
@@ -281,8 +287,15 @@ some content %s
       ;; enabled
       (org-dashboard-mode--on)
       ;; disabled
-      (org-dashboard-mode--off)
-      ))
+      (org-dashboard-mode--off)))
+
+(define-minor-mode org-themed-dashboard-mode
+  "Org dashboard mode with org-dashboard themes applied"
+  :global nil
+  :lighter "org-themed-dashboard"
+  (if org-themed-dashboard-mode
+      (org-dashboard-mode--on :theme t)
+      (org-dashboard-mode--off :theme t)))
 
 (defun org-dashboard--reload ()
   (interactive)

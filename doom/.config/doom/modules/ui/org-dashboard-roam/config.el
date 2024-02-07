@@ -100,12 +100,15 @@ and the following optional keys
 
 :hide-tags [bool] (default t)
         whether to display the tags of each nodes in the headline
-:exlucde [list-of-symbol-or-string] (default nil)
+:exclude [list-of-symbol-or-string] (default nil)
         list of tags to exclude
+:order [colname asc|desc] (default 'title asc'): node column to sort by; optional direction.
+        available columns: (id file level pos todo priority scheduled deadline title properties olp)
 "
   (let* ((stars (make-string (+ 1 (org-current-level)) ?*))
          (hide-tags (plist-get params :hide-tags))
          (exclude (plist-get params :exclude))
+         (order (or (plist-get params :order) "title asc"))
          (join-idx 0)
          (make-tag-list (lambda (tags) (string-join (mapcar (lambda (s) (concat "'\"" (org-dashboard-roam-symbol-as-string s) "\"'")) tags) ", ")))
          (tag-select (string-join (mapcar (lambda (taglist)
@@ -121,7 +124,7 @@ and the following optional keys
                        ") tsel join nodes n on tsel.node_id = n.id "
                        (unless hide-tags " join tags t on t.node_id = n.id")
                        " group by n.id, n.title"
-                       " order by n.title asc"
+                       " order by n." order
                        ))
          (_ (message expr))
          (nodes (org-roam-db-query expr))
@@ -133,5 +136,5 @@ and the following optional keys
                         (concat (make-string (- alignment (length name)) ?\s) ":"
                                 (string-join (sort (delete-dups (cddr row)) #'string-lessp) ":")
                                 ":"))))
-        (insert (format "%s [[id:%s][%s]] %s" stars id name tag-str))
-        (insert "\n")))))
+        (insert "\n")
+        (insert (format "%s [[id:%s][%s]] %s" stars id name tag-str))))))
