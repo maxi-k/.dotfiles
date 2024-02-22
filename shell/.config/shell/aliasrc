@@ -44,3 +44,6 @@ fcd() {
 }
 
 command -v nix >/dev/null && alias findpkg='nix search nixpkgs'
+
+# xdg utilities
+alias set-default-app="xdg-mime default"
