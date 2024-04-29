@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+if lsmod | grep -wq amd_uncore; then
+  perf stat -M umc_mem_read_bandwidth,umc_mem_write_bandwidth -a -I 1000 2>&1 | grep _bandwidth
+else
+  echo "please load the amd_uncore module before executing $0"
+  exit 1
+fi
