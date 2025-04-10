@@ -28,6 +28,7 @@ alias tma="tmux -2 attach -t $1" # attach session
 alias tmk="tmux kill-session -t $1" # kill session
 
 alias sl='sl -e'
+alias mj='make -j32'
 
 alias du-gui='ncdu'
 
@@ -43,6 +44,7 @@ fcd() {
     done
 }
 
+alias docker=podman
 command -v nix >/dev/null && alias findpkg='nix search nixpkgs'
 
 # xdg utilities
