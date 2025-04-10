@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 # Cycle between keyboard layouts
 
 # If an explicit layout is provided as an argument, use it. Otherwise, select the next layout from
@@ -16,3 +16,4 @@ else
       ;;
   esac
 fi
+# ((lsusb | grep "Apple, Inc. Magic Keyboard") >/dev/null && x-mac-layout) &

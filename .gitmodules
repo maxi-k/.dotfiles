@@ -100,3 +100,6 @@
 [submodule "doom/.config/doom/themes/bleak"]
 	path = doom/.config/doom/themes
 	url = https://github.com/maxi-k/emacs-bleak-theme
+[submodule "gdb/libcxx-pretty-printers"]
+	path = gdb/libcxx-pretty-printers
+	url = https://github.com/koutheir/libcxx-pretty-printers

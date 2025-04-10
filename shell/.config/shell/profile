@@ -1,9 +1,10 @@
 #!/bin/sh
 
 # General variables
-export LC_ALL=en_US.UTF-8
-export LC_TIME="de_DE.UTF-8"
-export LANG="$LC_ALL"
+#export LC_ALL=en_US.UTF-8 # overrides all others
+#export LC_TIME="de_DE.UTF-8"
+export LC_TIME="en_US.UTF-8"
+export LANG="en_US.UTF-8"
 export VISUAL="vim"
 export TERMINAL="alacritty"
 export EDITOR="emacsclient -nw"
@@ -21,10 +22,19 @@ export PATH=$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin
 [ -d "/opt/asdf-vm" ] && export ASDF_DATA_DIR="/opt/asdf-vm" || export ASDF_DATA_DIR="$HOME/.asdf"
 [ -f "$ASDF_DATA_DIR/asdf.sh" ] && source "$ASDF_DATA_DIR/asdf.sh" # || echo "asdf not found"
 # Use guix if installed
-command -v guix 1>/dev/null && export GUIX_PROFILE="${HOME}/.config/guix/current" && . "$GUIX_PROFILE/etc/profile"
-# load nix if installed
-test -e $HOME/.nix-profile/etc/profile.d/nix.sh && source $HOME/.nix-profile/etc/profile.d/nix.sh 
-# load flatpak export if flatpak is installed
-command -v flatpak 1>/dev/null && export PATH="$PATH:/var/lib/flatpak/exports/bin:${HOME}/.local/share/flatpak/exports/bin"
+command -v guix 1>/dev/null \
+	&& export GUIX_PROFILE="${HOME}/.config/guix/current" \
+        && test -f "$GUIX_PROFILE/etc/profile" \
+	&& . "$GUIX_PROFILE/etc/profile"
 
-[ -f "~/.config/shell/profile.local" ] && source ~/.config/shell/profile.local
+# load nix if installed
+test -e $HOME/.nix-profile/etc/profile.d/nix.sh \
+	&& source $HOME/.nix-profile/etc/profile.d/nix.sh 
+
+# load flatpak export if flatpak is installed
+command -v flatpak 1>/dev/null \
+	&& export PATH="$PATH:/var/lib/flatpak/exports/bin:${HOME}/.local/share/flatpak/exports/bin"
+
+test -f "$HOME/.config/shell/profile.local" && source ~/.config/shell/profile.local
+
+
