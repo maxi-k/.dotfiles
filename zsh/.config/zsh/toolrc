@@ -1,3 +1,10 @@
 #!/bin/zsh
 
+# handy printout for "did you mean x" messages
 test -f /etc/zsh_command_not_found && source /etc/zsh_command_not_found
+
+# load direnv if installed
+command -v direnv 1>/dev/null && eval "$(direnv hook zsh)"
+
+# fix nix-shell locale
+# command -v nix-env 1>/dev/null && export LOCALE_ARCHIVE="$(nix-env --installed --no-name --out-path --query glibc-locales)/lib/locale/locale-archive"

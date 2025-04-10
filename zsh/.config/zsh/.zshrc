@@ -24,9 +24,6 @@ setopt appendhistory     # Append history to the history file (no overwriting)
 setopt sharehistory      # Share history across terminals
 setopt incappendhistory  # Immediately append to the history file, not just when a term is killed
 
-# Load direnv if installed
-command -v direnv 1>/dev/null && eval "$(direnv hook zsh)"
-
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ '
 
 # Simple calculator
@@ -59,5 +56,3 @@ zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 
 # load plugin config if it exists
 #test -f ~/.config/zsh/pluginrc && source ~/.config/zsh/pluginrc
-
-if [ -e /home/maxi/.nix-profile/etc/profile.d/nix.sh ]; then . /home/maxi/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
