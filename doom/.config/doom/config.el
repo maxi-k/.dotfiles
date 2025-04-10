@@ -139,6 +139,10 @@ depending on the current stat."
                             #'+popup/raise
                           #'+popup/buffer))))
 
+(when (and (modulep! :completion ivy)
+           (modulep! :editor evil))
+  (after! ivy (add-hook! ivy-occur (turn-off-evil-mode))))
+
 (defun pinentry-emacs (desc prompt ok error)
   "Function for using emacs as a pinentry service."
   (let ((str (read-passwd (concat (replace-regexp-in-string "%22" "\"" (replace-regexp-in-string "%0A" "\n" desc)) prompt ": "))))
@@ -176,7 +180,12 @@ depending on the current stat."
 (when (modulep! :tools lsp)
   (setq lsp-lens-auto-enable nil)  ;; lens seems to deteriorate performance (tested in c++ mode), disable it for now
   (after! rustic (setq rustic-lsp-server 'rust-analyzer))
-  (after! ruby (setq lsp-solargraph-use-bundler 't)))
+  (after! ruby (setq lsp-solargraph-use-bundler 't))
+  (after! lsp
+    (map!
+     :leader
+     :prefix "b"
+     ("=" #'lsp-format-buffer))))
 
 ;; Deft for note searching in the notes/roam directory
 (when (modulep! :ui deft)
@@ -224,6 +233,10 @@ depending on the current stat."
              :unnarrowed t)
             ("p" "project" plain "%?"
              :if-new (file+head "projects/${slug}.org" "#+title: ${title}\n#+filetags: :project:\n")
+             :immediate-finish t
+             :unnarrowed t)
+            ("a" "area" plain "%?"
+             :if-new (file+head "projects/${slug}.org" "#+title: ${title}\n#+filetags: :area:\n")
              :immediate-finish t
              :unnarrowed t)
             ("x" "experiment" plain "%?"
