@@ -15,7 +15,7 @@ start_themed_apps() {
 
 tiling_wm() {
   command -v picom && (pgrep picom || picom) & # Compositor
-  command -v mktheme && mktheme && start_themed_apps & # Create a theme for this session
+  (command -v mktheme && mktheme && start_themed_apps) & # Create a theme for this session
   command -v unclutter && (pgrep unclutter || unclutter) & # Hide mouse cursor when unused
   command -v nm-applet && (pgrep nm-applet || nm-applet) &
   command -v gsettings && export GTK_THEME=$(gsettings get org.gnome.desktop.interface gtk-theme | sed "s/'//g")
@@ -23,9 +23,12 @@ tiling_wm() {
   # Set logitech mouse speed
   command -v xinput && xinput --set-prop "pointer:Logitech MX Master 3" 'libinput Accel Speed' -0.5 &
   command -v xset && xset mouse 3 6 &
-  command -v setup-wacom && setup-wacom &
+  # command -v setup-wacom && setup-wacom &
   # Bind hotkeys
   command -v start-keybindings && start-keybindings &
+  ((lsusb | grep Apple) >/dev/null && x-mac-layout) &
+
+  test -e /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 && /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 }
 
 if [ "$XDG_SESSION_DESKTOP" = "dwm" ]; then
