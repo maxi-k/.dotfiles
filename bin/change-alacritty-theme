@@ -1,8 +1,8 @@
 #!/bin/sh
 
-confdir=${XDG_CONFIG_HOME:-$HOME/.config}
-configfile="$confdir/alacritty/alacritty.yml"
-theme=`grep -Eo '&\w+' $configfile | cut -c 2- | selector`
+confdir="${XDG_CONFIG_HOME:-$HOME/.config}/alacritty"
+themedir="$confdir/themes"
+theme=`ls $themedir | cut -d'.' -f1 | selector`
 test -z "$theme" && notify-send "No theme selected" "Doing nothing" && exit 0
-sed -i'.oldtheme' -e "s/^colors: \*\w\+$/colors: *$theme/" $configfile
-command -v notify-send && notify-send "Changed alacritty theme" "New theme: $theme"
+( cd $themedir && ln -sf $theme.toml active.toml )
+touch $confdir/alacritty.toml
