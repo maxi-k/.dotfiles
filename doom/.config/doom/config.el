@@ -485,6 +485,14 @@ depending on the current stat."
                  "H" #'myai-reset-prompt-history
                  "m" #'myai-select-model)))
 
+(when (modulep! :editor copilot)
+  (map! "M-C" #'copilot-complete)
+  ;; set to a large idle delay so that it doesn't slow down editing by default
+  (setq copilot-idle-delay 5)
+  ;; could also disable 'autocompletion (w/o calling copilot-complete) explicitly like this
+  ;; (setq copilot-disable-predicates (list (lambda () t)))
+  )
+
 ;; TODO is there a better way to do this built into doom?
 ;; private git-ignored configuration variables
 (when (file-exists-p! "config.local.el" doom-user-dir)
