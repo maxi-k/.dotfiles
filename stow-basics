@@ -1,5 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env sh
+
+# make sure these exist b/c otherwise stow might symlink
+# the entire directory of the first toolset that has files
+# for that directory
 mkdir -p ~/.local/bin
+mkdir -p ~/.config
+
 stow shell
 stow zsh
 stow git
