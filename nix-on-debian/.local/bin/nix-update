@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+sudo /nix/var/nix/profiles/default/bin/nix-channel --update
