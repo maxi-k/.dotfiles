@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+root=${1:-"/nix/var/nix/profiles/system"}
+
+nix-tree $root

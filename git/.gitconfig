@@ -18,3 +18,4 @@
 	defaultBranch = master
 [safe]
 	directory = /etc/nixos/shared-setup
+	directory = /etc/nixos

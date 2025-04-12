@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+size=${1:-500MB}
+
+if [ "$size" = "help" ]; then
+    echo "Usage $0 <size> <root>"
+    echo "  size: include packages larger than this in the graph. default: 500MB"
+    echo "  root: garbage collection root, e.g., /run/current-system/sw/ or ~/.nix-profile"
+    exit 0
+fi
+
+root=${2:-""}
+
+test -z "$root" || root="--root $root"
+echo "using root: $root"
+
+## start shell with nix-du and graphviz
+## open in firefox
+nix-shell -p nix-du graphviz firefox --run "bash" <<EOF
+  nix-du -s="$size" $root | dot -Tsvg > /tmp/store-viz.svg
+  firefox /tmp/store-viz.svg
+EOF
