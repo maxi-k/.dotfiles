@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 test -z "$output" && output='column'
 test -z "$headers" && headers='on'
