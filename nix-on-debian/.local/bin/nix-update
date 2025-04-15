@@ -1,3 +1,7 @@
 #!/usr/bin/env sh
 
+# update channel
 sudo /nix/var/nix/profiles/default/bin/nix-channel --update
+
+# install latest nixpkgs
+nix-env --install --attr nixpkgs.nix nixpkgs.cacert; systemctl daemon-reload; systemctl restart nix-daemon
