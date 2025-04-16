@@ -541,7 +541,7 @@ depending on the current stat."
   (defun turn-off-vibe-mode () (interactive) (vibe-mode -1))
   ;; allow globalized version
   (define-globalized-minor-mode global-vibe-mode vibe-mode
-    #'turn-on-vibe-mode
+    turn-on-vibe-mode
     :init-value nil
     :global t
     :group 'copilot))
