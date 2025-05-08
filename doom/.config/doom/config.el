@@ -21,9 +21,9 @@
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "JetBrains Mono" :size 20)
+(setq doom-font (font-spec :family "JetBrains Mono" :size 24)
       doom-variable-pitch-font (font-spec :family "Inter")
-      doom-unicode-font (font-spec :family "Noto Color Emoji"))
+      doom-symbol-font (font-spec :family "Noto Color Emoji"))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -517,34 +517,6 @@ depending on the current stat."
              (cons "emacs-lsp-booster" orig-result))
          orig-result)))
    (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)))
-
-(when (modulep! :editor copilot)
-  (map! "M-C" #'copilot-complete)
-  ;; set to a large idle delay so that it doesn't slow down editing by default
-  (defvar my/default-copilot-idle-delay 5 "The default copilot idle delay for low-latency editing.")
-  (defvar my/vibe-mode-copilot-idle-delay 0 "Idle delay for fast copilot suggestions at the cost of jankier emacs.")
-  (setq copilot-idle-delay my/default-copilot-idle-delay)
-  ;; could also disable 'autocompletion (w/o calling copilot-complete) explicitly like this
-  ;; (setq copilot-disable-predicates (list (lambda () t)))
-
-  ;; define 'vibe-mode', which reduces copilot idle delay; allow local and global mode
-  (define-minor-mode vibe-mode
-    "Vibe mode for fast copilot suggestions."
-    :init-value nil
-    :lighter " Vibe"
-    :global nil
-    (if vibe-mode
-        (setq-local copilot-idle-delay my/vibe-mode-copilot-idle-delay)
-      (setq-local copilot-idle-delay my/default-copilot-idle-delay)))
-  ;; convenience functions
-  (defun turn-on-vibe-mode () (interactive) (vibe-mode 1))
-  (defun turn-off-vibe-mode () (interactive) (vibe-mode -1))
-  ;; allow globalized version
-  (define-globalized-minor-mode global-vibe-mode vibe-mode
-    turn-on-vibe-mode
-    :init-value nil
-    :global t
-    :group 'copilot))
 
 ;; TODO is there a better way to do this built into doom?
 ;; private git-ignored configuration variables

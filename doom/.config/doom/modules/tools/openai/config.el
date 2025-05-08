@@ -7,7 +7,6 @@
     (spellcheck . "You are a large language model and a writing assistant. Only correct any spelling mistakes you find. Change the input text as little as possibler. Do not comment on the semantic meaning of the input. If you don't find any mistakes then reply with \"No mistakes found!\". Respond consicely.")
     (chat . "You are a large language model and a conversation partner. Respond concisely.")))
 
-
 (use-package! gptel
   ;; gptel-api-key set in doom/config.local.el
   :config
@@ -16,5 +15,4 @@
   (defalias 'ai-add-context 'gptel-add)
   (defalias 'ai-add-file 'gptel-add-file)
   (defalias 'ai-org-set-topic 'gptel-org-set-topic)
-  (defalias 'ai-org-set-properties 'gptel-org-set-properties)
-  )
+  (defalias 'ai-org-set-properties 'gptel-org-set-properties))
