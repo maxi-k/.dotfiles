@@ -1,12 +1,15 @@
 [user]
 	email = maxi.kuschewski@gmail.com
 	name = Maximilian Kuschewski
+	signingkey = BA96B52648D56595
 [core]
-	excludesfile = /Users/Maxi/.gitignore_global
+	excludesfile = ~/.gitignore_global
 	editor = vim
+
 [filter "media"]
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
+
 [color]
 	ui = true
 [filter "lfs"]
@@ -16,6 +19,12 @@
 	process = git-lfs filter-process
 [init]
 	defaultBranch = master
+
 [safe]
-	directory = /etc/nixos/shared-setup
 	directory = /etc/nixos
+
+[credential]
+	helper = cache
+
+[commit]
+	gpgsign = true

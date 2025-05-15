@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+usage() {
+    echo "usage: $(basename $0) <regex> [git grep args...]"
+    exit 1
+}
+
+test -z "$1" && usage
+git grep $@ $(git rev-list --all)

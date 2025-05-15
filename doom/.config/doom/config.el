@@ -187,6 +187,9 @@ depending on the current stat."
      :prefix "b"
      ("=" #'lsp-format-buffer))))
 
+(when (modulep! :lang rust)
+  (setq rust-format-on-save t))
+
 ;; Deft for note searching in the notes/roam directory
 (when (modulep! :ui deft)
   (setq deft-directory my/notes-directory

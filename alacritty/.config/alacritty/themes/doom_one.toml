@@ -1,5 +1,5 @@
 
-[color_schemes.doom_one.normal]
+[colors.normal]
 black = "0x282c34"
 blue = "0x51afef"
 cyan = "0x46d9ff"
@@ -9,6 +9,6 @@ red = "0xff6c6b"
 white = "0xbbc2cf"
 yellow = "0xecbe7b"
 
-[color_schemes.doom_one.primary]
+[colors.primary]
 background = "0x282c34"
 foreground = "0xbbc2cf"
