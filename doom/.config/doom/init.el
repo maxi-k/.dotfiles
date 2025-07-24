@@ -117,6 +117,7 @@
        auto-make           ; automatically call 'make' on file save
        ;;translation         ; (human) language translation (own module)
        openai              ; openai tools (own module based on github package)
+       chrome              ; edit browser fields with emacs
        ;;notion            ; org-mode <-> notion integration (github package doesn't work yet)
        ;;org-sketch          ; add (inline) sketches to org-mode; best used with a graphic tablet
 

@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+# don't swap it (caps:swapescape); having escape be caps is very confusing
+
+if [ -z "$1" ]; then
+setxkbmap \
+    -option caps:escape \
+    -option escape:
+else
+    echo "arg given; clearing all options"
+    setxkbmap -option
+fi
+setxkbmap -query

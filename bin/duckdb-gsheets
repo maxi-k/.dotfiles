@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+err() {
+  echo $1
+  exit 1
+}
+
+command -v "duckdb" &>/dev/null || err "DuckDB not found"
+echo "
+install gsheets from community; load gsheets;
+create secret (type gsheet);
+" | duckdb
