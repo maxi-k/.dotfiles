@@ -69,7 +69,7 @@
        ;;rotate-text       ; cycle region at point between text candidates
        snippets            ; my elves. They type so I don't have to
        ;;word-wrap         ; soft wrapping with language-aware indent
-       copilot             ; own module based on copilot.el
+       ;copilot          ; own module based on copilot.el
 
        :emacs
        browse-kill-ring    ; Visually browse the kill ring and insert stuff
@@ -159,7 +159,7 @@
        ;;factor
        ;;ledger            ; an accounting system in Emacs
        lfe                 ; lisp flavoured erlang
-       ;;lua               ; one-based indices? one-based indices
+       lua                 ; one-based indices? one-based indices
        markdown            ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
        nix                 ; I hereby declare "nix geht mehr!"
@@ -186,8 +186,9 @@
        ;;terra             ; Earth and Moon in alignment for performance.
        web                 ; the tubes
        yaml                ; JSON, but readable
-       ;;zig               ; C, but simpler
+       zig                 ; C, but simpler
        bison               ; bison/yacc parser generator
+       qml
 
        :email
        ;;(mu4e +gmail)
