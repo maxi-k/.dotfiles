@@ -82,7 +82,8 @@ else
     # program neither hidden nor focused, spawn it
     # using second arg or first arg
     (
-        bspc rule -a \* -o state=floating sticky=on layer=above rectangle=$(test -z "$3" && bspwm-get-proportionate-rectangle 60 60 || "$3")
+        test -z "$3" && dim=$(bspwm-get-proportionate-rectangle 60 60) || dim="$3"
+        bspc rule -a \* -o state=floating sticky=on layer=above rectangle=$dim
         test -z "$2" && cmd="$progname" || cmd="$2"
         wait_for_new_window "$cmd" "$pgrogname"
     )

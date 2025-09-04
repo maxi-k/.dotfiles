@@ -118,7 +118,7 @@ super + shift + period
         #bspwm-hide-window
 
 super + shift + a
-      	bspwm-scratch-program chatgpt-scratchpad "" $(bspwm-get-proportionate-rectangle 90 60)
+      	bspwm-scratch-program chatgpt-scratchpad "" $(bspwm-get-proportionate-rectangle 60 60)
 
 super + ctrl + period
         bspwm-scratch-program
