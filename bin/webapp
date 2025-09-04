@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+
+url=$1; shift
+if [ -z "$url" ]; then
+    echo "usage: $0 <url>"
+fi
+
+case "$url" in
+    https://*)
+        ;;
+    *)
+        url="https://$url"
+        ;;
+esac
+
+# works with chrome-based browsers; XXX: check
+$BROWSER --app=$url $@
