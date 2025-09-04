@@ -15,4 +15,4 @@ case "$url" in
 esac
 
 # works with chrome-based browsers; XXX: check
-$BROWSER --app=$url $@
+$BROWSER --app="$url" $@

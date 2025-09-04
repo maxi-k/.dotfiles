@@ -15,7 +15,7 @@ notify() {
 
 filter_name() {
     while read line; do
-        winname=`xdotool getwindowname "$line" | grep -i "$progname"`
+        winname=`xdotool getwindowclassname "$line" | grep -i "$progname"`
         if ! [ -z "$winname" ] ; then
             $1 $line
             return 0
@@ -33,11 +33,38 @@ hide_window() {
     bspc node focused -g hidden=on
 }
 
+wait_for_new_window() {
+    prev=$(mktemp)
+    next=$(mktemp)
+    # query windows before
+    bspc query -N -n .window | sort > $prev
+    # launch whatever app we want
+    notify "launching $1"
+    $1 &
+    for _ in {1..20}
+    do
+        bspc query -N -n .window | sort > $next
+        if [ -z "$(diff $prev $next)" ]; then
+            sleep 0.1
+        else
+            id=`diff $prev $next | tail -n 1 | awk '{ print $2 }'`
+            echo $id
+            xdotool set_window --class "[scratch] $progname" $id
+            rm -f $prev
+            rm -f $next
+            return 0
+        fi
+    done
+    rm -f $prev
+    rm -f $next
+    return 1
+}
+
 if [ "$#" -eq "0" ]; then
     # no arguments given - interactively choose hidden window to show
     notify "interactive mode"
     bspc query -N -n .window.hidden | while read line; do
-        echo $(xdotool getwindowname "$line") " - $line"
+        echo $(xdotool getwindowname "$line") " - " $(xdotool getwindowclassname "$line") " -  $line"
     done | selector | awk '{ print $NF }' | xargs -I"{}" bspc node "{}" -g hidden=off -f
 else
     notify "mode~!"
@@ -54,6 +81,9 @@ else
 
     # program neither hidden nor focused, spawn it
     # using second arg or first arg
-    bspc rule -a \* -o state=floating sticky=on layer=above rectangle=$(test -z "$3" && bspwm-get-proportionate-rectangle 60 60 || "$3")\
-      && (test -z "$2" && $progname || $2)
+    (
+        bspc rule -a \* -o state=floating sticky=on layer=above rectangle=$(test -z "$3" && bspwm-get-proportionate-rectangle 60 60 || "$3")
+        test -z "$2" && cmd="$progname" || cmd="$2"
+        wait_for_new_window "$cmd" "$pgrogname"
+    )
 fi
