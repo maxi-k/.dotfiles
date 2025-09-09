@@ -1,2 +1,4 @@
 #!/bin/sh
-firefox -P aihelper "chat.openai.com"
+#firefox -P aihelper "chat.openai.com"
+#webapp chat.mistral.ai
+webapp claude.ai

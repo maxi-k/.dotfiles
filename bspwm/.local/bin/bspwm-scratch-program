@@ -41,20 +41,21 @@ wait_for_new_window() {
     # launch whatever app we want
     notify "launching $1"
     $1 &
-    for _ in {1..20}
+    for i in $(seq 1 30)
     do
         bspc query -N -n .window | sort > $next
         if [ -z "$(diff $prev $next)" ]; then
             sleep 0.1
         else
             id=`diff $prev $next | tail -n 1 | awk '{ print $2 }'`
-            echo $id
+            echo "id is $id"
             xdotool set_window --class "[scratch] $progname" $id
             rm -f $prev
             rm -f $next
             return 0
         fi
     done
+    notify "couldn't find window diff for $progname"
     rm -f $prev
     rm -f $next
     return 1

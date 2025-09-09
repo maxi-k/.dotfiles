@@ -51,7 +51,7 @@ super + space
 
 # Lock the screen
 super + shift + u
-    (lock & systemctl suspend)
+    (lock & (xset dpms force off && systemctl suspend))
 
 # Audio Controls
 XF86AudioMute
@@ -119,6 +119,12 @@ super + shift + period
 
 super + shift + a
       	bspwm-scratch-program chatgpt-scratchpad "" $(bspwm-get-proportionate-rectangle 60 60)
+
+super + shift + m
+      	bspwm-scratch-program "webapp chat.mistral.ai" "" $(bspwm-get-proportionate-rectangle 60 60)
+
+super + shift + g
+      	bspwm-scratch-program "webapp google.com" "" $(bspwm-get-proportionate-rectangle 60 60)
 
 super + ctrl + period
         bspwm-scratch-program
