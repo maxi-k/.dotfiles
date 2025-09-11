@@ -69,7 +69,7 @@
        ;;rotate-text       ; cycle region at point between text candidates
        snippets            ; my elves. They type so I don't have to
        ;;word-wrap         ; soft wrapping with language-aware indent
-       ;copilot          ; own module based on copilot.el
+       copilot             ; own module based on copilot.el
 
        :emacs
        browse-kill-ring    ; Visually browse the kill ring and insert stuff
@@ -117,6 +117,7 @@
        auto-make           ; automatically call 'make' on file save
        ;;translation         ; (human) language translation (own module)
        openai              ; openai tools (own module based on github package)
+       claude-code         ; claude-code-ide
        chrome              ; edit browser fields with emacs
        ;;notion            ; org-mode <-> notion integration (github package doesn't work yet)
        ;;org-sketch          ; add (inline) sketches to org-mode; best used with a graphic tablet
