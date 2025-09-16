@@ -6,7 +6,7 @@
 
 xpart=$1
 ypart=${2:-$xpart}
-monitorid=${3:-$((`bspc query -M`))}
+monitorid=${3:-$((`bspc query -M -m .focused`))}
 
 evalstr="\\(.width*0.$xpart)x\\(.height*0.$ypart)+\\(.x+(.width-.width*0.$xpart)/2)+\\(.y+(.height-.height*0.$ypart)/2)"
 filter=".monitors[] | select(.id == $monitorid) | .rectangle | \"$evalstr\""
