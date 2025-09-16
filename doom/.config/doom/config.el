@@ -155,6 +155,22 @@ depending on the current stat."
            (split-string str))
    " "))
 
+(defun disable-all-themes ()
+  "Disables all active themes."
+  (interactive)
+  (dolist (i custom-enabled-themes)
+    (disable-theme i)))
+
+(defun load-theme-exclusively (theme)
+  "Disables all active themes, then loads given theme."
+  (interactive
+   (list
+    (intern (completing-read "Load custom theme: "
+                             (mapcar 'symbol-name
+                                     (custom-available-themes))))))
+  (disable-all-themes)
+  (load-theme theme))
+
 ;;
 ;; Lisp language family setup
 ;;
