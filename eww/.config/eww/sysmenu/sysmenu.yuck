@@ -14,13 +14,10 @@
 (defpoll hostname :interval "24h" "cat /etc/hostname")
 (defpoll uptime :interval "30s" "uptime | grep -Eo 'up.*[0-9]+:[0-9]+' | awk '{ print $2 }'")
 
-(defpoll weathericon :interval "15m" "scripts/weather icon")
 (defpoll weathercity :interval "15m" "scripts/weather city")
 (defpoll weathertemp :interval "15m" "scripts/weather current_temp")
 (defpoll weatherdesc :interval "15m" "scripts/weather weather_desc")
-(defpoll weatherhex :interval "15m" "scripts/weather hex")
-
-(defpoll temp :interval "5s" "sensors | grep '^CPU' | grep -Eo '[0-9]+\.[0-9]'")
+(defpoll temp :interval "5s" "sensors | grep -e '^CPU' -e '^Tctl' | grep -Eo '[0-9]+\.[0-9]'")
 
 (defpoll current-hour :interval "1m" `date +%H`)
 
@@ -29,174 +26,148 @@
 ;; Widgets ;;
 
 (defwidget sysmenu []
-           (box :class "sysmenu"
-                :orientation "v"
-                :space-evenly "false"
-                :spacing 7
-                (time)
-                (usercard)
-                (weather)
-                (system)
-                (apps)))
+  (box :orientation "h"
+       :space-evenly "false"
+       :class "sysmenu-window"
+       (box :orientation "v"
+            :space-evenly "false"
+            :spacing 10
+            :class "sysmenu"
+            (time)
+            (hr)
+            (weather)
+            (hr)
+            (system)
+            (hr)
+            (motto))
+       (box :orientation "v" :space-evenly "false"
+            :class "aside"
+            (usercard)
+            (apps))))
+
+(defwidget hr [] (box :class "hr"))
+(defwidget motto []
+  (label :class "motto" :text "Nihil Supernum"))
 
 (defwidget time []
-           (box :class "timebox"
-                :orientation "v"
-                :space-evenly false
-                (box :class "time-container"
-                     :orientation "h"
-                     :space-evenly false
-                     :halign "center"
-                     :valign "center"
-                     (label :text "${current-hour}:${current-minute}" :class "content")
-                     )
-                (box :class "date-container"
-                     :orientation "h"
-                     :space-evenly true
-                     :halign "center"
-                     (label :text "${completeday}"))))
+  (box :class "timebox"
+       :orientation "v"
+       :space-evenly false
+       (box :class "time-container"
+            :orientation "h"
+            :space-evenly false
+            :halign "center"
+            :valign "center"
+            (label :text "${current-hour}:${current-minute}" :class "content"))
+       (box :class "date-container"
+            :orientation "h"
+            :space-evenly true
+            :halign "center"
+            (label :text "${completeday}"))
+       (box :class "uptime" :halign "center" (label :text "Up since ${uptime}h"))))
 
 (defwidget usercard []
-           (box :orientation "h"
-                :space-evenly "false"
-                :class "usercard"
-                (box :space-evenly "false"
-                     :hexpand true
-                     :orientation "h"
-                     :spacing "15"
-                     (box :style "background-image: url('${IMAGEP}');"
-                          :class "face"
-                          :halign "center")
-                     (box :orientation "v"
-                          :class "hostinfo"
-                          :space-evenly "false"
-                          :hexpand true
-                          :valign "center"
-                          (box :class "user-host"
-                               :halign "start"
-                               (label :text username))
-                          (box :class "host"
-                               :halign "start"
-                               (label :text "${hostname}"))
-                          (box :class "uptime"
-                               :halign "start"
-                               (label :text uptime)))
-                     (box :class "sys-buttons"
-                          :orientation "v"
-                          :space-evenly "false"
-                          :spacing 10
-                          :valign "center"
-                          :halign "start"
-                          :hexpand false
-                          (eventbox :cursor "pointer"
-                                    (button :class "sys-btn" :tooltip "Lock Computer" :onclick "lock" "󱅞"))
-                          (eventbox :cursor "pointer"
-                                    (button :class "sys-btn" :tooltip "Logout BSPWM" :onclick "bspc quit" "󰍃"))))))
-
+  (box :space-evenly "false"
+       :orientation "v"
+       :class "usercard"
+       (box :style "background-image: url('${IMAGEP}');"
+            :class "face"
+            :valign "center"
+            :halign "center")))
 
 (defwidget weather[]
-           (box :orientation "h" :class "weatherboxfull" :space-evenly false
-                (box :orientation "v" :class "weatherbox" :hexpand true :space-evenly false
-                     (box :orientation "h" :class "weathertop" :space-evenly false
-                          (box :class "weatherdesc" :style "color: ${weatherhex};" :halign "start" :hexpand true weatherdesc)
-                          (box :class "weathertemp" :halign "end" "${weathertemp}°C"))
-                     (box :orientation "v" :class "weatherbot" :space-evenly false
-                          (box :class "weathercity" :halign "start" :hexpand true
-                               (label :limit-width 22 :text weathercity))))
-                (box :class "weathericon" :style "color: ${weatherhex};" :halign "center" weathericon)))
+    (box :orientation "h" :class "weather" :hexpand true
+          "${weathertemp}°C / ${weatherdesc}"))
 
 (defwidget sys-indicator [data icon css tip]
-           (eventbox :cursor "pointer"
-                     :onclick "( ${closecmd} ); ( $TERMINAL -e 'htop' & )"
-                     (box
-                      :class "progress"
-                      (circular-progress
-                       :class css
-                       :value data
-                       :thickness 6
-                       :tooltip tip
-                       (overlay
-                        :valign "center"
-                        (label
-                         :class "icon"
-                         :text icon))))))
+  (eventbox :cursor "pointer"
+            :onclick "( ${closecmd} ); ( $TERMINAL -e 'htop' & )"
+            (box :orientation "v"
+                 :class "progress"
+             (circular-progress
+              :class css
+              :value data
+              :thickness 6
+              :tooltip tip
+              (overlay
+               :valign "center"
+               (label
+                :class "icon"
+                :text icon)))
+             (label :text "${tip}" ))))
 
 (defwidget cpu []
-           (sys-indicator
-            :css "cpu"
-            :tip "CPU ${round(EWW_CPU.avg,0)}%"
-            :data {round(EWW_CPU.avg, 0)}
-            :icon ""))
+  (sys-indicator
+   :css "cpu"
+   :tip "CPU ${round(EWW_CPU.avg,0)}%"
+   :data {round(EWW_CPU.avg, 0)}
+   :icon ""))
 
 (defwidget ram []
-           (sys-indicator
-            :css "ram"
-            :tip "RAM ${round(EWW_RAM.used_mem / 1048576, 2)}MB"
-            :data {round(EWW_RAM.used_mem_perc, 0)}
-            :icon ""))
+  (sys-indicator
+   :css "ram"
+   :tip "RAM ${round(EWW_RAM.used_mem / 1048576, 2)}MB"
+   :data {round(EWW_RAM.used_mem_perc, 0)}
+   :icon ""))
 
 (defwidget disk []
-           (sys-indicator
-            :css "disk"
-            :tip "SSD ${round(EWW_DISK["/"].used_perc, 2)}%"
-            :data {round(EWW_DISK["/"].used_perc, 0)}
-            :icon ""))
+  (sys-indicator
+   :css "disk"
+   :tip "SSD ${round(EWW_DISK["/"].used_perc, 2)}%"
+   :data {round(EWW_DISK["/"].used_perc, 0)}
+   :icon ""))
 
 (defwidget temp []
-           (sys-indicator
-            :css "temp"
-            :tip "Cpu temperature ${temp}°C"
-            :data temp
-            :icon ""))
+  (sys-indicator
+   :css "temp"
+   :tip "Cpu ${temp}°C"
+   :data temp
+   :icon ""))
 
 (defwidget system []
-           (box
-            :class "system"
-            :spacing 8
-            (cpu)
-            (ram)
-            (disk)
-            (temp)))
+  (box
+   :class "system"
+   :hexpand "true"
+   :orientation "v"
+   (box :orientation "h"
+    (cpu)
+    (ram))
+   (box :orientation "h"
+    (disk)
+    (temp))))
 
 (defwidget appbtn [onclick icon title]
-           (eventbox :cursor "pointer"
-                     (button :class "launcher-btn"
-                             :onclick "( ${closecmd} ); ( ${onclick} )"
-                             :tooltip title
-                             icon)))
-
-(defwidget buttonbox []
-           (box :orientation "v"
-                :space-evenly "true"
-                :class "launcher-apps"
-                (box :orientation "h"
-                     :space-evenly "false"
-                     :hexpand true
-                     :halign "center"
-                     :spacing 12
-                     (children))))
+  (eventbox :cursor "pointer"
+            :class "icon-btn"
+            (button :onclick "( ${closecmd} ); ( ${onclick} )"
+                    :tooltip title
+                    (box :orientation "h"
+                         :space-evenly "false"
+                         (box :class "icon" icon)
+                         (label :class "text" :text title)))))
 
 (defwidget apps []
-           (buttonbox
-            (appbtn :onclick "firefox &" :icon "󰇧" :title "Firefox")
-            (appbtn :onclick "pavucontrol &" :icon "󰕾" :title "Sound Control")
-            (appbtn :onclick "xdg-open ~ &" :icon "󰝰" :title "File Manager")
-            (appbtn :onclick "$TERMINAL &" :icon "󰆍" :title "Terminal")
-            (appbtn :onclick "$EDITOR &" :icon "󰷈" :title "Editor")))
+  (box :orientation "v" :space-evenly "true" :class "buttons" :vexpand true
+   (appbtn :onclick "$BROWSER &" :icon "󰇧" :title "Browser")
+   (appbtn :onclick "pavucontrol &" :icon "󰕾" :title "Sound Control")
+   (appbtn :onclick "xdg-open ~ &" :icon "󰝰" :title "File Manager")
+   (appbtn :onclick "cd ~ && $TERMINAL &" :icon "󰆍" :title "Terminal")
+   (appbtn :onclick "$EDITOR &" :icon "󰷈" :title "Editor")
+   (appbtn :onclick "lock" :icon "󱅞" :title "Lock")
+   (appbtn :onclick "lock" :icon "󰍃" :title "Log Out")))
 
 ;; Windows ;;
 
 (defwindow sysmenu-bottom-left
-           :geometry (geometry :x "10px"
-                               :y "-40px"
-                               :anchor "bottom left"
-                               )
-           :stacking "fg"
-           :wm-ignore false
-           (sysmenu))
+  :geometry (geometry :x "3px"
+                      :y "-33px"
+                      :anchor "bottom left")
+  :stacking "fg"
+  :wm-ignore false
+  (sysmenu))
 
 (defwindow sysmenu-bottom-left-closer
-           :geometry (geometry :width "100%" :height "100%")
-           :stacking "fg"
-           :focusable false
-           (closer :window "sysmenu-bottom-left"))
+  :geometry (geometry :width "100%" :height "100%")
+  :stacking "fg"
+  :focusable false
+  (closer :window "sysmenu-bottom-left"))

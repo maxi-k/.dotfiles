@@ -4,6 +4,7 @@
 * { all: unset; }
 @import "theme.scss";
 
+$basefont: "Jetbrains Mono";
 $nerdfont: "Symbols Nerd Font Mono";
 $fontawesome: "Font Awesome 5 Free";
 
@@ -16,7 +17,7 @@ $fontawesome: "Font Awesome 5 Free";
 }
 
 .text {
-    font-family: "Roboto"
+    font-family: $basefont;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
