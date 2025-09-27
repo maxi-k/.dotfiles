@@ -45,7 +45,11 @@
             (usercard)
             (apps))))
 
-(defwidget hr [] (box :class "hr"))
+(defwidget hr []
+  (box :space-evenly "true" :orientation "v" :vexpand false
+   (box)
+   (box :class "hr")))
+
 (defwidget motto []
   (label :class "motto" :text "Nihil Supernum"))
 
@@ -148,22 +152,24 @@
 
 (defwidget apps []
   (box :orientation "v" :space-evenly "true" :class "buttons" :vexpand true
-   (appbtn :onclick "$BROWSER &" :icon "󰇧" :title "Browser")
-   (appbtn :onclick "pavucontrol &" :icon "󰕾" :title "Sound Control")
-   (appbtn :onclick "xdg-open ~ &" :icon "󰝰" :title "File Manager")
    (appbtn :onclick "cd ~ && $TERMINAL &" :icon "󰆍" :title "Terminal")
    (appbtn :onclick "$EDITOR &" :icon "󰷈" :title "Editor")
+   (appbtn :onclick "$BROWSER &" :icon "󰇧" :title "Browser")
+   (appbtn :onclick "xdg-open ~ &" :icon "󰝰" :title "File Manager")
+   (appbtn :onclick "pavucontrol &" :icon "󰕾" :title "Sound Control")
+   (hr)
    (appbtn :onclick "lock" :icon "󱅞" :title "Lock")
    (appbtn :onclick "lock" :icon "󰍃" :title "Log Out")))
 
 ;; Windows ;;
 
 (defwindow sysmenu-bottom-left
-  :geometry (geometry :x "3px"
-                      :y "-33px"
+  :geometry (geometry :x "0px"
+                      :y "-30px"
                       :anchor "bottom left")
   :stacking "fg"
-  :wm-ignore false
+  :wm-ignore true
+  :windowtype "dialog"
   (sysmenu))
 
 (defwindow sysmenu-bottom-left-closer

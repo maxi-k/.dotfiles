@@ -1,5 +1,6 @@
 .sysmenu-window {
     font-family: $basefont;
+    border: 2px solid $color2;
 }
 
 .sysmenu {
@@ -49,7 +50,7 @@
 }
 
 .usercard {
-    padding: 1rem 0;
+    padding: 1.5rem 0 1.5rem 0;
 }
 
 .face {

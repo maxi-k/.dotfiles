@@ -109,8 +109,9 @@ super + {y,shift + y,g,f}
 #         STATE={marked,locked,sticky,private};\
 #         bspc node -g $STATE;\
 #         notify-send "Set node state to $STATE"
+
 super + shift + s
-    echo "marked\nlocked\nsticky\nprivate" | selector | xargs bspc node -g
+    echo -e "marked\nlocked\nsticky\nprivate" | selector | xargs bspc node -g
 
 super + shift + period
         bspwm-scratch-program emacs-scratchpad
