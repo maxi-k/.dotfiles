@@ -216,10 +216,26 @@ depending on the current stat."
     (setq org-fold-core-style 'overlays))
   (after! ox-latex
     (setq org-latex-inputenc-alist '(("utf8" . "utf8x"))))
+
+  (defun my/org-insert-common-timetracking-category ()
+    (interactive)
+    (let* ((default-directory my/notes-directory)
+           (buf (generate-new-buffer "rg-output")))
+      ;; generate output to buf
+      (call-process "bash" nil buf nil
+                    "-c"
+                    "rg -FI ':timetracking' | sort | uniq -c | sort -n | tail -n10 | awk '{ $1=\"\"; print $0 }'")
+      (when-let* ((bufstr (with-current-buffer buf (substring-no-properties (buffer-string))))
+                  (coll (split-string bufstr "\n"))
+                  (chosen (ivy-read "headline>" coll)))
+        (insert (s-trim chosen)))
+      (kill-buffer buf)))
+
   (map!
    (:map org-mode-map
     :localleader
-    ("L" #'org-cycle-list-bullet)))
+    ("L" #'org-cycle-list-bullet)
+    (":" #'my/org-insert-common-timetracking-category)))
   (after! org
     ;; used by org capture; default doom popup rule (:slot -1 :vslot -2 :ttl 0 :size 0.25)
     ;; seems to break this, causing the select buffer content to be inserted into the current buffer
