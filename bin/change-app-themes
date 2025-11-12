@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+change-alacritty-theme
+change-emacs-theme

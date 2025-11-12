@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+theme=$(
+    emacsclient --no-wait --eval "(custom-available-themes)" \
+        | sed -Ee 's/\s+/\n/g' -e 's/[\)\(]//' -e 's/^\s//g' \
+        | selector -p "emacs theme"
+     )
+test -z "$theme" && notify-send "No theme selected" "Doing nothing" && exit 0
+emacsclient --no-wait --eval "(load-theme-exclusively '$theme)"

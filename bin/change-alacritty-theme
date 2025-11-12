@@ -2,7 +2,7 @@
 
 confdir="${XDG_CONFIG_HOME:-$HOME/.config}/alacritty"
 themedir="$confdir/themes"
-theme=`ls $themedir | cut -d'.' -f1 | selector`
+theme=`ls $themedir | cut -d'.' -f1 | selector -p "alacritty theme"`
 test -z "$theme" && notify-send "No theme selected" "Doing nothing" && exit 0
 ( cd $themedir && ln -sf $theme.toml active.toml )
 touch $confdir/alacritty.toml
