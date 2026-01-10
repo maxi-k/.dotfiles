@@ -509,18 +509,10 @@ depending on the current stat."
                                            (format "%s <%s>" user-full-name
                                                    (completing-read "From: " (notmuch-user-emails))))))))))
 
-(when (modulep! :tools openai)
-  (map! :leader
-        (:prefix ("a" . "AI")
-                 "." #'ai-buffer
-                 "b" #'ai-buffer
-                 "s" #'ai-send
-                 "a" #'ai-add-context
-                 "f" #'ai-add-file)))
-
-(when (modulep! :tools claude-code)
-  (map! :leader
-        (:prefix ("a" . "AI") "c" #'claude-code-ide-menu)))
+(when (modulep! :tools ai)
+  ;; (map! :leader "a" #'ai-code-menu)
+  (map! :leader "a" #'eca-transient-menu)
+  )
 
 (ignore
  '(when (modulep! :tools lsp)
