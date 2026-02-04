@@ -1,12 +1,15 @@
-#!/bin/sh
+#!/usr/bin/env sh
+set -e
 
-input=${1:-perf.data}
-name=${2:-flamegraph}
+test -z "$TEMPDIR" || mkdir -p $TEMPDIR
+dir=$(mktemp -d)
+echo "$dir"
+mkdir -p $dir
 
-perf script -i perf.data > /tmp/$name.perf
+# TODO
+base=${HOME}/dev/build/FlameGraph
+perf script > $dir/out.perf
+$base/stackcollapse-perf.pl $dir/out.perf > $dir/out.folded
+$base/flamegraph.pl $dir/out.folded > perf.svg
 
-$( cd /home/maxi/dev/build/flamegraph \
-		&& ./stackcollapse-perf.pl /tmp/$name.perf > /tmp/$name.folded  \
-		&& ./flamegraph.pl /tmp/$name.folded > /tmp/$name.svg)
-
-echo "/tmp/$name.svg"
+rm -r $dir

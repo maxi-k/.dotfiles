@@ -1,27 +1,16 @@
 #!/usr/bin/env sh
 
-sysprompt='{"role": "system", "content": "You are a helpful AI assistant living in a ubuntu 22.04 shell environment. Respond consicely and put an executable shell command in a code section."}'
-data="{
-     \"model\": \"gpt-3.5-turbo\",
-     \"temperature\": "0.5",
-     \"messages\": [$sysprompt, {\"role\": \"user\", \"content\": \"$@\"}]
-     }"
+sysprompt="You are a helpful AI assistant living in a ubuntu shell environment. Respond very consicely and put a single executable shell command in a single code section. Don't ever reply with multiple code sections."
+prompt="$@"
 
-# query openai
-raw=$(curl "https://api.openai.com/v1/chat/completions" \
-     --silent \
-     -H "Authorization: Bearer $OPENAI_API_KEY" \
-     -H "Content-Type: application/json" \
-     -d "$data")
+# query claude using CLI
+res=$(claude --model "claude-haiku-4-5" --system-prompt "$sysprompt" "$prompt")
 
-# exit if output could not be parsed
-res=$(printf "%s" "$raw" | jq --raw-output '.choices[0].message.content')
-test "$res" = "null" -o -z "$res" && echo "Error:
-$raw" && exit 1
+# exit if no response
+test -z "$res" && echo "Error: No response from Claude" && exit 1
 
 # extract shell command, replace newlines with ';'
 cmd=$(echo "$res" | sed -n '/^```/,/^```/ p' | sed '/^```/ d' | sed 's/\n/; /g')
-#cmd=$(echo "$res" | grep -zo "\`\`\`\n\(.*\)\n\`\`\`" | sed -n 2p | sed 's/\n/; /g')
 
 # Print response in full
 echo "--------------------------------------------------------------------------------
@@ -31,13 +20,13 @@ $res
 Extracted Command: $cmd \033[1;34m"
 
 
-# use xdotool to write suggested command to output prommpt
+# use xdotool to write suggested command to output prompt
 if command -v xdotool >/dev/null; then
-  xdotool type "$cmd" 
+  xdotool type "$cmd"
 else
   # alternative: confirm with user and run from inside this script;
   printf "%s" "$cmd"
-  read -p "Run[1;34m $cmd [0m(y/n)?> " yn
+  read -p "Run[1;34m $cmd [0m(y/n)?> " yn
   case $yn in
       [Nn]* ) echo "NOT Running"; exit;;
       * ) echo "Running..."; $cmd; break;;

@@ -1,5 +1,5 @@
 #!/bin/sh
 
 NAME="Wacom One by Wacom M Pen stylus"
-xsetwacom set "$NAME" rotate half
-xsetwacom set "$NAME" MapToOutput DisplayPort-1
+xsetwacom set "$NAME" rotate half || notify-send "could not find wacom"
+xsetwacom set "$NAME" MapToOutput DisplayPort-1 || notify-send "could not map wacom display"

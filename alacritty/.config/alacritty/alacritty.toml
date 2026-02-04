@@ -1,8 +1,6 @@
-
-[general]
+import = [ "~/.config/alacritty/themes/active.toml" ]
 live_config_reload = true
 working_directory = "None"
-import = [ "themes/active.toml" ]
 
 [bell]
 animation = "EaseOutExpo"
@@ -25,7 +23,7 @@ render_timer = false
 
 [font]
 # AppleFontSmoothing = true
-size = 20.0
+size = 18.0
 
 [font.glyph_offset]
 x = 0

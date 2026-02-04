@@ -16,6 +16,7 @@ export PATH=$PATH:$HOME/.local/bin:$HOME/.dotfiles/bin
 
 # Add emacs bin to path
 [ -d ${HOME}/.emacs.d/bin ] && export PATH=$PATH:$HOME/.emacs.d/bin
+[ -d ${HOME}/.config/emacs/bin ] && export PATH=$PATH:$HOME/.config/emacs/bin
 
 ### PACKAGE & VERSION MANAGERS ###
 # Use asdf if installed

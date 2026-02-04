@@ -375,13 +375,40 @@ depending on the current stat."
   (:when (modulep! :ui golden-ratio)
    "g" #'+golden-ratio-toggle))
 
-
-
  ;; Direct Keybindings for jumping with avy
  :desc "Jump Char" "J" #'avy-goto-char
  :desc "Jump Word" "j" #'avy-goto-word-or-subword-1)
 
-;;
+
+;; slightly adapted from `evil-ret-gen'
+
+(ignore
+ '(when (modulep! :editor evil)
+   (defun my/evil-jump-on-ret (arg)
+     (interactive "P")
+     (let ((widget (or (get-char-property (point) 'field)
+                       (get-char-property (point) 'button)
+                       (get-char-property (point) 'widget-doc))))
+       (if (or ;; defer to the original evil function when:
+            ;; ...there is some widget under cursor
+            (and widget
+                 (fboundp 'widget-type)
+                 (fboundp 'widget-button-press)
+                 (or (and (symbolp widget)
+                          (get widget 'widget-type))
+                     (and (consp widget)
+                          (get (widget-type widget) 'widget-type))))
+            ;; ...or a button under cursor
+            (and (fboundp 'button-at)
+                 (fboundp 'push-button)
+                 (button-at (point))))
+           ;; do regular evil ret
+           (evil-ret)
+         ;; otherwise, goto char
+         (call-interactively (if arg #'avy-goto-char #'avy-goto-word-or-subword-1)))))
+
+   (map! :nmv "RET" #'my/evil-jump-on-ret)))
+
 ;; Very package- / mode-specific keybindings
 ;;
 
@@ -435,8 +462,8 @@ depending on the current stat."
   (message "loading scratchpad profile")
   (setq doom-theme *scratchpad-theme*)
   (if doom-init-time
-      (load-theme *scratchpad-theme*)
-    (add-hook 'window-setup-hook (lambda () (load-theme *scratchpad-theme*))))
+      (load-theme-exclusively *scratchpad-theme*)
+    (add-hook 'window-setup-hook (lambda () (load-theme-exclusively *scratchpad-theme*))))
   (let ((x (or action *scratchpad-action*)))
     (cond
      ((eq x :scratch) (switch-to-buffer "*scratch*"))
