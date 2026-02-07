@@ -1,0 +1,9 @@
+{
+  "behavior": {
+    "writing-assistant": {
+      "prompts": {
+        "chat": "${file:./behaviors/writing-assistant.md}"
+      }
+    }
+  }
+}
