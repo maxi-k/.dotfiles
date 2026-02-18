@@ -1,9 +1,49 @@
 {
-  "behavior": {
-    "writing-assistant": {
-      "prompts": {
-        "chat": "${file:./behaviors/writing-assistant.md}"
-      }
+    "behavior": {
+        "writing-assistant": {
+            "prompts": {
+                "chat": "${file:./behaviors/writing-assistant.md}"
+            }
+        }
+    },
+    "customTools": {
+        "web_search": {
+            "description": "Searches the web for the given search term",
+            "command": "curl -sS --fail-with-body --compressed -G --data-urlencode \"q={{search_string}}\" \"https://api.search.brave.com/res/v1/web/search\" -H \"Accept: application/json\" -H \"X-Subscription-Token: $(get-api-key brave)\"",
+            "schema": {
+                "properties": {
+                    "search_string": {
+                        "type": "string",
+                        "description": "The term to search for"
+                    }
+                },
+                "required": ["search_string"]
+            }
+        },
+        "web_fetch": {
+            "description": "Fetches the full contents of a web page (HTML/text) given a URL. Optionally fetch only a byte range.",
+            "command": "bash -lc 'set -euo pipefail; url=\"{{url}}\"; range=\"{{range}}\"; if [ -n \"$range\" ]; then curl -sS --fail-with-body --compressed -L -H \"Range: bytes=$range\" \"$url\"; else curl -sS --fail-with-body --compressed -L \"$url\"; fi'",
+            "schema": {
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "description": "The URL of the page to fetch"
+                    },
+                    "range": {
+                        "type": "string",
+                        "description": "Optional HTTP Range header byte spec (e.g. '0-4095', '4096-8191', '10000-')"
+                    }
+                },
+                "required": ["url"]
+            }
+        }
+    },
+    "toolCall": {
+        "approval": {
+            "allow": {
+                "web_search": {},
+                "web_fetch": {}
+            }
+        }
     }
-  }
 }
