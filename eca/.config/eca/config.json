@@ -36,13 +36,27 @@
                 },
                 "required": ["url"]
             }
+        },
+        "notify_user": {
+            "description": "Notifies the user by displaying a notification message on his devices.",
+            "command": "curl -d \"{{message}}\" https://ntfy.sh/maxi-k",
+            "schema": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "A short, notification-sized message to display to the user."
+                    }
+                },
+                "required": ["message"]
+            }
         }
     },
     "toolCall": {
         "approval": {
             "allow": {
                 "web_search": {},
-                "web_fetch": {}
+                "web_fetch": {},
+                "notify_user": {}
             }
         }
     }

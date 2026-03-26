@@ -154,7 +154,7 @@
        (java +lsp)         ; the poster child for carpal tunnel syndrome
        javascript          ; all(hope(abandon(ye(who(enter(here))))))
        ;;(julia +lsp)      ; a better, faster MATLAB
-       ;;janet             ; OWN janet lispy scripting language
+       (janet +tree-sitter)             ; OWN janet lispy scripting language
        ;;kotlin            ; a better, slicker Java(Script)
        latex               ; writing papers in Emacs has never been so fun
        ;;lean

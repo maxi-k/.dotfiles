@@ -30,6 +30,8 @@
 ;; `load-theme' function. This is the default:
 
 (setq doom-theme 'bleak)
+;; (setq doom-theme 'doom-solarized-light)
+;;(setq doom-theme 'doom-nord)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'.
@@ -187,10 +189,9 @@ depending on the current stat."
 
 (add-hook! 'lisp-mode-hook (my/on-lisp-mode))
 (add-hook! emacs-lisp-mode (my/on-lisp-mode))
-(when (modulep! :lang lfe)
-  (add-hook! lfe-mode (my/on-lisp-mode)))
-(when (modulep! :lang clojure)
-  (add-hook! clojure-mode (my/on-lisp-mode)))
+(when (modulep! :lang lfe) (add-hook! lfe-mode (my/on-lisp-mode)))
+(when (modulep! :lang clojure) (add-hook! clojure-mode (my/on-lisp-mode)))
+(when (modulep! :lang janet) (add-hook! janet-mode (my/on-lisp-mode)))
 
 ;; Language Server Protocol setup
 (when (modulep! :tools lsp)
@@ -545,7 +546,7 @@ depending on the current stat."
     (defun my/eca-go ()
       (interactive)
       (eca-chat-send-prompt my/eca-go-prompt))
-    (transient-append-suffix 'eca-transient-menu '(0 2)
+    (transient-append-suffix 'eca--transient-menu-prefix '(0 2)
       ["Quick Actions"
        ("g" "my/eca-go-prompt" my/eca-go)
        ]))
