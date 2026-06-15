@@ -9,6 +9,11 @@
 (setq user-full-name "Maximilian Kuschewski"
       user-mail-address "")
 
+(setq-default mode-line-format nil) 
+(setq frame-title-format nil)
+(setq default-frame-alist '((undecorated . t)))
+
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -29,7 +34,9 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 
-(setq doom-theme 'bleak)
+(if (display-graphic-p)
+    (setq doom-theme 'bleak)
+  (setq doom-theme nil))
 ;; (setq doom-theme 'doom-solarized-light)
 ;;(setq doom-theme 'doom-nord)
 
@@ -72,7 +79,10 @@
 (setq which-key-idle-delay 1.5)
 (after! company
   (setq company-idle-delay 1.0
-        company-tooltip-idle-delay 0.325))
+        company-tooltip-idle-delay 0.325
+        company-show-quick-access t))
+
+(display-graphic-p)
 
 ;; Keep a scroll margin
 (setq scroll-margin 7)
@@ -191,11 +201,28 @@ depending on the current stat."
 (add-hook! emacs-lisp-mode (my/on-lisp-mode))
 (when (modulep! :lang lfe) (add-hook! lfe-mode (my/on-lisp-mode)))
 (when (modulep! :lang clojure) (add-hook! clojure-mode (my/on-lisp-mode)))
-(when (modulep! :lang janet) (add-hook! janet-mode (my/on-lisp-mode)))
+(when (modulep! :lang janet)
+  (add-hook! janet-mode (my/on-lisp-mode))
+  ;; xxx figure out how to do this better with paredit mode
+  (map! (:map janet-mode-map
+         :i
+         "{" #'paredit-open-curly
+         "}" #'paredit-close-curly))
+  (when (modulep! :lang janet-repl)
+    (map!
+     (:map janet-mode-map
+      :localleader
+      ("," #'ajrepl)
+      ("b" #'ajrepl-send-buffer)
+      ("e" #'ajrepl-send-expression-at-point)
+      ("E" #'ajrepl-send-top-level-expression)
+      ("r" #'ajrepl-send-region)
+      ("w" #'ajrepl-switch-to-repl)))))
 
 ;; Language Server Protocol setup
 (when (modulep! :tools lsp)
-  (setq lsp-lens-auto-enable nil)  ;; lens seems to deteriorate performance (tested in c++ mode), disable it for now
+  (setq lsp-lens-auto-enable t)  ;; lens seems to deteriorate performance (tested in c++ mode), disable it for now
+  (setq lsp-idle-delay 0.1)
   (after! rustic (setq rustic-lsp-server 'rust-analyzer))
   (after! ruby (setq lsp-solargraph-use-bundler 't))
   (after! lsp
@@ -399,37 +426,45 @@ depending on the current stat."
 
  ;; Direct Keybindings for jumping with avy
  :desc "Jump Char" "J" #'avy-goto-char
- :desc "Jump Word" "j" #'avy-goto-word-or-subword-1)
+ :desc "Jump Word" "j" #'avy-goto-word-or-subword-1
+ )
 
 
 ;; slightly adapted from `evil-ret-gen'
 
 (ignore
  '(when (modulep! :editor evil)
-   (defun my/evil-jump-on-ret (arg)
-     (interactive "P")
-     (let ((widget (or (get-char-property (point) 'field)
-                       (get-char-property (point) 'button)
-                       (get-char-property (point) 'widget-doc))))
-       (if (or ;; defer to the original evil function when:
-            ;; ...there is some widget under cursor
-            (and widget
-                 (fboundp 'widget-type)
-                 (fboundp 'widget-button-press)
-                 (or (and (symbolp widget)
-                          (get widget 'widget-type))
-                     (and (consp widget)
-                          (get (widget-type widget) 'widget-type))))
-            ;; ...or a button under cursor
-            (and (fboundp 'button-at)
-                 (fboundp 'push-button)
-                 (button-at (point))))
-           ;; do regular evil ret
-           (evil-ret)
-         ;; otherwise, goto char
-         (call-interactively (if arg #'avy-goto-char #'avy-goto-word-or-subword-1)))))
+    (defun my/evil-jump-on-ret (arg)
+      (interactive "P")
+      (let ((widget (or (get-char-property (point) 'field)
+                        (get-char-property (point) 'button)
+                        (get-char-property (point) 'widget-doc))))
+        (if (or ;; defer to the original evil function when:
+             ;; ...there is some widget under cursor
+             (and widget
+                  (fboundp 'widget-type)
+                  (fboundp 'widget-button-press)
+                  (or (and (symbolp widget)
+                           (get widget 'widget-type))
+                      (and (consp widget)
+                           (get (widget-type widget) 'widget-type))))
+             ;; ...or a button under cursor
+             (and (fboundp 'button-at)
+                  (fboundp 'push-button)
+                  (button-at (point))))
+            ;; do regular evil ret
+            (evil-ret)
+          ;; otherwise, goto char
+          (call-interactively (if arg #'avy-goto-char #'avy-goto-word-or-subword-1)))))
 
-   (map! :nmv "RET" #'my/evil-jump-on-ret)))
+    (map! :nmv
+          "RET" #'my/evil-jump-on-ret
+          )))
+
+;;; 
+(map! 
+ :nmv  "] l" (lambda () (interactive) (re-search-forward (format "^.\\{%d,\\}" fill-column)))
+ :nvm "[ l" (lambda () (interactive) (re-search-backward (format "^.\\{%d,\\}" fill-column))))
 
 ;; Very package- / mode-specific keybindings
 ;;
