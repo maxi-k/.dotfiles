@@ -291,7 +291,28 @@ depending on the current stat."
                 ;; right align doom tags; simplified version of
                 ;; https://github.com/org-roam/org-roam/issues/1775#issue-971157225
                 (propertize " " 'display `(space :align-to (- right 30)))
-                (propertize "${doom-tags:30}" 'face 'org-tag))))
+                (propertize "${doom-tags:30}" 'face 'org-tag)))
+
+  (defun my/show-roam-project-todos (&optional arg)
+    (interactive "P")
+    (let* ((project-name (projectile-project-name))
+           (tag-suffix (if (or arg
+                               (not project-name)
+                               (string-empty-p project-name)
+                               (string-equal "-" project-name))
+                           (completing-read "project tag>" (org-roam-tag-completions))
+                         project-name
+                         ))
+           (tag (concat "+" tag-suffix)))
+      (message "using project %s tag %s" project-name tag arg)
+      (org-agenda nil "t")
+      (org-agenda-filter-apply (list tag) 'tag)
+      (call-interactively #'+popup/buffer)))
+
+  (map!
+   :leader
+   (:prefix "p" "t" #'my/show-roam-project-todos)
+   (:prefix "nr" "p" #'my/show-roam-project-todos)))
 
 ;; Make macOS title bar transparent
 (when (eq system-type 'darwin)
