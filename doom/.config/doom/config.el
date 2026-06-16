@@ -86,6 +86,7 @@
 
 ;; Keep a scroll margin
 (setq scroll-margin 7)
+(scroll-bar-mode -1)
 
 ;; TODO find out why this doesn't work
 ;; Highlight lines > 100 in length
@@ -323,18 +324,26 @@ depending on the current stat."
   (defun my/show-roam-project-todos (&optional arg)
     (interactive "P")
     (let* ((project-name (projectile-project-name))
-           (tag-suffix (if (or arg
-                               (not project-name)
-                               (string-empty-p project-name)
-                               (string-equal "-" project-name))
-                           (completing-read "project tag>" (org-roam-tag-completions))
-                         project-name
-                         ))
-           (tag (concat "+" tag-suffix)))
-      (message "using project %s tag %s" project-name tag arg)
-      (org-agenda nil "t")
-      (org-agenda-filter-apply (list tag) 'tag)
-      (call-interactively #'+popup/buffer)))
+           (tag-or-name (if (or arg
+                                (not project-name)
+                                (string-empty-p project-name)
+                                (string-equal "-" project-name))
+                            (completing-read "project tag>" (org-roam-tag-completions))
+                          project-name
+                          ))
+           (bufname (concat "*" tag-or-name " " "todos*"))
+           (org-agenda-custom-commands (cons `("Z" ,bufname
+                                               ((agenda)
+                                                (tags-todo ,tag-or-name)))
+                                        org-agenda-custom-commands))
+           (display-buffer-alist (cons
+                                  `(,(concat "^\\" org-agenda-buffer-name) (+popup-buffer) (actions) (side . right) (size)
+                                    (window-width . 0.33) (window-height . 0.5) (slot . 2) (vslot)
+                                    (window-parameters (ttl) (quit) (select . ignore) (modeline) (autosave)))
+                                  display-buffer-alist))
+           (tag (concat "+" tag-or-name)))
+      (message "using project %s tag %s arg %s" project-name tag arg)
+      (org-agenda nil "Z")))
 
   (map!
    :leader
